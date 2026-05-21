@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>31901-2004 — การพัฒนาซอฟต์แวร์ด้วยเทคโนโลยี Front-End</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;0,800;1,600&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07080d; --surface:#0e1018; --card:#13151f;
+  --border:rgba(255,255,255,0.07); --border-hi:rgba(255,255,255,0.14);
+  --accent:#38bdf8; --purple:#a78bfa;
+  --text:#dde1ee; --muted:#6b7280;
+  --html:#e8612a; --css:#3b82f6; --tw:#06b6d4; --vue:#42b883; --proj:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);
+  background-size:48px 48px;}
+.content{position:relative;z-index:1;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(7,8,13,0.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 2rem;height:56px;}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);letter-spacing:0.05em;}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:7rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:-10%;left:-10%;width:700px;height:700px;
+  background:radial-gradient(circle,rgba(56,189,248,0.06) 0%,transparent 65%);
+  pointer-events:none;}
+.hero-glow2{position:absolute;bottom:-20%;right:-5%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(167,139,250,0.05) 0%,transparent 65%);
+  pointer-events:none;}
+.hero-inner{max-width:960px;margin:0 auto;}
+
+.badge-row{display:flex;align-items:center;gap:12px;margin-bottom:1.8rem;}
+.badge-code{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);
+  color:var(--accent);padding:6px 18px;border-radius:100px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;}
+.badge-level{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);
+  color:var(--purple);padding:6px 14px;border-radius:100px;font-size:12px;}
+
+.hero-title{font-family:'Exo 2',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);
+  font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:0.6rem;}
+.hero-title .blue{color:var(--accent);}
+.hero-en{font-family:'Exo 2',sans-serif;font-size:clamp(1rem,2vw,1.25rem);
+  font-weight:300;color:var(--muted);font-style:italic;margin-bottom:2rem;}
+.hero-desc{max-width:600px;color:#9ba3b8;font-size:15px;line-height:1.8;margin-bottom:2.5rem;}
+
+.stats-row{display:flex;gap:3rem;flex-wrap:wrap;margin-bottom:3rem;
+  padding:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stat .num{font-family:'Exo 2',sans-serif;font-size:2.2rem;font-weight:800;
+  color:var(--accent);line-height:1;}
+.stat .lbl{font-size:13px;color:var(--muted);margin-top:3px;}
+
+.tech-row{display:flex;gap:10px;flex-wrap:wrap;}
+.tech-pill{display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--border-hi);
+  border-radius:10px;padding:8px 18px;font-size:14px;font-weight:600;
+  transition:border-color .2s;}
+.tech-pill:hover{border-color:rgba(255,255,255,0.25);}
+.dot{width:8px;height:8px;border-radius:50%;}
+
+/* SCROLL SECTIONS */
+section{padding:5rem 2rem;}
+.s-inner{max-width:960px;margin:0 auto;}
+.s-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.s-title{font-family:'Exo 2',sans-serif;font-size:1.9rem;font-weight:700;margin-bottom:1.8rem;}
+hr.divider{border:none;border-top:1px solid var(--border);}
+
+/* PHASE LEGEND */
+.phase-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.phase-item{display:flex;align-items:center;gap:8px;font-size:13px;}
+.phase-dot{width:10px;height:10px;border-radius:3px;}
+
+/* WEEKS GRID */
+.weeks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+.wk{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;}
+.wk:hover{transform:translateY(-3px);}
+.wk::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.wk.html::after{background:var(--html);}
+.wk.html:hover{border-color:rgba(232,97,42,0.3);}
+.wk.css::after{background:var(--css);}
+.wk.css:hover{border-color:rgba(59,130,246,0.3);}
+.wk.tw::after{background:var(--tw);}
+.wk.tw:hover{border-color:rgba(6,182,212,0.3);}
+.wk.vue::after{background:var(--vue);}
+.wk.vue:hover{border-color:rgba(66,184,131,0.3);}
+.wk.proj::after{background:var(--proj);}
+.wk.proj:hover{border-color:rgba(245,158,11,0.3);}
+.wk-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:6px;}
+.wk-title{font-weight:600;font-size:14px;margin-bottom:5px;}
+.wk-desc{font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:10px;}
+.wk-chip{display:inline-block;padding:2px 9px;border-radius:4px;
+  font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.wk-work{font-size:11px;color:#7090a0;margin-top:5px;line-height:1.4;}
+
+/* ASSESSMENT */
+.assess-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+.assess-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 20px;text-align:center;position:relative;overflow:hidden;
+  transition:border-color .2s;}
+.assess-card:hover{border-color:var(--border-hi);}
+.assess-bar{position:absolute;bottom:0;left:0;height:3px;transition:width 1s ease;}
+.assess-pct{font-family:'Exo 2',sans-serif;font-size:2.8rem;font-weight:800;line-height:1;}
+.assess-name{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.4;}
+
+/* RULES */
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.rule{display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;}
+.rule-icon{font-size:1.6rem;flex-shrink:0;}
+.rule-text{font-size:14px;line-height:1.4;}
+
+/* STANDARD */
+.std-card{background:linear-gradient(135deg,rgba(167,139,250,0.06),rgba(56,189,248,0.04));
+  border:1px solid rgba(167,139,250,0.2);border-radius:16px;
+  padding:2.5rem;display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;}
+.std-icon{font-size:3.5rem;flex-shrink:0;}
+.std-title{font-family:'Exo 2',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:4px;}
+.std-detail{color:var(--muted);font-size:14px;margin-bottom:16px;}
+.std-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.std-tag{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);
+  color:var(--accent);padding:4px 14px;border-radius:6px;font-size:13px;}
+
+/* FOOTER */
+footer{padding:2.5rem 2rem;text-align:center;color:var(--muted);
+  font-size:13px;border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;}
+
+/* FADE-IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{opacity:0;animation:fadeUp .7s ease forwards;}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}
+.d4{animation-delay:.35s}.d5{animation-delay:.45s}.d6{animation-delay:.55s}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="content">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">31901-2004</div>
+  <div class="nav-links">
+    <a href="#curriculum">หลักสูตร</a>
+    <a href="#assessment">เกณฑ์คะแนน</a>
+    <a href="#standard">มาตรฐานวิชาชีพ</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div><div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="badge-row fade-in d1">
+      <div class="badge-code">&#11045; รหัสวิชา 31901-2004</div>
+      <div class="badge-level">ระดับ ปวส.1</div>
+    </div>
+    <h1 class="hero-title fade-in d2">
+      การพัฒนาซอฟต์แวร์<br>ด้วยเทคโนโลยี <span class="blue">Front-End</span>
+    </h1>
+    <p class="hero-en fade-in d3">Software Development with Front-End Technology</p>
+    <p class="hero-desc fade-in d4">
+      รายวิชาที่จะพาผู้เรียนเดินทางจากพื้นฐาน HTML ไปจนถึงการสร้างเว็บแอปด้วย Vue.js
+      เน้นชิ้นงานจริงจากสถานการณ์งานอาชีพ พร้อมสู่มาตรฐานนักพัฒนาระบบ ระดับ 4
+    </p>
+    <div class="stats-row fade-in d5">
+      <div class="stat"><div class="num">70</div><div class="lbl">ชั่วโมงรวม</div></div>
+      <div class="stat"><div class="num">14</div><div class="lbl">สัปดาห์</div></div>
+      <div class="stat"><div class="num">13</div><div class="lbl">ชิ้นงาน Lab</div></div>
+      <div class="stat"><div class="num">4</div><div class="lbl">เทคโนโลยีหลัก</div></div>
+    </div>
+    <div class="tech-row fade-in d6">
+      <div class="tech-pill"><div class="dot" style="background:var(--html)"></div>HTML5</div>
+      <div class="tech-pill"><div class="dot" style="background:var(--css)"></div>CSS3</div>
+      <div class="tech-pill"><div class="dot" style="background:var(--tw)"></div>Tailwind CSS</div>
+      <div class="tech-pill"><div class="dot" style="background:var(--vue)"></div>Vue.js 3</div>
+      <div class="tech-pill"><div class="dot" style="background:#f97316"></div>Git & GitHub</div>
+      <div class="tech-pill"><div class="dot" style="background:#8b5cf6"></div>RESTful API</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- CURRICULUM -->
+<section id="curriculum">
+  <div class="s-inner">
+    <div class="s-tag">// curriculum</div>
+    <h2 class="s-title">แผนการเรียน 14 สัปดาห์</h2>
+    <div class="phase-legend">
+      <div class="phase-item"><div class="phase-dot" style="background:var(--html)"></div>HTML (สัปดาห์ 1–2)</div>
+      <div class="phase-item"><div class="phase-dot" style="background:var(--css)"></div>CSS (สัปดาห์ 3–4)</div>
+      <div class="phase-item"><div class="phase-dot" style="background:var(--tw)"></div>Tailwind (สัปดาห์ 5–7)</div>
+      <div class="phase-item"><div class="phase-dot" style="background:var(--vue)"></div>Vue.js (สัปดาห์ 8–12)</div>
+      <div class="phase-item"><div class="phase-dot" style="background:var(--proj)"></div>Final Project (สัปดาห์ 13–14)</div>
+    </div>
+    <div class="weeks-grid">
+      <div class="wk html">
+        <div class="wk-num">Week 01</div>
+        <div class="wk-title">HTML เบื้องต้น</div>
+        <div class="wk-desc">โครงสร้าง HTML, Tag พื้นฐาน: text, heading, list, link, image</div>
+        <div class="wk-work">🎯 แนะนำตัวเอง + เมนูร้านอาหาร</div>
+        <span class="wk-chip" style="background:rgba(232,97,42,0.12);color:var(--html)">HTML</span>
+      </div>
+      <div class="wk html">
+        <div class="wk-num">Week 02</div>
+        <div class="wk-title">HTML ฟอร์ม + Table</div>
+        <div class="wk-desc">form, input, select, table, โครงสร้างเว็บทั้งหน้า</div>
+        <div class="wk-work">🎯 ฟอร์มสมัครเรียน + ตารางข้อมูล</div>
+        <span class="wk-chip" style="background:rgba(232,97,42,0.12);color:var(--html)">HTML</span>
+      </div>
+      <div class="wk css">
+        <div class="wk-num">Week 03</div>
+        <div class="wk-title">CSS เบื้องต้น</div>
+        <div class="wk-desc">Syntax, Selector, Color, Font, Internal/External CSS</div>
+        <div class="wk-work">🎯 จัดสไตล์ Resume</div>
+        <span class="wk-chip" style="background:rgba(59,130,246,0.12);color:var(--css)">CSS</span>
+      </div>
+      <div class="wk css">
+        <div class="wk-num">Week 04</div>
+        <div class="wk-title">CSS Layout</div>
+        <div class="wk-desc">Box Model, Margin, Padding, Display, Flexbox เบื้องต้น</div>
+        <div class="wk-work">🎯 Resume Layout Responsive</div>
+        <span class="wk-chip" style="background:rgba(59,130,246,0.12);color:var(--css)">CSS</span>
+      </div>
+      <div class="wk tw">
+        <div class="wk-num">Week 05</div>
+        <div class="wk-title">Tailwind CSS Intro</div>
+        <div class="wk-desc">ติดตั้ง Tailwind, Typography Utility, text-, bg-, p-, m-</div>
+        <div class="wk-work">🎯 สร้าง Resume ด้วย Tailwind</div>
+        <span class="wk-chip" style="background:rgba(6,182,212,0.12);color:var(--tw)">Tailwind</span>
+      </div>
+      <div class="wk tw">
+        <div class="wk-num">Week 06</div>
+        <div class="wk-title">Tailwind Layout</div>
+        <div class="wk-desc">Flex, Grid, Card, Button, Responsive Utility (sm: md:)</div>
+        <div class="wk-work">🎯 Landing Page สินค้า</div>
+        <span class="wk-chip" style="background:rgba(6,182,212,0.12);color:var(--tw)">Tailwind</span>
+      </div>
+      <div class="wk tw">
+        <div class="wk-num">Week 07</div>
+        <div class="wk-title">Tailwind Advanced</div>
+        <div class="wk-desc">Form Style, Hover, Focus, Custom Component, @apply</div>
+        <div class="wk-work">🎯 ฟอร์มสมัครสมาชิก</div>
+        <span class="wk-chip" style="background:rgba(6,182,212,0.12);color:var(--tw)">Tailwind</span>
+      </div>
+      <div class="wk vue">
+        <div class="wk-num">Week 08</div>
+        <div class="wk-title">Vue.js เบื้องต้น</div>
+        <div class="wk-desc">Vue project (Vite), {{}}, v-bind, v-on, method</div>
+        <div class="wk-work">🎯 หน้าโปรไฟล์นักเรียน</div>
+        <span class="wk-chip" style="background:rgba(66,184,131,0.12);color:var(--vue)">Vue.js</span>
+      </div>
+      <div class="wk vue">
+        <div class="wk-num">Week 09</div>
+        <div class="wk-title">Vue Condition & Loop</div>
+        <div class="wk-desc">v-if, v-else, v-for, Loop เมนู/สินค้า</div>
+        <div class="wk-work">🎯 รายการสินค้า dynamic</div>
+        <span class="wk-chip" style="background:rgba(66,184,131,0.12);color:var(--vue)">Vue.js</span>
+      </div>
+      <div class="wk vue">
+        <div class="wk-num">Week 10</div>
+        <div class="wk-title">Vue Component</div>
+        <div class="wk-desc">สร้าง Component, Props / Emit / Slot</div>
+        <div class="wk-work">🎯 ระบบตะกร้าสินค้า</div>
+        <span class="wk-chip" style="background:rgba(66,184,131,0.12);color:var(--vue)">Vue.js</span>
+      </div>
+      <div class="wk vue">
+        <div class="wk-num">Week 11</div>
+        <div class="wk-title">Vue Form & Computed</div>
+        <div class="wk-desc">v-model, validation, computed, watch</div>
+        <div class="wk-work">🎯 เว็บคำนวณราคาสินค้า</div>
+        <span class="wk-chip" style="background:rgba(66,184,131,0.12);color:var(--vue)">Vue.js</span>
+      </div>
+      <div class="wk vue">
+        <div class="wk-num">Week 12</div>
+        <div class="wk-title">Vue Router & API</div>
+        <div class="wk-desc">Vue Router หลายหน้า, Fetch API จาก JSON/mock</div>
+        <div class="wk-work">🎯 เว็บร้านค้าหลายหน้า</div>
+        <span class="wk-chip" style="background:rgba(66,184,131,0.12);color:var(--vue)">Vue.js</span>
+      </div>
+      <div class="wk proj">
+        <div class="wk-num">Week 13</div>
+        <div class="wk-title">Final Project — Part 1</div>
+        <div class="wk-desc">วางแผน ออกแบบ UI, เริ่มพัฒนาเว็บจริง Coding จริงจัง</div>
+        <div class="wk-work">🎯 เว็บโปรเจกต์จริง</div>
+        <span class="wk-chip" style="background:rgba(245,158,11,0.12);color:var(--proj)">Project</span>
+      </div>
+      <div class="wk proj">
+        <div class="wk-num">Week 14</div>
+        <div class="wk-title">Final Project — Part 2</div>
+        <div class="wk-desc">ทำให้เสร็จสมบูรณ์ + นำเสนอโปรเจกต์</div>
+        <div class="wk-work">🎯 Present + Demo</div>
+        <span class="wk-chip" style="background:rgba(245,158,11,0.12);color:var(--proj)">Project</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ASSESSMENT -->
+<section id="assessment">
+  <div class="s-inner">
+    <div class="s-tag">// assessment</div>
+    <h2 class="s-title">เกณฑ์การวัดผล</h2>
+    <div class="assess-grid">
+      <div class="assess-card">
+        <div class="assess-pct" style="color:var(--html)">40%</div>
+        <div class="assess-name">ชิ้นงาน Lab<br>รายสัปดาห์</div>
+        <div class="assess-bar" style="background:var(--html);width:40%"></div>
+      </div>
+      <div class="assess-card">
+        <div class="assess-pct" style="color:var(--tw)">30%</div>
+        <div class="assess-name">Final Project<br>สัปดาห์ 13–14</div>
+        <div class="assess-bar" style="background:var(--tw);width:30%"></div>
+      </div>
+      <div class="assess-card">
+        <div class="assess-pct" style="color:var(--vue)">20%</div>
+        <div class="assess-name">สอบกลาง/ปลาย<br>ภาคเรียน</div>
+        <div class="assess-bar" style="background:var(--vue);width:20%"></div>
+      </div>
+      <div class="assess-card">
+        <div class="assess-pct" style="color:var(--purple)">10%</div>
+        <div class="assess-name">เข้าเรียน<br>& มีส่วนร่วม</div>
+        <div class="assess-bar" style="background:var(--purple);width:10%"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CLASS RULES -->
+<section>
+  <div class="s-inner">
+    <div class="s-tag">// class rules</div>
+    <h2 class="s-title">กติกาห้องเรียน</h2>
+    <div class="rules-grid">
+      <div class="rule"><div class="rule-icon">💻</div><div class="rule-text"><strong>ทำ Lab ตาม</strong><br>ลงมือทำด้วยตนเอง ไม่ copy วางโดยไม่เข้าใจ</div></div>
+      <div class="rule"><div class="rule-icon">🙋</div><div class="rule-text"><strong>ถามถ้าไม่เข้าใจ</strong><br>ไม่มีคำถามโง่ — ถามเสมอเมื่อสงสัย</div></div>
+      <div class="rule"><div class="rule-icon">📢</div><div class="rule-text"><strong>เรียกถ้าไม่ทัน</strong><br>บอกอาจารย์ถ้าตามไม่ทัน จะรอได้</div></div>
+      <div class="rule"><div class="rule-icon">📬</div><div class="rule-text"><strong>ทำงานส่ง</strong><br>ส่งตรงเวลา — ล่าช้ามีผลต่อคะแนน</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- STANDARD -->
+<section id="standard">
+  <div class="s-inner">
+    <div class="s-tag">// professional standard</div>
+    <h2 class="s-title">มาตรฐานวิชาชีพ</h2>
+    <div class="std-card">
+      <div class="std-icon">🏛️</div>
+      <div>
+        <div class="std-title">สถาบันคุณวุฒิวิชาชีพ (สคช.) — TPQI</div>
+        <div class="std-detail">อาชีพนักพัฒนาระบบ ระดับ 4 &nbsp;|&nbsp; System Developer Level 4</div>
+        <div class="std-tags">
+          <span class="std-tag">Front-End Development</span>
+          <span class="std-tag">Version Control System</span>
+          <span class="std-tag">RESTful API / Web Services</span>
+          <span class="std-tag">SQL / NoSQL Database</span>
+          <span class="std-tag">Responsive Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  รายวิชา 31901-2004 &nbsp;·&nbsp; วิทยาลัยเทคนิคเลย &nbsp;·&nbsp; ปีการศึกษา 2569
+</footer>
+</div>
+</body>
+</html>
