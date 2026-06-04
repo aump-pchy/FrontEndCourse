@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Week 3 — Flexbox Layout | 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18; --surf:#0c1028; --card:#111830; --card2:#16203c;
+  --bd:rgba(130,150,255,0.1); --bd2:rgba(130,150,255,0.22);
+  --v:#818cf8; --v2:#6366f1;   /* violet */
+  --c:#22d3ee; --c2:#06b6d4;   /* cyan */
+  --g:#34d399; --g2:#10b981;   /* green */
+  --p:#f472b6; --p2:#ec4899;   /* pink */
+  --y:#fbbf24;                 /* yellow */
+  --tx:#e2e8f0; --mu:#546280;
+  --r:#f87171;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;font-weight:400;line-height:1.7;overflow-x:hidden;}
+
+/* ── PROGRESS BAR ── */
+#rprog{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;
+  background:linear-gradient(90deg,var(--v),var(--c),var(--g));}
+
+/* ── STICKY NAV ── */
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,0.85);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);
+  padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:6px;overflow-x:auto;}
+.snav-item{white-space:nowrap;padding:5px 14px;border-radius:100px;font-size:13px;font-weight:500;
+  color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
+.snav-item:hover,.snav-item.active{color:var(--tx);border-color:var(--bd2);background:var(--card);}
+.snav-item.s1.active{color:var(--v);border-color:rgba(129,140,248,.35);}
+.snav-item.s2.active{color:var(--c);border-color:rgba(34,211,238,.35);}
+.snav-item.s3.active{color:var(--g);border-color:rgba(52,211,153,.35);}
+.snav-item.s4.active{color:var(--p);border-color:rgba(244,114,182,.35);}
+.snav-sep{color:var(--bd2);font-size:12px;flex-shrink:0;}
+
+/* ── WRAPPER ── */
+.page{max-width:880px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+/* ── HERO ── */
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
+.wk-tag{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.3);
+  color:var(--v);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.hero h1 span{background:linear-gradient(135deg,var(--v),var(--c));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#94a3c8;font-size:15px;max-width:560px;margin-bottom:2rem;}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.hchip{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;}
+
+/* ── SECTION ── */
+.sec{padding:3.5rem 0 1rem;}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:.4rem;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bd);}
+.sec-title{font-size:clamp(1.5rem,3.5vw,2rem);font-weight:700;margin-bottom:.4rem;}
+.sec-sub{color:#7a8aaa;font-size:14px;margin-bottom:2rem;}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.card-title{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;}
+.card-title .icon{font-size:1.1rem;}
+
+/* ── CODE BLOCK ── */
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,0.06);border-radius:10px;
+  padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.7rem 0;user-select:text;}
+.t{color:#89dceb;} .a{color:#a6e3a1;} .v{color:#fab387;}
+.k{color:#cba6f7;} .cm{color:#454c6b;} .prop{color:#89dceb;} .val{color:#a6e3a1;}
+
+/* ── TWO COL ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:640px){.two{grid-template-columns:1fr;}}
+
+/* ── TAG TABLE ── */
+.ttable{width:100%;border-collapse:collapse;font-size:13.5px;}
+.ttable th{text-align:left;padding:8px 12px;color:var(--mu);font-weight:500;
+  font-size:12px;border-bottom:1px solid var(--bd);letter-spacing:.04em;}
+.ttable td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.ttable tr:last-child td{border-bottom:none;}
+.ttable tr:hover td{background:rgba(255,255,255,.02);}
+.tag-badge{font-family:'JetBrains Mono',monospace;font-size:12px;
+  background:rgba(129,140,248,.12);color:var(--v);padding:2px 8px;border-radius:5px;}
+
+/* ── VISUAL DIAGRAM ── */
+.diagram{border:2px dashed var(--bd2);border-radius:12px;padding:1rem;
+  font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(0,0,0,.2);}
+.dg-row{display:flex;gap:6px;margin-bottom:6px;}
+.dg-block{border-radius:7px;padding:8px 12px;text-align:center;font-size:12px;
+  display:flex;align-items:center;justify-content:center;}
+
+/* ── INFO BOX ── */
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;line-height:1.6;
+  display:flex;align-items:flex-start;gap:10px;}
+.info .ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.info-v{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);color:#bdc5f0;}
+.info-c{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);color:#9ee5f5;}
+.info-g{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.info-y{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+
+/* ── PROPERTY CARD ── */
+.prop-card{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:1rem;margin-bottom:.7rem;}
+.prop-name{font-family:'JetBrains Mono',monospace;color:var(--c);font-size:13px;margin-bottom:5px;}
+.prop-desc{font-size:13px;color:#8494b8;margin-bottom:.5rem;}
+
+/* ── ═══════ FLEX SIMULATOR ═══════ ── */
+.sim-box{background:var(--surf);border:1px solid var(--bd2);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.sim-preview{
+  background:#060c20;border:2px solid rgba(34,211,238,.25);border-radius:12px;
+  padding:16px;min-height:180px;display:flex;flex-direction:row;
+  flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;gap:8px;
+  transition:all .3s ease;margin-bottom:1.2rem;position:relative;}
+.sim-preview::before{content:'FLEX CONTAINER';position:absolute;top:-11px;left:14px;
+  background:var(--surf);padding:0 8px;font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(34,211,238,.6);letter-spacing:.12em;}
+.sim-item{min-width:52px;min-height:52px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;
+  font-weight:500;transition:all .3s ease;flex-shrink:0;}
+.si1{background:rgba(129,140,248,.25);border:1px solid rgba(129,140,248,.5);color:var(--v);}
+.si2{background:rgba(34,211,238,.2);border:1px solid rgba(34,211,238,.4);color:var(--c);}
+.si3{background:rgba(52,211,153,.2);border:1px solid rgba(52,211,153,.4);color:var(--g);}
+.si4{background:rgba(244,114,182,.2);border:1px solid rgba(244,114,182,.4);color:var(--p);}
+.si5{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);color:var(--y);}
+
+.sim-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem;}
+.ctrl-group{background:rgba(0,0,0,.25);border-radius:10px;padding:12px 14px;}
+.ctrl-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.ctrl-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.cbtn{padding:4px 11px;border-radius:6px;border:1px solid var(--bd2);background:var(--card);
+  color:#8494b8;font-family:'JetBrains Mono',monospace;font-size:11.5px;cursor:pointer;
+  transition:all .15s;}
+.cbtn:hover{border-color:rgba(34,211,238,.4);color:var(--c);}
+.cbtn.on{background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.5);color:var(--c);}
+
+.sim-code{background:#060c20;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px 18px;}
+.sim-code-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;}
+#css-output{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;color:#8494b8;}
+#css-output .prop{color:#89dceb;} #css-output .val{color:#a6e3a1;} #css-output .punc{color:#454c6b;}
+
+/* ── TAILWIND TABLE ── */
+.tw-table{width:100%;border-collapse:collapse;font-size:13px;}
+.tw-table th{padding:9px 12px;text-align:left;font-size:11.5px;color:var(--mu);
+  font-weight:500;border-bottom:1px solid var(--bd);letter-spacing:.04em;}
+.tw-table td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+.tw-table tr:last-child td{border-bottom:none;}
+.tw-table tr:hover td{background:rgba(255,255,255,.02);}
+.css-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--c);
+  background:rgba(34,211,238,.1);padding:2px 8px;border-radius:5px;}
+.tw-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--g);
+  background:rgba(52,211,153,.1);padding:2px 7px;border-radius:5px;margin:1px;}
+.tw-pills{display:flex;gap:4px;flex-wrap:wrap;}
+
+/* ── TW SIMULATOR ── */
+.tw-sim-preview{background:#060c20;border:1px solid var(--bd2);border-radius:10px;padding:16px;
+  min-height:80px;margin-bottom:1rem;transition:all .3s;}
+.tw-sim-item{padding:10px 20px;border-radius:7px;font-size:13px;font-weight:500;display:inline-block;}
+
+.tw-clicker{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.8rem;}
+.tw-cat{margin-bottom:.8rem;}
+.tw-cat-label{font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.twbtn{padding:4px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--card);
+  color:#7a8aaa;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;
+  transition:all .15s;}
+.twbtn:hover{border-color:rgba(52,211,153,.4);color:var(--g);}
+.twbtn.on{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.45);color:var(--g);}
+
+/* ── WORKSHOP ── */
+.workshop{background:linear-gradient(135deg,rgba(129,140,248,.07),rgba(34,211,238,.04));
+  border:1px solid rgba(129,140,248,.2);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.ws-icon{font-size:1.6rem;}
+.ws-title{font-size:1.1rem;font-weight:700;}
+.ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
+.ws-tasks{display:flex;flex-direction:column;gap:8px;}
+.ws-task{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:12px;}
+.ws-lv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
+.lv3{background:rgba(244,114,182,.12);color:var(--p);border:1px solid rgba(244,114,182,.3);}
+.ws-task-text{font-size:13.5px;line-height:1.55;}
+.ws-task-text strong{color:var(--tx);}
+
+/* ── FINAL CHALLENGE ── */
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.07),rgba(129,140,248,.06));
+  border:1px solid rgba(244,114,182,.25);border-radius:16px;padding:2rem;margin:2rem 0;}
+.ch-title{font-size:1.2rem;font-weight:700;color:var(--p);margin-bottom:.5rem;}
+.ch-badge{display:inline-block;background:rgba(244,114,182,.15);color:var(--p);
+  border:1px solid rgba(244,114,182,.3);border-radius:6px;font-size:11px;
+  padding:3px 10px;font-family:'JetBrains Mono',monospace;margin-bottom:1rem;}
+.ch-preview{background:#060c20;border:1px solid rgba(244,114,182,.2);border-radius:10px;
+  overflow:hidden;margin:1rem 0;}
+.ch-nav-demo{background:#1a1f35;padding:14px 20px;display:flex;
+  justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.ch-hero-demo{padding:32px 20px;text-align:center;
+  background:linear-gradient(135deg,#111830,#1a1038);}
+.ch-links{display:flex;gap:16px;}
+.ch-link{color:#8494b8;font-size:13px;}
+.ch-logo{font-weight:700;color:var(--v);font-size:15px;}
+.ch-btn{background:var(--v2);color:white;padding:7px 18px;border-radius:8px;font-size:13px;}
+.ch-h1{font-size:1.8rem;font-weight:700;margin-bottom:.5rem;}
+.ch-h1 span{color:var(--v);}
+.ch-p{color:#8494b8;font-size:14px;margin-bottom:1rem;}
+
+/* ── UTILS ── */
+.mt1{margin-top:.5rem;} .mt2{margin-top:1rem;} .mt3{margin-top:1.5rem;}
+.mb1{margin-bottom:.5rem;}
+hr.sec-hr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
+.badge-new{background:rgba(244,114,182,.12);color:var(--p);border:1px solid rgba(244,114,182,.25);
+  padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+<div id="rprog"></div>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="snav">
+  <a class="snav-item s1" href="#s1">🏗 HTML Semantic</a>
+  <span class="snav-sep">›</span>
+  <a class="snav-item s2" href="#s2">⚡ CSS Flexbox</a>
+  <span class="snav-sep">›</span>
+  <a class="snav-item s3" href="#s3">🎨 Tailwind Flex</a>
+  <span class="snav-sep">›</span>
+  <a class="snav-item s4" href="#s4">🏁 Challenge</a>
+</nav>
+
+<div class="page">
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="wk-tag">📐 WEEK 03</div>
+  <h1>Flexbox Layout &<br><span>Navigation</span></h1>
+  <p>เรียนรู้การจัดโครงสร้างหน้าเว็บด้วย HTML Semantic, จัดตำแหน่ง Element ด้วย CSS Flexbox และ Tailwind Flex Utilities</p>
+  <div class="hero-chips">
+    <span class="hchip" style="background:rgba(129,140,248,.12);color:var(--v);border:1px solid rgba(129,140,248,.25)">🏗 HTML Semantic</span>
+    <span class="hchip" style="background:rgba(34,211,238,.1);color:var(--c);border:1px solid rgba(34,211,238,.25)">⚡ CSS Flexbox</span>
+    <span class="hchip" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.25)">🎨 Tailwind Flex</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: Navbar + Hero</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1: HTML SEMANTIC
+════════════════════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--v)">01</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--v)">HTML Semantic Elements</h2>
+  <p class="sec-sub">เขียน HTML ให้มีความหมาย — ไม่ใช้แต่ &lt;div&gt;</p>
+
+  <!-- WHY SEMANTIC -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🤔</span> ทำไมต้องใช้ Semantic Tag?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ แบบเดิม — div ทุกอย่าง</div>
+        <div class="cb">
+<span class="cm">&lt;!-- ไม่รู้ว่าแต่ละส่วนคืออะไร --&gt;</span>
+<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"header"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"nav"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"main"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"footer"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--g);margin-bottom:6px;">✅ แบบ Semantic — บอกความหมาย</div>
+        <div class="cb">
+<span class="cm">&lt;!-- Browser, Google, Accessibility รู้ทันที --&gt;</span>
+<span class="t">&lt;header&gt;</span>...<span class="t">&lt;/header&gt;</span>
+<span class="t">&lt;nav&gt;</span>...<span class="t">&lt;/nav&gt;</span>
+<span class="t">&lt;main&gt;</span>...<span class="t">&lt;/main&gt;</span>
+<span class="t">&lt;footer&gt;</span>...<span class="t">&lt;/footer&gt;</span>
+        </div>
+      </div>
+    </div>
+    <div class="info info-v mt2">
+      <span class="ic">💡</span>
+      <span>Semantic HTML ทำให้ <strong style="color:var(--v)">Google จัดอันดับเว็บได้ดีขึ้น</strong>, คนพิการที่ใช้ Screen Reader อ่านเว็บได้, และตัวเองอ่านโค้ดกลับมาเข้าใจได้ง่ายกว่า</span>
+    </div>
+  </div>
+
+  <!-- TAGS TABLE -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">🔖</span> Tags Semantic ที่ต้องรู้</div>
+    <table class="ttable">
+      <thead><tr><th>Tag</th><th>ใช้สำหรับ</th><th>ตัวอย่าง</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag-badge">&lt;header&gt;</span></td><td style="font-size:13.5px;">ส่วนหัวของหน้าหรือ section — โลโก้, ชื่อเว็บ</td><td style="font-size:12px;color:var(--mu)">ด้านบนสุดของหน้า</td></tr>
+        <tr><td><span class="tag-badge">&lt;nav&gt;</span></td><td style="font-size:13.5px;">แถบ Navigation — ลิงก์เมนูต่างๆ</td><td style="font-size:12px;color:var(--mu)">เมนูด้านบน, sidebar</td></tr>
+        <tr><td><span class="tag-badge">&lt;main&gt;</span></td><td style="font-size:13.5px;">เนื้อหาหลักของหน้า — มีได้แค่ 1 ตัวต่อหน้า</td><td style="font-size:12px;color:var(--mu)">พื้นที่เนื้อหาหลัก</td></tr>
+        <tr><td><span class="tag-badge">&lt;section&gt;</span></td><td style="font-size:13.5px;">แบ่งเนื้อหาเป็นหัวข้อ — ควรมี heading</td><td style="font-size:12px;color:var(--mu)">Hero, About, Contact</td></tr>
+        <tr><td><span class="tag-badge">&lt;article&gt;</span></td><td style="font-size:13.5px;">เนื้อหาที่ standalone ได้ — อ่านแยกออกมาก็ได้ความ</td><td style="font-size:12px;color:var(--mu)">บทความ, Product Card</td></tr>
+        <tr><td><span class="tag-badge">&lt;aside&gt;</span></td><td style="font-size:13.5px;">เนื้อหาข้างเคียง — เสริมเนื้อหาหลัก</td><td style="font-size:12px;color:var(--mu)">Sidebar, Related posts</td></tr>
+        <tr><td><span class="tag-badge">&lt;footer&gt;</span></td><td style="font-size:13.5px;">ส่วนท้ายของหน้าหรือ section</td><td style="font-size:12px;color:var(--mu)">Copyright, ลิงก์ท้ายหน้า</td></tr>
+      </tbody>
+    </table>
+    <div class="info info-y mt2">
+      <span class="ic">⚠️</span>
+      <span>Semantic tag <strong style="color:var(--y)">ไม่มีสไตล์พิเศษ</strong> — แสดงผลเหมือน div เลย แต่มีความหมายทาง HTML ที่ Browser และเครื่องมืออื่นๆ เข้าใจ</span>
+    </div>
+  </div>
+
+  <!-- VISUAL DIAGRAM -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">🗂</span> โครงสร้างหน้าเว็บ — มองเห็นภาพ</div>
+    <div class="diagram">
+      <div class="dg-row">
+        <div class="dg-block" style="flex:1;background:rgba(129,140,248,.15);border:1px dashed rgba(129,140,248,.4);color:var(--v);">&lt;header&gt; โลโก้ + ชื่อเว็บ</div>
+      </div>
+      <div class="dg-row">
+        <div class="dg-block" style="flex:1;background:rgba(34,211,238,.12);border:1px dashed rgba(34,211,238,.4);color:var(--c);">&lt;nav&gt; เมนู Home | About | Contact</div>
+      </div>
+      <div class="dg-row" style="align-items:stretch;">
+        <div class="dg-block" style="flex:3;min-height:90px;background:rgba(52,211,153,.1);border:1px dashed rgba(52,211,153,.4);color:var(--g);flex-direction:column;gap:6px;">
+          <div>&lt;main&gt;</div>
+          <div style="display:flex;gap:6px;width:100%;">
+            <div style="flex:1;background:rgba(52,211,153,.15);border-radius:5px;padding:6px;font-size:11px;">&lt;section&gt; Hero</div>
+            <div style="flex:1;background:rgba(52,211,153,.15);border-radius:5px;padding:6px;font-size:11px;">&lt;section&gt; Cards</div>
+          </div>
+        </div>
+        <div class="dg-block" style="flex:1;background:rgba(251,191,36,.08);border:1px dashed rgba(251,191,36,.35);color:var(--y);font-size:11px;">&lt;aside&gt; Sidebar</div>
+      </div>
+      <div class="dg-row">
+        <div class="dg-block" style="flex:1;background:rgba(244,114,182,.1);border:1px dashed rgba(244,114,182,.35);color:var(--p);">&lt;footer&gt; Copyright</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 1 -->
+  <div class="workshop" id="ws1">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 1 — โครงสร้าง Semantic</div>
+        <span class="ws-badge" style="background:rgba(129,140,248,.12);color:var(--v);border:1px solid rgba(129,140,248,.3)">HTML Semantic</span>
+      </div>
+    </div>
+    <p class="ws-desc">แปลง &lt;div&gt; ที่มีอยู่ให้เป็น Semantic tag ที่ถูกต้อง แล้วเขียนโครงสร้างพื้นฐานของหน้าเว็บ cafe.html จาก Week 2 ใหม่โดยใช้ Semantic</p>
+    <div class="ws-tasks">
+      <div class="ws-task">
+        <div class="ws-lv lv1">1</div>
+        <div class="ws-task-text"><strong>พื้นฐาน:</strong> เปิดไฟล์ cafe.html ใส่ semantic tag ให้ถูกต้อง — เปลี่ยน div.header → &lt;header&gt;, div.nav → &lt;nav&gt;, div.content → &lt;main&gt;, div.footer → &lt;footer&gt;</div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv2">2</div>
+        <div class="ws-task-text"><strong>กลาง:</strong> แบ่งส่วนเมนูอาหารใน &lt;main&gt; ออกเป็น &lt;section&gt; ตามหมวดหมู่ (เครื่องดื่ม, ขนม, อาหาร) แต่ละ section มี &lt;h2&gt; เป็น heading</div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv3">3</div>
+        <div class="ws-task-text"><strong>ท้าทาย:</strong> ใช้ &lt;article&gt; สำหรับแต่ละรายการเมนู ภายใน article มี &lt;h3&gt; ชื่อเมนู, &lt;p&gt; คำอธิบาย, &lt;footer&gt; แสดงราคา</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-hr">
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2: CSS FLEXBOX
+════════════════════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--c)">02</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--c)">CSS Flexbox</h2>
+  <p class="sec-sub">จัดตำแหน่ง Element ได้ง่ายด้วย Flexible Box Layout</p>
+
+  <!-- WHAT IS FLEX -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🧠</span> Flexbox คืออะไร?</div>
+    <div class="two">
+      <div>
+        <p style="font-size:14px;color:#94a3b8;line-height:1.8;">
+          ก่อนมี Flexbox การจัดตำแหน่ง element บนเว็บทำได้ยากมาก<br><br>
+          Flexbox คือระบบ layout ที่ทำให้ <strong style="color:var(--tx)">items ข้างในกล่องจัดเรียงตัวเองได้อัตโนมัติ</strong> ตามที่เราต้องการ — จัดกลาง, จัดชิดขอบ, เว้นระยะ — ทำได้หมดด้วย CSS ไม่กี่บรรทัด
+        </p>
+      </div>
+      <div>
+        <div class="cb" style="font-size:13px;">
+<span class="cm">/* เปิดใช้ Flexbox */</span>
+<span class="prop">display</span>: <span class="val">flex</span>;
+
+<span class="cm">/* แค่นี้ ลูกข้างในจะเรียง */</span>
+<span class="cm">/* เป็นแถวนอนแล้ว ✓ */</span>
+        </div>
+        <div class="info info-c mt1">
+          <span class="ic">💡</span>
+          <span>กล่องที่ใส่ <code style="color:var(--c)">display:flex</code> เรียกว่า <strong style="color:var(--c)">Flex Container</strong> — ของข้างในเรียกว่า <strong style="color:var(--c)">Flex Items</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AXIS CONCEPT -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">↔️</span> แกน Main Axis และ Cross Axis</div>
+    <div class="two">
+      <div>
+        <p style="font-size:13.5px;color:#8494b8;margin-bottom:.8rem;line-height:1.7;">Flexbox มี <strong style="color:var(--tx)">แกน 2 แกน</strong> เสมอ — แกนหลักที่ items วิ่ง และแกนตั้งฉากกัน</p>
+        <div style="background:rgba(0,0,0,.3);border-radius:10px;padding:14px;">
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:var(--c);font-family:'JetBrains Mono',monospace;margin-bottom:4px;">flex-direction: row (ค่าเริ่มต้น)</div>
+            <div style="display:flex;align-items:center;gap:8px;height:50px;background:rgba(34,211,238,.06);border-radius:8px;padding:8px;border:1px dashed rgba(34,211,238,.25);position:relative;overflow:hidden;">
+              <div style="position:absolute;bottom:4px;left:10px;right:10px;height:1px;background:rgba(34,211,238,.3);"></div>
+              <div style="position:absolute;bottom:4px;right:14px;color:rgba(34,211,238,.6);font-size:10px;">main axis →</div>
+              <div style="position:absolute;top:4px;right:14px;color:rgba(244,114,182,.6);font-size:10px;writing-mode:vertical-rl;">↕ cross</div>
+              <div style="height:30px;width:30px;background:rgba(129,140,248,.3);border-radius:5px;"></div>
+              <div style="height:30px;width:30px;background:rgba(34,211,238,.3);border-radius:5px;"></div>
+              <div style="height:30px;width:30px;background:rgba(52,211,153,.3);border-radius:5px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:4px;">flex-direction: column</div>
+            <div style="display:flex;flex-direction:column;gap:4px;background:rgba(244,114,182,.05);border-radius:8px;padding:8px;border:1px dashed rgba(244,114,182,.2);">
+              <div style="display:flex;gap:4px;">
+                <div style="height:16px;width:60px;background:rgba(129,140,248,.3);border-radius:4px;"></div>
+                <span style="font-size:10px;color:rgba(244,114,182,.6);align-self:center;">← cross axis</span>
+              </div>
+              <div style="height:16px;width:60px;background:rgba(34,211,238,.3);border-radius:4px;"></div>
+              <div style="height:16px;width:60px;background:rgba(52,211,153,.3);border-radius:4px;"></div>
+              <span style="font-size:10px;color:rgba(244,114,182,.6);">main axis ↓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="prop-card">
+          <div class="prop-name">justify-content</div>
+          <div class="prop-desc">จัดตำแหน่งบน <strong style="color:var(--c)">Main Axis</strong> (แกนหลัก)</div>
+          <div class="cb" style="font-size:12px;">
+<span class="prop">justify-content</span>: <span class="val">flex-start</span>;  <span class="cm">/* ชิดซ้าย */</span>
+<span class="prop">justify-content</span>: <span class="val">center</span>;     <span class="cm">/* กลาง */</span>
+<span class="prop">justify-content</span>: <span class="val">flex-end</span>;    <span class="cm">/* ชิดขวา */</span>
+<span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="cm">/* เว้นขอบ */</span>
+<span class="prop">justify-content</span>: <span class="val">space-evenly</span>;  <span class="cm">/* เว้นเท่ากัน */</span>
+          </div>
+        </div>
+        <div class="prop-card mt1">
+          <div class="prop-name">align-items</div>
+          <div class="prop-desc">จัดตำแหน่งบน <strong style="color:var(--p)">Cross Axis</strong> (แกนตั้งฉาก)</div>
+          <div class="cb" style="font-size:12px;">
+<span class="prop">align-items</span>: <span class="val">flex-start</span>; <span class="cm">/* ชิดบน */</span>
+<span class="prop">align-items</span>: <span class="val">center</span>;     <span class="cm">/* กลาง */</span>
+<span class="prop">align-items</span>: <span class="val">flex-end</span>;   <span class="cm">/* ชิดล่าง */</span>
+<span class="prop">align-items</span>: <span class="val">stretch</span>;    <span class="cm">/* ยืดเต็ม (default) */</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ FLEX SIMULATOR ════ -->
+  <div class="card mt2">
+    <div class="card-title">
+      <span class="icon">🎮</span> Flex Simulator — ลองกดดูผลได้เลย
+      <span class="badge-new">Interactive</span>
+    </div>
+    <div class="info info-c mb1">
+      <span class="ic">👆</span>
+      <span>กดปุ่มด้านล่างเพื่อเปลี่ยน property และดูผลลัพธ์ที่เปลี่ยนตามแบบ real-time</span>
+    </div>
+
+    <div class="sim-box">
+      <!-- PREVIEW -->
+      <div class="sim-preview" id="flexPreview">
+        <div class="sim-item si1">1</div>
+        <div class="sim-item si2">2</div>
+        <div class="sim-item si3">3</div>
+        <div class="sim-item si4">4</div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="sim-controls">
+        <div class="ctrl-group">
+          <div class="ctrl-label">flex-direction</div>
+          <div class="ctrl-btns" id="ctrl-direction">
+            <button class="cbtn on" data-prop="flexDirection" data-val="row">row</button>
+            <button class="cbtn" data-prop="flexDirection" data-val="row-reverse">row-reverse</button>
+            <button class="cbtn" data-prop="flexDirection" data-val="column">column</button>
+            <button class="cbtn" data-prop="flexDirection" data-val="column-reverse">col-reverse</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">justify-content</div>
+          <div class="ctrl-btns" id="ctrl-justify">
+            <button class="cbtn on" data-prop="justifyContent" data-val="flex-start">flex-start</button>
+            <button class="cbtn" data-prop="justifyContent" data-val="center">center</button>
+            <button class="cbtn" data-prop="justifyContent" data-val="flex-end">flex-end</button>
+            <button class="cbtn" data-prop="justifyContent" data-val="space-between">space-between</button>
+            <button class="cbtn" data-prop="justifyContent" data-val="space-around">space-around</button>
+            <button class="cbtn" data-prop="justifyContent" data-val="space-evenly">space-evenly</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">align-items</div>
+          <div class="ctrl-btns" id="ctrl-align">
+            <button class="cbtn" data-prop="alignItems" data-val="flex-start">flex-start</button>
+            <button class="cbtn" data-prop="alignItems" data-val="center">center</button>
+            <button class="cbtn" data-prop="alignItems" data-val="flex-end">flex-end</button>
+            <button class="cbtn on" data-prop="alignItems" data-val="stretch">stretch</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">flex-wrap</div>
+          <div class="ctrl-btns" id="ctrl-wrap">
+            <button class="cbtn on" data-prop="flexWrap" data-val="nowrap">nowrap</button>
+            <button class="cbtn" data-prop="flexWrap" data-val="wrap">wrap</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">gap</div>
+          <div class="ctrl-btns" id="ctrl-gap">
+            <button class="cbtn" data-prop="gap" data-val="0px">0</button>
+            <button class="cbtn on" data-prop="gap" data-val="8px">8px</button>
+            <button class="cbtn" data-prop="gap" data-val="16px">16px</button>
+            <button class="cbtn" data-prop="gap" data-val="24px">24px</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE CODE OUTPUT -->
+      <div class="sim-code">
+        <div class="sim-code-title">CSS ที่ได้ (คัดลอกไปใช้ได้เลย)</div>
+        <div id="css-output">
+          <span class="prop">.container</span> <span class="punc">{</span><br>
+          &nbsp;&nbsp;<span class="prop">display</span>: <span class="val">flex</span>;<br>
+          &nbsp;&nbsp;<span class="prop">flex-direction</span>: <span class="val" id="out-dir">row</span>;<br>
+          &nbsp;&nbsp;<span class="prop">justify-content</span>: <span class="val" id="out-jus">flex-start</span>;<br>
+          &nbsp;&nbsp;<span class="prop">align-items</span>: <span class="val" id="out-ali">stretch</span>;<br>
+          &nbsp;&nbsp;<span class="prop">flex-wrap</span>: <span class="val" id="out-wrp">nowrap</span>;<br>
+          &nbsp;&nbsp;<span class="prop">gap</span>: <span class="val" id="out-gap">8px</span>;<br>
+          <span class="punc">}</span>
+        </div>
+      </div>
+    </div><!-- end sim-box -->
+  </div>
+
+  <!-- FLEX ITEMS -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">📦</span> Flex Items — จัดการแต่ละชิ้น</div>
+    <div class="two">
+      <div>
+        <div class="prop-card">
+          <div class="prop-name">flex: 1 — สำคัญมาก!</div>
+          <div class="prop-desc">ทำให้ item ขยายตัวเต็มพื้นที่ที่เหลือ — ใช้ทำ Navbar บ่อยมาก</div>
+          <div class="cb" style="font-size:12px;">
+<span class="t">&lt;nav</span> <span class="a">style</span>=<span class="v">"display:flex"</span><span class="t">&gt;</span>
+  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"logo"</span><span class="t">&gt;</span>MyBrand<span class="t">&lt;/div&gt;</span>
+
+  <span class="cm">/* กลาง ขยายเต็ม → ดันลิงก์ไปขวา */</span>
+  <span class="t">&lt;div</span> <span class="a">style</span>=<span class="v">"flex:1"</span><span class="t">&gt;&lt;/div&gt;</span>
+
+  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"links"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;/nav&gt;</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#060c20;border-radius:10px;padding:14px;margin-bottom:8px;">
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px;font-family:'JetBrains Mono',monospace;">ตัวอย่างผลลัพธ์</div>
+          <div style="display:flex;align-items:center;background:rgba(129,140,248,.1);border-radius:8px;padding:10px 14px;gap:8px;">
+            <div style="background:var(--v2);color:white;padding:4px 12px;border-radius:6px;font-size:13px;font-weight:600;">Brand</div>
+            <div style="flex:1;"></div>
+            <div style="display:flex;gap:12px;">
+              <span style="color:#8494b8;font-size:13px;">Home</span>
+              <span style="color:#8494b8;font-size:13px;">About</span>
+              <span style="color:#8494b8;font-size:13px;">Contact</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--mu);margin-top:6px;font-family:'JetBrains Mono',monospace;">⬆ flex:1 ดัน links ไปชิดขวา</div>
+        </div>
+        <div class="info info-g">
+          <span class="ic">✨</span>
+          <span><code style="color:var(--g)">flex:1</code> คือ shorthand ของ <code>flex-grow:1 flex-shrink:1 flex-basis:0</code> — จำแค่ว่า "ขยายเต็มพื้นที่"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 2 -->
+  <div class="workshop" id="ws2">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 2 — สร้าง Navbar ด้วย CSS Flex</div>
+        <span class="ws-badge" style="background:rgba(34,211,238,.1);color:var(--c);border:1px solid rgba(34,211,238,.3)">CSS Flexbox</span>
+      </div>
+    </div>
+    <p class="ws-desc">สร้างไฟล์ navbar.html ใหม่ แล้ว build Navbar โดยใช้ CSS Flexbox เขียน style ใน &lt;style&gt; tag ตรงๆ (ยังไม่ใช้ Tailwind)</p>
+    <div class="ws-tasks">
+      <div class="ws-task">
+        <div class="ws-lv lv1">1</div>
+        <div class="ws-task-text"><strong>พื้นฐาน:</strong> สร้าง Navbar ที่มี โลโก้ชื่อร้าน (ซ้าย) และลิงก์เมนู 3 อัน (ขวา) โดยใช้ <code style="color:var(--c)">display:flex</code> + <code style="color:var(--c)">justify-content:space-between</code> + <code style="color:var(--c)">align-items:center</code></div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv2">2</div>
+        <div class="ws-task-text"><strong>กลาง:</strong> เพิ่ม Hero section ใต้ Navbar — ข้อความ + ปุ่ม จัดกึ่งกลาง ทั้ง horizontal และ vertical โดยใช้ <code style="color:var(--c)">flex-direction:column</code> + <code style="color:var(--c)">align-items:center</code> + <code style="color:var(--c)">justify-content:center</code></div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv3">3</div>
+        <div class="ws-task-text"><strong>ท้าทาย:</strong> เพิ่ม Card section 3 ใบโดยใช้ <code style="color:var(--c)">flex</code> + <code style="color:var(--c)">gap</code> และใช้ <code style="color:var(--c)">flex:1</code> ให้ card ขยายเท่ากันหมด</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-hr">
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3: TAILWIND FLEX
+════════════════════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--g)">03</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--g)">Tailwind Flex Utilities</h2>
+  <p class="sec-sub">CSS Flex ทุก property มี Tailwind class รองรับ — เขียนสั้นกว่า ไม่ต้องออกจาก HTML</p>
+
+  <!-- MAPPING TABLE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔄</span> CSS → Tailwind เทียบกันตรงๆ</div>
+    <div class="info info-g mb1">
+      <span class="ic">💡</span>
+      <span>Tailwind ไม่ได้สร้างอะไรใหม่ — มันแค่แปลง CSS ที่เรารู้อยู่แล้วให้เป็น class สั้นๆ ใส่ใน HTML ได้เลย</span>
+    </div>
+    <table class="tw-table">
+      <thead><tr><th>CSS Property</th><th>CSS Value</th><th>Tailwind Class</th></tr></thead>
+      <tbody>
+        <tr>
+          <td rowspan="2" style="vertical-align:top;padding-top:12px;"><span class="css-pill">display</span></td>
+          <td style="font-size:13px;color:#94a3b8;">flex</td>
+          <td><div class="tw-pills"><span class="tw-pill">flex</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">inline-flex</td>
+          <td><div class="tw-pills"><span class="tw-pill">inline-flex</span></div></td>
+        </tr>
+        <tr>
+          <td rowspan="2" style="vertical-align:top;padding-top:12px;"><span class="css-pill">flex-direction</span></td>
+          <td style="font-size:13px;color:#94a3b8;">row / column</td>
+          <td><div class="tw-pills"><span class="tw-pill">flex-row</span><span class="tw-pill">flex-col</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">row-reverse / col-reverse</td>
+          <td><div class="tw-pills"><span class="tw-pill">flex-row-reverse</span><span class="tw-pill">flex-col-reverse</span></div></td>
+        </tr>
+        <tr>
+          <td rowspan="4" style="vertical-align:top;padding-top:12px;"><span class="css-pill">justify-content</span></td>
+          <td style="font-size:13px;color:#94a3b8;">flex-start / flex-end</td>
+          <td><div class="tw-pills"><span class="tw-pill">justify-start</span><span class="tw-pill">justify-end</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">center</td>
+          <td><div class="tw-pills"><span class="tw-pill">justify-center</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">space-between</td>
+          <td><div class="tw-pills"><span class="tw-pill">justify-between</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">space-evenly / space-around</td>
+          <td><div class="tw-pills"><span class="tw-pill">justify-evenly</span><span class="tw-pill">justify-around</span></div></td>
+        </tr>
+        <tr>
+          <td rowspan="3" style="vertical-align:top;padding-top:12px;"><span class="css-pill">align-items</span></td>
+          <td style="font-size:13px;color:#94a3b8;">flex-start / flex-end</td>
+          <td><div class="tw-pills"><span class="tw-pill">items-start</span><span class="tw-pill">items-end</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">center / stretch</td>
+          <td><div class="tw-pills"><span class="tw-pill">items-center</span><span class="tw-pill">items-stretch</span></div></td>
+        </tr>
+        <tr>
+          <td style="font-size:13px;color:#94a3b8;">baseline</td>
+          <td><div class="tw-pills"><span class="tw-pill">items-baseline</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="css-pill">flex-wrap</span></td>
+          <td style="font-size:13px;color:#94a3b8;">wrap / nowrap</td>
+          <td><div class="tw-pills"><span class="tw-pill">flex-wrap</span><span class="tw-pill">flex-nowrap</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="css-pill">gap</span></td>
+          <td style="font-size:13px;color:#94a3b8;">gap, row-gap, column-gap</td>
+          <td><div class="tw-pills"><span class="tw-pill">gap-{n}</span><span class="tw-pill">gap-x-{n}</span><span class="tw-pill">gap-y-{n}</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="css-pill">flex: 1</span></td>
+          <td style="font-size:13px;color:#94a3b8;">flex: 1 1 0</td>
+          <td><div class="tw-pills"><span class="tw-pill">flex-1</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="css-pill">flex-shrink: 0</span></td>
+          <td style="font-size:13px;color:#94a3b8;">ป้องกันการหดตัว</td>
+          <td><div class="tw-pills"><span class="tw-pill">shrink-0</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TAILWIND INTERACTIVE DEMO -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">🎮</span> Tailwind Flex — กดเลือก Class
+      <span class="badge-new">Interactive</span>
+    </div>
+    <div class="info info-g mb1">
+      <span class="ic">👆</span>
+      <span>กดเลือก class ด้านล่าง แล้วดูผลลัพธ์ที่ preview — ทดสอบ class ก่อน copy ไปใช้งานจริง</span>
+    </div>
+
+    <div class="tw-sim-preview" id="twPreview">
+      <div class="tw-sim-item" style="background:rgba(129,140,248,.25);color:var(--v);border:1px solid rgba(129,140,248,.4)">ชิ้นที่ 1</div>
+      <div class="tw-sim-item" style="background:rgba(34,211,238,.2);color:var(--c);border:1px solid rgba(34,211,238,.4)">ชิ้นที่ 2</div>
+      <div class="tw-sim-item" style="background:rgba(52,211,153,.2);color:var(--g);border:1px solid rgba(52,211,153,.4)">ชิ้นที่ 3</div>
+    </div>
+
+    <div class="tw-cat">
+      <div class="tw-cat-label">Direction & Wrap</div>
+      <div class="tw-clicker">
+        <button class="twbtn" data-twprop="flexDirection" data-twval="flex-row" style="--twcss:row">flex-row</button>
+        <button class="twbtn" data-twprop="flexDirection" data-twval="flex-col" style="--twcss:column">flex-col</button>
+        <button class="twbtn" data-twprop="flexWrap" data-twval="flex-wrap" style="--twcss:wrap">flex-wrap</button>
+        <button class="twbtn" data-twprop="flexWrap" data-twval="flex-nowrap" style="--twcss:nowrap">flex-nowrap</button>
+      </div>
+    </div>
+    <div class="tw-cat">
+      <div class="tw-cat-label">justify-content (แกน Main)</div>
+      <div class="tw-clicker">
+        <button class="twbtn" data-twprop="justifyContent" data-twval="justify-start" data-css="flex-start">justify-start</button>
+        <button class="twbtn" data-twprop="justifyContent" data-twval="justify-center" data-css="center">justify-center</button>
+        <button class="twbtn" data-twprop="justifyContent" data-twval="justify-end" data-css="flex-end">justify-end</button>
+        <button class="twbtn" data-twprop="justifyContent" data-twval="justify-between" data-css="space-between">justify-between</button>
+        <button class="twbtn" data-twprop="justifyContent" data-twval="justify-evenly" data-css="space-evenly">justify-evenly</button>
+      </div>
+    </div>
+    <div class="tw-cat">
+      <div class="tw-cat-label">align-items (แกน Cross)</div>
+      <div class="tw-clicker">
+        <button class="twbtn" data-twprop="alignItems" data-twval="items-start" data-css="flex-start">items-start</button>
+        <button class="twbtn" data-twprop="alignItems" data-twval="items-center" data-css="center">items-center</button>
+        <button class="twbtn" data-twprop="alignItems" data-twval="items-end" data-css="flex-end">items-end</button>
+        <button class="twbtn" data-twprop="alignItems" data-twval="items-stretch" data-css="stretch">items-stretch</button>
+      </div>
+    </div>
+    <div class="tw-cat">
+      <div class="tw-cat-label">gap</div>
+      <div class="tw-clicker">
+        <button class="twbtn" data-twprop="gap" data-twval="gap-0" data-css="0px">gap-0</button>
+        <button class="twbtn" data-twprop="gap" data-twval="gap-2" data-css="8px">gap-2</button>
+        <button class="twbtn" data-twprop="gap" data-twval="gap-4" data-css="16px">gap-4</button>
+        <button class="twbtn" data-twprop="gap" data-twval="gap-8" data-css="32px">gap-8</button>
+      </div>
+    </div>
+
+    <!-- live class output -->
+    <div class="sim-code mt2">
+      <div class="sim-code-title">Tailwind Classes ที่ได้</div>
+      <div id="tw-class-output" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--g);padding:4px 0;">
+        &lt;div class="<span id="tw-live-classes">flex</span>"&gt;
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR EXAMPLE IN TAILWIND -->
+  <div class="card mt2">
+    <div class="card-title"><span class="icon">💻</span> ตัวอย่างจริง — Navbar ด้วย Tailwind</div>
+    <div class="two">
+      <div>
+        <div class="cb" style="font-size:12px;">
+<span class="t">&lt;nav</span> <span class="a">class</span>=<span class="v">"flex items-center
+     justify-between px-6 py-3
+     bg-white shadow"</span><span class="t">&gt;</span>
+
+  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"font-bold text-blue-600"</span><span class="t">&gt;</span>
+    MyBrand
+  <span class="t">&lt;/div&gt;</span>
+
+  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"flex gap-6"</span><span class="t">&gt;</span>
+    <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#"</span><span class="t">&gt;</span>Home<span class="t">&lt;/a&gt;</span>
+    <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#"</span><span class="t">&gt;</span>About<span class="t">&lt;/a&gt;</span>
+    <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#"</span><span class="t">&gt;</span>Contact<span class="t">&lt;/a&gt;</span>
+  <span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;/nav&gt;</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">Class ที่ใช้ในตัวอย่างนี้:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+            <span class="tw-pill">flex</span><span style="color:#7a8aaa;">→ display:flex บน nav</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+            <span class="tw-pill">items-center</span><span style="color:#7a8aaa;">→ จัดกลางแนวตั้ง</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+            <span class="tw-pill">justify-between</span><span style="color:#7a8aaa;">→ โลโก้ซ้าย เมนูขวา</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+            <span class="tw-pill">flex gap-6</span><span style="color:#7a8aaa;">→ flex บน div ลิงก์ + ระยะห่าง</span>
+          </div>
+        </div>
+        <div class="info info-g mt2">
+          <span class="ic">🎯</span>
+          <span>สังเกตว่า flex ใช้ได้ทั้งบน nav (container หลัก) และ div ลิงก์ (container ย่อย) — Flex ซ้อน Flex ได้เลย</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 3 -->
+  <div class="workshop" id="ws3">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 3 — แปลง CSS → Tailwind</div>
+        <span class="ws-badge" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.3)">Tailwind Flex</span>
+      </div>
+    </div>
+    <p class="ws-desc">เปิด navbar.html จาก Workshop 2 แล้วแปลง CSS flex ทั้งหมดให้เป็น Tailwind class โดยไม่แก้ผลลัพธ์ที่เห็นบนหน้าจอ</p>
+    <div class="ws-tasks">
+      <div class="ws-task">
+        <div class="ws-lv lv1">1</div>
+        <div class="ws-task-text"><strong>พื้นฐาน:</strong> เพิ่ม Tailwind CDN แล้วแปลง display:flex → class="flex", justify-content:space-between → justify-between, align-items:center → items-center บน Navbar</div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv2">2</div>
+        <div class="ws-task-text"><strong>กลาง:</strong> ลบ &lt;style&gt; tag ทั้งหมดออก แล้วใส่ Tailwind class ให้ครบจนหน้าตาเหมือนเดิม รวมถึง gap, padding, background สี</div>
+      </div>
+      <div class="ws-task">
+        <div class="ws-lv lv3">3</div>
+        <div class="ws-task-text"><strong>ท้าทาย:</strong> เพิ่ม <code style="color:var(--g)">hidden md:flex</code> บน div ลิงก์ เพื่อซ่อนเมนูบนหน้าจอเล็ก และเพิ่มปุ่ม hamburger ที่ซ่อนบน md ขึ้นไป (<code style="color:var(--g)">md:hidden</code>)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-hr">
+
+<!-- ═══════════════════════════════════════════
+     FINAL CHALLENGE
+════════════════════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--p)">04</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--p)">🏁 ชิ้นงาน Week 3</h2>
+  <p class="sec-sub">รวมทุกอย่างที่เรียนมา — สร้าง Navbar + Hero Section</p>
+
+  <div class="challenge">
+    <div class="ch-badge">FINAL CHALLENGE</div>
+    <div class="ch-title">สร้างหน้าเว็บ — Navbar + Hero Section</div>
+    <p style="font-size:14px;color:#b094c8;line-height:1.7;margin-bottom:1rem;">
+      สร้างไฟล์ <code style="color:var(--p);background:rgba(244,114,182,.1);padding:1px 7px;border-radius:4px;">layout.html</code> ที่มี Navbar ครบและ Hero section สวยงาม โดยใช้ทุกสิ่งที่เรียนมาใน Week 3
+    </p>
+
+    <!-- PREVIEW -->
+    <div class="ch-preview">
+      <div class="ch-nav-demo">
+        <div class="ch-logo">✦ MyBrand</div>
+        <div class="ch-links">
+          <span class="ch-link">หน้าแรก</span>
+          <span class="ch-link">เกี่ยวกับ</span>
+          <span class="ch-link">ติดต่อ</span>
+        </div>
+        <div class="ch-btn">เริ่มต้น</div>
+      </div>
+      <div class="ch-hero-demo">
+        <div class="ch-h1">ยินดีต้อนรับสู่ <span>MyBrand</span></div>
+        <div class="ch-p">คำอธิบายสั้นๆ ว่าเว็บนี้คืออะไร และทำไมต้องใช้</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <div style="background:var(--v2);color:white;padding:9px 24px;border-radius:8px;font-size:14px;">เริ่มต้นเลย</div>
+          <div style="background:transparent;color:#94a3b8;padding:9px 24px;border-radius:8px;font-size:14px;border:1px solid rgba(255,255,255,.2);">ดูตัวอย่าง</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:1.2rem;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--p);margin-bottom:.6rem;">✅ Checklist Navbar</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ ใช้ &lt;nav&gt; semantic tag</div>
+          <div>☐ flex items-center justify-between</div>
+          <div>☐ โลโก้ซ้าย / ลิงก์ขวา</div>
+          <div>☐ ลิงก์เมนู 3 อัน ด้วย flex gap-*</div>
+          <div>☐ ปุ่ม CTA 1 ปุ่ม</div>
+          <div>☐ padding และสีพื้นหลัง</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--p);margin-bottom:.6rem;">✅ Checklist Hero</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ ใช้ &lt;section&gt; หรือ &lt;header&gt;</div>
+          <div>☐ flex flex-col items-center justify-center</div>
+          <div>☐ มี h1 หัวข้อใหญ่</div>
+          <div>☐ มี p คำอธิบาย</div>
+          <div>☐ ปุ่ม 2 ปุ่ม (Primary + Secondary)</div>
+          <div>☐ ปุ่มจัด flex gap-*</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">⭐ Bonus (ระดับ 3)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ bg-gradient-to-r บน Hero</div>
+          <div>☐ Navbar ติดบน sticky top-0</div>
+          <div>☐ เพิ่ม Feature section 3 คอลัมน์ ใช้ flex</div>
+          <div>☐ ใช้ space-x-* หรือ space-y-* บางส่วน</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;background:rgba(0,0,0,.25);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:.5rem;">📤 ส่งงาน</div>
+      <div class="cb" style="margin:0;font-size:12px;">
+git add layout.html
+git commit -m <span class="v">"Week 3 navbar + hero layout"</span>
+git push
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
+  <div style="font-size:13px;font-weight:600;color:var(--mu);margin-bottom:1rem;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 3</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+    <div style="background:rgba(129,140,248,.07);border:1px solid rgba(129,140,248,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--v);font-weight:600;font-size:13px;margin-bottom:4px;">✓ HTML Semantic</div>
+      <div style="font-size:12px;color:var(--mu);">nav, header, main, section, article, aside, footer</div>
+    </div>
+    <div style="background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--c);font-weight:600;font-size:13px;margin-bottom:4px;">✓ CSS Flexbox</div>
+      <div style="font-size:12px;color:var(--mu);">display:flex, direction, justify, align, wrap, gap, flex:1</div>
+    </div>
+    <div style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--g);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Tailwind Flex</div>
+      <div style="font-size:12px;color:var(--mu);">flex, flex-col, justify-*, items-*, gap-*, flex-1</div>
+    </div>
+    <div style="background:rgba(244,114,182,.06);border:1px solid rgba(244,114,182,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--p);font-weight:600;font-size:13px;margin-bottom:4px;">✓ ชิ้นงาน</div>
+      <div style="font-size:12px;color:var(--mu);">Navbar + Hero Section ใน layout.html → push GitHub</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
+    <strong style="color:var(--g)">Week 4 →</strong> CSS Grid + Responsive Design — grid-template-columns, auto-fill, minmax(), sm:/md:/lg: breakpoints
+  </div>
+</div>
+
+</div><!-- end .page -->
+
+<script>
+// ─── READ PROGRESS ───
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('rprog').style.width = pct + '%';
+});
+
+// ─── STICKY NAV ACTIVE ───
+const sections = [{id:'s1',cls:'s1'},{id:'s2',cls:'s2'},{id:'s3',cls:'s3'},{id:'s4',cls:'s4'}];
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      document.querySelectorAll('.snav-item').forEach(el => el.classList.remove('active'));
+      const a = document.querySelector('.snav-item.' + e.target.id.replace('s','s'));
+      // find matching nav item
+      const link = document.querySelector(`.snav-item[href="#${e.target.id}"]`);
+      if(link) link.classList.add('active');
+    }
+  });
+}, {threshold: 0.25});
+document.querySelectorAll('.sec').forEach(s => obs.observe(s));
+
+// ─── FLEX SIMULATOR ───
+const fp = document.getElementById('flexPreview');
+const state = {
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'stretch',
+  flexWrap: 'nowrap',
+  gap: '8px'
+};
+const outMap = {
+  flexDirection: 'out-dir', justifyContent: 'out-jus',
+  alignItems: 'out-ali', flexWrap: 'out-wrp', gap: 'out-gap'
+};
+const cssPropMap = {
+  flexDirection: 'flex-direction', justifyContent: 'justify-content',
+  alignItems: 'align-items', flexWrap: 'flex-wrap', gap: 'gap'
+};
+
+function applyFlexState() {
+  Object.entries(state).forEach(([k, v]) => {
+    fp.style[k] = v;
+    const el = document.getElementById(outMap[k]);
+    if(el) el.textContent = v;
+  });
+}
+
+document.querySelectorAll('.cbtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const prop = this.dataset.prop;
+    const val = this.dataset.val;
+    // deselect siblings
+    const parent = this.parentElement;
+    parent.querySelectorAll('.cbtn').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+    state[prop] = val;
+    applyFlexState();
+  });
+});
+
+// ─── TAILWIND FLEX DEMO ───
+const twPreview = document.getElementById('twPreview');
+const twState = {
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'stretch',
+  flexWrap: 'nowrap',
+  gap: '0px'
+};
+const twClassMap = {
+  'flex-row': {flexDirection:'row'},
+  'flex-col': {flexDirection:'column'},
+  'flex-wrap': {flexWrap:'wrap'},
+  'flex-nowrap': {flexWrap:'nowrap'},
+  'justify-start': {justifyContent:'flex-start'},
+  'justify-center': {justifyContent:'center'},
+  'justify-end': {justifyContent:'flex-end'},
+  'justify-between': {justifyContent:'space-between'},
+  'justify-evenly': {justifyContent:'space-evenly'},
+  'items-start': {alignItems:'flex-start'},
+  'items-center': {alignItems:'center'},
+  'items-end': {alignItems:'flex-end'},
+  'items-stretch': {alignItems:'stretch'},
+  'gap-0': {gap:'0px'},
+  'gap-2': {gap:'8px'},
+  'gap-4': {gap:'16px'},
+  'gap-8': {gap:'32px'},
+};
+
+let activeClasses = new Set();
+
+function updateTwPreview() {
+  twPreview.style.display = 'flex';
+  Object.entries(twState).forEach(([k, v]) => { twPreview.style[k] = v; });
+  const cls = ['flex', ...activeClasses].join(' ');
+  document.getElementById('tw-live-classes').textContent = cls;
+}
+
+document.querySelectorAll('.twbtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const twClass = this.dataset.twval;
+    const prop = this.dataset.twprop;
+    // deselect same-prop
+    document.querySelectorAll(`.twbtn[data-twprop="${prop}"]`).forEach(b => {
+      b.classList.remove('on');
+      const old = b.dataset.twval;
+      activeClasses.delete(old);
+    });
+    if(twClassMap[twClass]) {
+      Object.entries(twClassMap[twClass]).forEach(([k, v]) => twState[k] = v);
+    }
+    this.classList.add('on');
+    activeClasses.add(twClass);
+    updateTwPreview();
+  });
+});
+
+updateTwPreview();
+applyFlexState();
+</script>
+</body>
+</html>
+HTMLEOF
