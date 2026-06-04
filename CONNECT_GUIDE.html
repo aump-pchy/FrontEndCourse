@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือเชื่อมต่อ Frontend ↔ Backend · iT-e-Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #16080e;
+    --rose:     #a0163f;
+    --rose-dim: #7d0d30;
+    --rose-lt:  #f0c8d8;
+    --rose-bg:  #fdf2f6;
+    --muted:    #7a5c66;
+    --border:   #e8d5dc;
+    --white:    #ffffff;
+    --code-bg:  #1e0a12;
+    --code-str: #f9a8c9;
+    --code-kw:  #f472b6;
+    --code-cm:  #7a4055;
+    --code-fn:  #fbbf24;
+    --success:  #16a34a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Mitr', sans-serif;
+    background: var(--rose-bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(150deg, #6d0d30 0%, #a0163f 40%, #d45080 75%, #fdf2f6 100%);
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: 'iT-e';
+    position: absolute; right: 40px; top: 20px;
+    font-size: 120px; font-weight: 600;
+    color: rgba(255,255,255,0.05);
+    letter-spacing: -4px; line-height: 1;
+  }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.9);
+    font-size: 11px; font-weight: 400; letter-spacing: 1px;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: 28px; font-weight: 600; color: #fff;
+    line-height: 1.2; margin-bottom: 6px;
+  }
+  header h1 span { color: #f9d0e0; }
+  header p { color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 300; }
+
+  /* ── Flow diagram ── */
+  .flow-bar {
+    background: var(--code-bg);
+    padding: 14px 40px;
+    display: flex; align-items: center; gap: 0;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .flow-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; flex-shrink: 0;
+  }
+  .flow-box {
+    background: rgba(160,22,63,0.3);
+    border: 1px solid rgba(160,22,63,0.5);
+    color: #f0b8cc; font-size: 12px; font-weight: 500;
+    padding: 5px 14px; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .flow-sub { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 300; }
+  .flow-arrow { color: rgba(255,255,255,0.2); font-size: 18px; padding: 0 10px; flex-shrink: 0; }
+
+  /* ── Layout ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ── Steps nav ── */
+  .steps-nav {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .step-pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border); background: var(--white);
+    cursor: pointer; color: var(--muted); transition: all .15s;
+  }
+  .step-pill:hover, .step-pill.active {
+    background: var(--rose); border-color: var(--rose); color: #fff;
+  }
+
+  /* ── Step card ── */
+  .step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(90deg, var(--rose-bg) 0%, var(--white) 100%);
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--rose); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600; flex-shrink: 0;
+  }
+  .step-num.gray { background: #e2d5d9; color: var(--muted); }
+  .step-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+  .step-who {
+    margin-left: auto; font-size: 11px; font-weight: 400;
+    background: var(--rose-lt); color: var(--rose-dim);
+    padding: 3px 10px; border-radius: 10px; flex-shrink: 0;
+  }
+  .step-body { padding: 20px 24px; }
+
+  /* ── Text helpers ── */
+  p { color: var(--muted); font-size: 13px; margin-bottom: 12px; font-weight: 300; }
+  p strong { color: var(--ink); font-weight: 500; }
+  h3 { font-size: 13px; font-weight: 600; color: var(--ink); margin: 16px 0 8px; }
+  h3:first-child { margin-top: 0; }
+
+  /* ── Code block ── */
+  .code-wrap { position: relative; margin: 10px 0 16px; }
+  .code-label {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--rose-dim); color: rgba(255,255,255,0.8);
+    font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+    padding: 3px 10px; border-radius: 6px 6px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border-radius: 0 8px 8px 8px;
+    padding: 16px 18px; overflow-x: auto;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; line-height: 1.7;
+    color: #e2d5d9;
+  }
+  .cm { color: var(--code-cm); }
+  .kw { color: var(--code-kw); }
+  .fn { color: var(--code-fn); }
+  .st { color: var(--code-str); }
+  .nm { color: #93c5fd; }
+  .op { color: rgba(255,255,255,0.4); }
+
+  /* inline code */
+  p code, li code {
+    background: var(--rose-bg);
+    border: 1px solid var(--border);
+    color: var(--rose);
+    font-size: 11px; padding: 1px 6px; border-radius: 4px;
+  }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; margin: 8px 0 16px; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13px; color: var(--muted); font-weight: 300;
+    padding: 4px 0; border-bottom: 1px dashed var(--border);
+  }
+  .checklist li:last-child { border: none; }
+  .ck {
+    width: 18px; height: 18px; border-radius: 5px;
+    background: #dcfce7; border: 1px solid #86efac;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--rose-bg); border: 1px solid var(--border);
+    border-left: 3px solid var(--rose);
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+  }
+  .callout p { margin: 0; font-size: 12px; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th {
+    background: var(--rose-bg); color: var(--rose-dim);
+    font-weight: 500; padding: 8px 12px; text-align: left;
+    border-bottom: 2px solid var(--border); font-size: 12px;
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; }
+  td:first-child { color: var(--ink); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  tr:last-child td { border: none; }
+
+  /* ── Terminal block ── */
+  .terminal {
+    background: #0f0a0d; border-radius: 10px;
+    padding: 14px 16px; margin: 10px 0;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .terminal-line { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 4px; }
+  .terminal-line:last-child { margin: 0; }
+  .prompt { color: var(--rose); font-family: 'JetBrains Mono', monospace; font-size: 12px; flex-shrink: 0; }
+  .cmd { color: #e2d5d9; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .cmt { color: #4a2535; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  /* ── Warning ── */
+  .warn {
+    background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 10px 14px; margin: 10px 0;
+    font-size: 12px; color: #78500a; font-weight: 300;
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 32px 24px;
+    color: var(--border); font-size: 11px; font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">📡 Integration Guide</div>
+  <h1><span>iT</span>-e-Document</h1>
+  <h1 style="font-size:20px; margin-top:4px; font-weight:400;">คู่มือเชื่อมต่อ Frontend ↔ Backend</h1>
+  <p style="margin-top:8px;">แผนกวิชาเทคโนโลยีสารสนเทศ · วิทยาลัยเทคนิคเลย</p>
+</header>
+
+<!-- Flow bar -->
+<div class="flow-bar">
+  <div class="flow-item">
+    <div class="flow-box">Vue</div>
+    <div class="flow-sub">หน้าจอ</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-box">api.js</div>
+    <div class="flow-sub">Axios</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-box">Express</div>
+    <div class="flow-sub">Backend</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-box">Supabase</div>
+    <div class="flow-sub">Database</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Steps nav -->
+  <div class="steps-nav">
+    <div class="step-pill active">Step 0 · Setup</div>
+    <div class="step-pill">Step 1 · Login</div>
+    <div class="step-pill">Step 2 · MemoList</div>
+    <div class="step-pill">Step 3 · MemoForm</div>
+    <div class="step-pill">Step 4 · MemoDetail</div>
+    <div class="step-pill">Step 5 · Guard</div>
+  </div>
+
+  <!-- Step 0 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">0</div>
+      <div>
+        <div class="step-title">ตั้งค่าก่อนทุกอย่าง</div>
+      </div>
+      <div class="step-who">👥 ทุกคน</div>
+    </div>
+    <div class="step-body">
+      <h3>สร้างไฟล์ <code>frontend/.env</code></h3>
+      <div class="code-wrap">
+        <div class="code-label">.env</div>
+        <pre><code><span class="nm">VITE_API_URL</span><span class="op">=</span><span class="st">http://localhost:3000/api</span></code></pre>
+      </div>
+
+      <h3>รัน Server ทั้งสองพร้อมกัน</h3>
+      <div class="terminal">
+        <div class="terminal-line"><span class="prompt">#</span><span class="cmt">terminal 1 — backend</span></div>
+        <div class="terminal-line"><span class="prompt">$</span><span class="cmd">cd backend &amp;&amp; npm run dev</span></div>
+        <div class="terminal-line" style="margin-top:8px;"><span class="prompt">#</span><span class="cmt">terminal 2 — frontend</span></div>
+        <div class="terminal-line"><span class="prompt">$</span><span class="cmd">cd frontend &amp;&amp; npm run dev</span></div>
+      </div>
+      <div class="warn">⚠️ ต้องรัน Backend ทุกครั้งที่ทดสอบ ไม่งั้น API จะ error</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Login · Auth Store</div>
+      </div>
+      <div class="step-who">คนที่ 1</div>
+    </div>
+    <div class="step-body">
+      <p>แก้ไฟล์ <strong>2 ไฟล์</strong> — auth store และ LoginView</p>
+
+      <h3>แก้ <code>src/stores/auth.js</code></h3>
+      <div class="code-wrap">
+        <div class="code-label">stores/auth.js</div>
+        <pre><code><span class="kw">import</span> { defineStore } <span class="kw">from</span> <span class="st">'pinia'</span>
+<span class="kw">import</span> { ref, computed } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> api <span class="kw">from</span> <span class="st">'@/api'</span>
+
+<span class="kw">export const</span> <span class="fn">useAuthStore</span> = <span class="fn">defineStore</span>(<span class="st">'auth'</span>, () => {
+  <span class="kw">const</span> user  = <span class="fn">ref</span>(<span class="nm">JSON</span>.<span class="fn">parse</span>(<span class="nm">localStorage</span>.<span class="fn">getItem</span>(<span class="st">'user'</span>) || <span class="st">'null'</span>))
+  <span class="kw">const</span> token = <span class="fn">ref</span>(<span class="nm">localStorage</span>.<span class="fn">getItem</span>(<span class="st">'token'</span>) || <span class="st">''</span>)
+
+  <span class="kw">const</span> isLoggedIn = <span class="fn">computed</span>(() => !!token.value)
+  <span class="kw">const</span> isAdmin    = <span class="fn">computed</span>(() => user.value?.<span class="nm">role</span> === <span class="st">'admin'</span>)
+
+  <span class="kw">async function</span> <span class="fn">login</span>(email, password) {
+    <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">post</span>(<span class="st">'/auth/login'</span>, { email, password })
+    token.value = data.token
+    user.value  = data.user
+    <span class="nm">localStorage</span>.<span class="fn">setItem</span>(<span class="st">'token'</span>, data.token)
+    <span class="nm">localStorage</span>.<span class="fn">setItem</span>(<span class="st">'user'</span>, <span class="nm">JSON</span>.<span class="fn">stringify</span>(data.user))
+  }
+
+  <span class="kw">function</span> <span class="fn">logout</span>() {
+    token.value = <span class="st">''</span>
+    user.value  = <span class="kw">null</span>
+    <span class="nm">localStorage</span>.<span class="fn">removeItem</span>(<span class="st">'token'</span>)
+    <span class="nm">localStorage</span>.<span class="fn">removeItem</span>(<span class="st">'user'</span>)
+  }
+
+  <span class="kw">return</span> { user, token, isLoggedIn, isAdmin, login, logout }
+})</code></pre>
+      </div>
+
+      <h3>แก้ <code>src/views/LoginView.vue</code> — ส่วน script</h3>
+      <div class="code-wrap">
+        <div class="code-label">LoginView.vue &lt;script setup&gt;</div>
+        <pre><code><span class="kw">import</span> { ref } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> { useRouter } <span class="kw">from</span> <span class="st">'vue-router'</span>
+<span class="kw">import</span> { useAuthStore } <span class="kw">from</span> <span class="st">'@/stores/auth'</span>
+
+<span class="kw">const</span> auth     = <span class="fn">useAuthStore</span>()
+<span class="kw">const</span> router   = <span class="fn">useRouter</span>()
+<span class="kw">const</span> email    = <span class="fn">ref</span>(<span class="st">''</span>)
+<span class="kw">const</span> password = <span class="fn">ref</span>(<span class="st">''</span>)
+<span class="kw">const</span> error    = <span class="fn">ref</span>(<span class="st">''</span>)
+<span class="kw">const</span> loading  = <span class="fn">ref</span>(<span class="kw">false</span>)
+
+<span class="kw">async function</span> <span class="fn">handleLogin</span>() {
+  error.value   = <span class="st">''</span>
+  loading.value = <span class="kw">true</span>
+  <span class="kw">try</span> {
+    <span class="kw">await</span> auth.<span class="fn">login</span>(email.value, password.value)
+    router.<span class="fn">push</span>(<span class="st">'/memos'</span>) <span class="cm">// ← login สำเร็จ ไปหน้า memos</span>
+  } <span class="kw">catch</span> (err) {
+    error.value = <span class="st">'อีเมลหรือรหัสผ่านไม่ถูกต้อง'</span>
+  } <span class="kw">finally</span> {
+    loading.value = <span class="kw">false</span>
+  }
+}</code></pre>
+      </div>
+
+      <h3>✅ ทดสอบ</h3>
+      <ul class="checklist">
+        <li><div class="ck">✓</div>เปิด <code>http://localhost:5173/login</code></li>
+        <li><div class="ck">✓</div>กรอก <code>admin@loeitech.ac.th</code> / <code>123456</code></li>
+        <li><div class="ck">✓</div>ถ้าเข้าหน้า <code>/memos</code> ได้ = สำเร็จ</li>
+        <li><div class="ck">✓</div>เช็ค localStorage ว่ามี <code>token</code> ไหม (DevTools → Application)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div><div class="step-title">MemoList · ดึงข้อมูลมาแสดง</div></div>
+      <div class="step-who">คนที่ 2</div>
+    </div>
+    <div class="step-body">
+      <h3>แก้ <code>src/stores/memo.js</code></h3>
+      <div class="code-wrap">
+        <div class="code-label">stores/memo.js</div>
+        <pre><code><span class="kw">import</span> { defineStore } <span class="kw">from</span> <span class="st">'pinia'</span>
+<span class="kw">import</span> { ref } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> api <span class="kw">from</span> <span class="st">'@/api'</span>
+
+<span class="kw">export const</span> <span class="fn">useMemoStore</span> = <span class="fn">defineStore</span>(<span class="st">'memo'</span>, () => {
+  <span class="kw">const</span> memos   = <span class="fn">ref</span>([])
+  <span class="kw">const</span> current = <span class="fn">ref</span>(<span class="kw">null</span>)
+  <span class="kw">const</span> loading = <span class="fn">ref</span>(<span class="kw">false</span>)
+
+  <span class="kw">async function</span> <span class="fn">fetchMemos</span>(params = {}) {
+    loading.value = <span class="kw">true</span>
+    <span class="kw">try</span> {
+      <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">get</span>(<span class="st">'/memos'</span>, { params })
+      memos.value = data.data
+    } <span class="kw">finally</span> { loading.value = <span class="kw">false</span> }
+  }
+
+  <span class="kw">async function</span> <span class="fn">fetchMemo</span>(id) {
+    <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">get</span>(<span class="st">`/memos/${id}`</span>)
+    current.value = data.data
+  }
+
+  <span class="kw">async function</span> <span class="fn">createMemo</span>(payload) {
+    <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">post</span>(<span class="st">'/memos'</span>, payload)
+    <span class="kw">return</span> data
+  }
+
+  <span class="kw">async function</span> <span class="fn">updateMemo</span>(id, payload) {
+    <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">put</span>(<span class="st">`/memos/${id}`</span>, payload)
+    <span class="kw">return</span> data
+  }
+
+  <span class="kw">async function</span> <span class="fn">deleteMemo</span>(id) {
+    <span class="kw">await</span> api.<span class="fn">delete</span>(<span class="st">`/memos/${id}`</span>)
+    memos.value = memos.value.<span class="fn">filter</span>(m => m.id !== id)
+  }
+
+  <span class="kw">return</span> { memos, current, loading, fetchMemos, fetchMemo, createMemo, updateMemo, deleteMemo }
+})</code></pre>
+      </div>
+
+      <h3>แก้ <code>src/views/MemoListView.vue</code></h3>
+      <div class="code-wrap">
+        <div class="code-label">MemoListView.vue &lt;script setup&gt;</div>
+        <pre><code><span class="kw">import</span> { ref, onMounted, computed } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> { useMemoStore } <span class="kw">from</span> <span class="st">'@/stores/memo'</span>
+
+<span class="kw">const</span> store  = <span class="fn">useMemoStore</span>()
+<span class="kw">const</span> search = <span class="fn">ref</span>(<span class="st">''</span>)
+<span class="kw">const</span> status = <span class="fn">ref</span>(<span class="st">''</span>)
+
+<span class="kw">const</span> memos   = <span class="fn">computed</span>(() => store.memos)
+<span class="kw">const</span> loading = <span class="fn">computed</span>(() => store.loading)
+
+<span class="cm">// โหลดข้อมูลตอนเปิดหน้า</span>
+<span class="fn">onMounted</span>(() => store.<span class="fn">fetchMemos</span>())
+
+<span class="kw">function</span> <span class="fn">handleSearch</span>() {
+  store.<span class="fn">fetchMemos</span>({ search: search.value, status: status.value })
+}</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-label">MemoListView.vue &lt;template&gt; (ตัวอย่าง)</div>
+        <pre><code><span class="op">&lt;</span>div <span class="kw">v-if</span>=<span class="st">"loading"</span><span class="op">&gt;</span>กำลังโหลด...<span class="op">&lt;/</span>div<span class="op">&gt;</span>
+<span class="op">&lt;</span>div <span class="kw">v-else</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span>div <span class="kw">v-for</span>=<span class="st">"memo in memos"</span> <span class="kw">:key</span>=<span class="st">"memo.id"</span><span class="op">&gt;</span>
+    {{ memo.memo_number }} — {{ memo.subject }}
+  <span class="op">&lt;/</span>div<span class="op">&gt;</span>
+<span class="op">&lt;/</span>div<span class="op">&gt;</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div><div class="step-title">MemoForm · สร้าง / แก้ไข</div></div>
+      <div class="step-who">คนที่ 3</div>
+    </div>
+    <div class="step-body">
+      <div class="callout"><p>⚡ <strong>MemoForm ใช้หน้าเดียวกันทั้ง Create และ Edit</strong> — เช็คจาก <code>route.params.id</code> ว่ามีหรือเปล่า</p></div>
+
+      <div class="code-wrap">
+        <div class="code-label">MemoFormView.vue &lt;script setup&gt;</div>
+        <pre><code><span class="kw">import</span> { ref, onMounted, computed } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> { useRoute, useRouter } <span class="kw">from</span> <span class="st">'vue-router'</span>
+<span class="kw">import</span> { useMemoStore } <span class="kw">from</span> <span class="st">'@/stores/memo'</span>
+
+<span class="kw">const</span> store  = <span class="fn">useMemoStore</span>()
+<span class="kw">const</span> route  = <span class="fn">useRoute</span>()
+<span class="kw">const</span> router = <span class="fn">useRouter</span>()
+
+<span class="cm">// เช็คว่าเป็นหน้า Edit หรือ Create</span>
+<span class="kw">const</span> isEdit = <span class="fn">computed</span>(() => !!route.params.id)
+
+<span class="kw">const</span> form = <span class="fn">ref</span>({
+  subject: <span class="st">''</span>, recipient: <span class="st">''</span>, operator: <span class="st">''</span>,
+  content: <span class="st">''</span>, memo_number: <span class="st">''</span>
+})
+<span class="kw">const</span> error = <span class="fn">ref</span>(<span class="st">''</span>)
+
+<span class="cm">// ถ้าเป็น Edit → โหลดข้อมูลเดิมมาใส่ฟอร์ม</span>
+<span class="fn">onMounted</span>(<span class="kw">async</span> () => {
+  <span class="kw">if</span> (isEdit.value) {
+    <span class="kw">await</span> store.<span class="fn">fetchMemo</span>(route.params.id)
+    form.value = { ...store.current }
+  }
+})
+
+<span class="kw">async function</span> <span class="fn">handleSubmit</span>() {
+  error.value = <span class="st">''</span>
+  <span class="kw">try</span> {
+    <span class="kw">if</span> (isEdit.value) {
+      <span class="kw">await</span> store.<span class="fn">updateMemo</span>(route.params.id, form.value)
+    } <span class="kw">else</span> {
+      <span class="kw">await</span> store.<span class="fn">createMemo</span>(form.value)
+    }
+    router.<span class="fn">push</span>(<span class="st">'/memos'</span>)
+  } <span class="kw">catch</span> (err) {
+    error.value = err.response?.data?.message || <span class="st">'เกิดข้อผิดพลาด'</span>
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div><div class="step-title">MemoDetail · ดูรายละเอียด + เปลี่ยนสถานะ</div></div>
+      <div class="step-who">คนที่ 4</div>
+    </div>
+    <div class="step-body">
+      <div class="code-wrap">
+        <div class="code-label">MemoDetailView.vue &lt;script setup&gt;</div>
+        <pre><code><span class="kw">import</span> { onMounted, computed } <span class="kw">from</span> <span class="st">'vue'</span>
+<span class="kw">import</span> { useRoute } <span class="kw">from</span> <span class="st">'vue-router'</span>
+<span class="kw">import</span> { useMemoStore } <span class="kw">from</span> <span class="st">'@/stores/memo'</span>
+
+<span class="kw">const</span> store = <span class="fn">useMemoStore</span>()
+<span class="kw">const</span> route = <span class="fn">useRoute</span>()
+<span class="kw">const</span> memo  = <span class="fn">computed</span>(() => store.current)
+
+<span class="cm">// โหลดข้อมูลตอนเปิดหน้า</span>
+<span class="fn">onMounted</span>(() => store.<span class="fn">fetchMemo</span>(route.params.id))
+
+<span class="cm">// เปลี่ยนสถานะ</span>
+<span class="kw">async function</span> <span class="fn">changeStatus</span>(status) {
+  <span class="kw">await</span> store.<span class="fn">updateMemo</span>(route.params.id, { status })
+}</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-label">template ตัวอย่าง</div>
+        <pre><code><span class="op">&lt;</span>div <span class="kw">v-if</span>=<span class="st">"memo"</span><span class="op">&gt;</span>
+  <span class="op">&lt;</span>h1<span class="op">&gt;</span>{{ memo.memo_number }}<span class="op">&lt;/</span>h1<span class="op">&gt;</span>
+  <span class="op">&lt;</span>p<span class="op">&gt;</span>เรื่อง: {{ memo.subject }}<span class="op">&lt;/</span>p<span class="op">&gt;</span>
+  <span class="op">&lt;</span>p<span class="op">&gt;</span>เรียน: {{ memo.recipient }}<span class="op">&lt;/</span>p<span class="op">&gt;</span>
+  <span class="op">&lt;</span>p<span class="op">&gt;</span>ผู้ดำเนินงาน: {{ memo.operator }}<span class="op">&lt;/</span>p<span class="op">&gt;</span>
+  <span class="op">&lt;</span>button <span class="kw">@click</span>=<span class="st">"changeStatus('completed')"</span><span class="op">&gt;</span>เสร็จสิ้น<span class="op">&lt;/</span>button<span class="op">&gt;</span>
+<span class="op">&lt;/</span>div<span class="op">&gt;</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num gray">5</div>
+      <div><div class="step-title">เปิด Route Guard · ทำหลังสุด</div></div>
+      <div class="step-who">👥 ทุกคน</div>
+    </div>
+    <div class="step-body">
+      <div class="warn">⚠️ ทำขั้นนี้ <strong>หลังจากทุก feature ทดสอบผ่านแล้วเท่านั้น</strong></div>
+
+      <h3>1. เปิด <code>verifyToken</code> ใน backend routes ทุกไฟล์</h3>
+      <div class="code-wrap">
+        <div class="code-label">routes/memos.js และ routes/users.js</div>
+        <pre><code><span class="cm">// เอา comment ออก</span>
+router.<span class="fn">use</span>(verifyToken)
+router.<span class="fn">use</span>(verifyToken, verifyAdmin)</code></pre>
+      </div>
+
+      <h3>2. เปิด Route Guard ใน <code>src/router/index.js</code></h3>
+      <div class="code-wrap">
+        <div class="code-label">router/index.js</div>
+        <pre><code>router.<span class="fn">beforeEach</span>((to, _, next) => {
+  <span class="kw">const</span> auth = <span class="fn">useAuthStore</span>()
+  <span class="kw">if</span> (!to.meta.public && !auth.isLoggedIn) <span class="kw">return</span> next(<span class="st">'/login'</span>)
+  <span class="kw">if</span> (to.name === <span class="st">'login'</span> && auth.isLoggedIn) <span class="kw">return</span> next(<span class="st">'/memos'</span>)
+  <span class="fn">next</span>()
+})</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#e2d5d9;color:var(--muted);">🧪</div>
+      <div><div class="step-title">ปัญหาที่เจอบ่อย</div></div>
+    </div>
+    <div class="step-body">
+      <table>
+        <tr><th>ปัญหา</th><th>สาเหตุ</th><th>แก้ยังไง</th></tr>
+        <tr><td>Network Error</td><td>Backend ไม่ได้รัน</td><td><code>cd backend &amp;&amp; npm run dev</code></td></tr>
+        <tr><td>401 Unauthorized</td><td>ไม่มี token</td><td>Login ก่อน</td></tr>
+        <tr><td>CORS Error</td><td>FRONTEND_URL ใน .env ผิด</td><td>เช็ค port ให้ตรง</td></tr>
+        <tr><td>ข้อมูลไม่ขึ้น</td><td>ลืมเรียก fetchMemos()</td><td>เพิ่มใน onMounted()</td></tr>
+        <tr><td>Cannot read role</td><td>verifyToken ถูก comment ออก</td><td>เช็ค route ว่า comment อะไรไว้บ้าง</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>iT-e-Document · แผนกวิชาเทคโนโลยีสารสนเทศ · วิทยาลัยเทคนิคเลย</footer>
+
+</body>
+</html>
