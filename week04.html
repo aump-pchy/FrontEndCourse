@@ -3,52 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Week 4 — CSS Grid & Responsive | 31901-2004</title>
+<title>Week 8 — React & JSX | 31901-2004</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#060a18; --surf:#0c1028; --card:#111830; --card2:#161c38;
-  --bd:rgba(130,150,255,0.09); --bd2:rgba(130,150,255,0.2);
-  --or:#fb923c; --or2:#f97316;   /* orange — CSS Grid */
-  --pu:#a78bfa; --pu2:#8b5cf6;  /* purple — Tailwind Grid */
-  --cy:#22d3ee; --cy2:#06b6d4;  /* cyan — Responsive */
-  --pk:#f472b6; --pk2:#ec4899;  /* pink — Challenge */
-  --g:#34d399; --y:#fbbf24; --r:#f87171;
-  --tx:#e2e8f0; --mu:#546280;
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,0.09);--bd2:rgba(130,150,255,0.2);
+  --js:#34d399;--js2:#10b981;       /* green — JS */
+  --re:#61dafb;--re2:#38bdf8;       /* react blue */
+  --jsx:#a78bfa;--jsx2:#8b5cf6;     /* purple — JSX */
+  --co:#fb923c;--co2:#f97316;       /* orange — Component */
+  --pk:#f472b6;--y:#fbbf24;--r:#f87171;
+  --tx:#e2e8f0;--mu:#546280;
 }
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;font-weight:400;line-height:1.7;overflow-x:hidden;}
 
-/* PROGRESS */
 #rp{position:fixed;top:0;left:0;height:3px;width:0;z-index:999;
-  background:linear-gradient(90deg,var(--or),var(--pu),var(--cy));}
+  background:linear-gradient(90deg,var(--js),var(--re),var(--jsx),var(--co));}
 
-/* STICKY NAV */
-.snav{position:sticky;top:0;z-index:100;
-  background:rgba(6,10,24,0.88);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--bd);height:52px;
-  display:flex;align-items:center;gap:6px;padding:0 1.5rem;overflow-x:auto;}
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  height:52px;display:flex;align-items:center;gap:6px;padding:0 1.5rem;overflow-x:auto;}
 .sni{white-space:nowrap;padding:5px 14px;border-radius:100px;font-size:13px;font-weight:500;
   color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
 .sni:hover{color:var(--tx);border-color:var(--bd2);background:var(--card);}
-.sni.a1.on{color:var(--or);border-color:rgba(251,146,60,.35);}
-.sni.a2.on{color:var(--pu);border-color:rgba(167,139,250,.35);}
-.sni.a3.on{color:var(--cy);border-color:rgba(34,211,238,.35);}
-.sni.a4.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
+.sni.a1.on{color:var(--js);border-color:rgba(52,211,153,.35);}
+.sni.a2.on{color:var(--re);border-color:rgba(97,218,251,.35);}
+.sni.a3.on{color:var(--jsx);border-color:rgba(167,139,250,.35);}
+.sni.a4.on{color:var(--co);border-color:rgba(251,146,60,.35);}
+.sni.a5.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
 .nsep{color:var(--bd2);font-size:11px;flex-shrink:0;}
 
-/* PAGE */
 .page{max-width:880px;margin:0 auto;padding:0 1.25rem 5rem;}
 
 /* HERO */
 .hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
 .wk-tag{display:inline-flex;align-items:center;gap:7px;
-  background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);
-  color:var(--or);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+  background:rgba(97,218,251,.1);border:1px solid rgba(97,218,251,.3);
+  color:var(--re);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
 .hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
-.hero h1 span{background:linear-gradient(135deg,var(--or),var(--pu));
+.hero h1 span{background:linear-gradient(135deg,var(--js),var(--re));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero p{color:#94a3c8;font-size:15px;max-width:560px;margin-bottom:1.8rem;}
 .hchips{display:flex;gap:8px;flex-wrap:wrap;}
@@ -65,430 +62,348 @@ hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
 
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;}
-.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;}
+.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
 @media(max-width:640px){.two{grid-template-columns:1fr;}}
 
 /* CODE */
-.cb{background:#070c1e;border:1px solid rgba(255,255,255,0.06);border-radius:10px;
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:10px;
   padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
   line-height:1.8;overflow-x:auto;margin:.7rem 0;user-select:text;}
 .t{color:#89dceb;}.a{color:#a6e3a1;}.v{color:#fab387;}
-.k{color:#cba6f7;}.cm{color:#454c6b;}.prop{color:#89dceb;}.val{color:#a6e3a1;}
+.k{color:#cba6f7;}.cm{color:#454c6b;}.kw{color:#ff79c6;}
+.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
 
 /* INFO */
-.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;line-height:1.6;
-  display:flex;align-items:flex-start;gap:10px;}
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
 .ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.ij{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+.ix{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
 .io{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);color:#f0c8a0;}
-.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
-.ic2{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);color:#9ee5f5;}
 .iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
-.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.ir2{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
 
-/* BADGE */
 .badge-new{background:rgba(244,114,182,.1);color:var(--pk);border:1px solid rgba(244,114,182,.25);
   padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
-.tw-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--g);
-  background:rgba(52,211,153,.1);padding:2px 7px;border-radius:5px;margin:1px;display:inline-block;}
-.css-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--cy);
-  background:rgba(34,211,238,.1);padding:2px 8px;border-radius:5px;}
+.tag-b{font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 8px;border-radius:5px;}
 
-/* ═══ GRID SIMULATOR ═══ */
-.sim-box{background:var(--surf);border:1px solid var(--bd2);border-radius:16px;padding:1.5rem;margin:1rem 0;}
-.grid-preview{
-  background:#060c20;border:2px solid rgba(251,146,60,.2);border-radius:12px;
-  padding:14px;min-height:200px;display:grid;gap:10px;
-  grid-template-columns:repeat(3,1fr);
-  transition:all .35s ease;margin-bottom:1.2rem;position:relative;}
-.grid-preview::before{content:'GRID CONTAINER';position:absolute;top:-11px;left:14px;
-  background:var(--surf);padding:0 8px;
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  color:rgba(251,146,60,.6);letter-spacing:.12em;}
-.gi{border-radius:8px;display:flex;align-items:center;justify-content:center;
-  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;
-  min-height:52px;transition:all .35s;}
-.gi1{background:rgba(251,146,60,.2);border:1px solid rgba(251,146,60,.45);color:var(--or);}
-.gi2{background:rgba(167,139,250,.18);border:1px solid rgba(167,139,250,.45);color:var(--pu);}
-.gi3{background:rgba(34,211,238,.15);border:1px solid rgba(34,211,238,.4);color:var(--cy);}
-.gi4{background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.4);color:var(--pk);}
-.gi5{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:var(--y);}
-.gi6{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);color:var(--g);}
-
-.sim-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:1rem;}
-.ctrl-g{background:rgba(0,0,0,.25);border-radius:10px;padding:12px 14px;}
-.ctrl-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
-.ctrl-btns{display:flex;gap:5px;flex-wrap:wrap;}
-.cbtn{padding:4px 11px;border-radius:6px;border:1px solid var(--bd2);background:var(--card);
-  color:#8494b8;font-family:'JetBrains Mono',monospace;font-size:11.5px;cursor:pointer;transition:all .15s;}
-.cbtn:hover{border-color:rgba(251,146,60,.4);color:var(--or);}
-.cbtn.on{background:rgba(251,146,60,.12);border-color:rgba(251,146,60,.5);color:var(--or);}
-
-.sim-code{background:#060c20;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px 18px;}
-.sim-code-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
-  letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;}
-
-/* ═══ RESPONSIVE SIMULATOR ═══ */
-.res-sim{background:var(--surf);border:1px solid var(--bd2);border-radius:16px;padding:1.5rem;margin:1rem 0;}
-.device-tabs{display:flex;gap:8px;margin-bottom:1.2rem;flex-wrap:wrap;}
-.dtab{display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:10px;
-  border:1px solid var(--bd2);background:var(--card);cursor:pointer;
-  font-size:13px;font-weight:500;transition:all .2s;color:var(--mu);}
-.dtab:hover{border-color:rgba(34,211,238,.4);color:var(--cy);}
-.dtab.on{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.45);color:var(--cy);}
-.dtab-icon{font-size:1.1rem;}
-.dtab-info{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);margin-top:1px;}
-
-.device-frame{background:#060c20;border:2px solid rgba(34,211,238,.15);border-radius:12px;
-  overflow:hidden;transition:all .4s ease;}
-.frame-bar{background:#111828;height:28px;display:flex;align-items:center;gap:6px;padding:0 12px;}
-.fbar-dot{width:8px;height:8px;border-radius:50%;}
-.frame-url{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;margin:0 8px;}
-.frame-content{padding:12px;}
-.res-item{border-radius:7px;overflow:hidden;margin-bottom:8px;}
-.res-nav{background:rgba(251,146,60,.15);border:1px solid rgba(251,146,60,.3);
-  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
-.res-logo{font-size:13px;font-weight:600;color:var(--or);}
-.res-links{display:flex;gap:12px;}
-.res-link{font-size:11px;color:#8494b8;}
-.res-cards{display:grid;gap:8px;}
-.res-card{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:7px;
-  overflow:hidden;}
-.res-card-img{background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(34,211,238,.15));
-  height:60px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
-.res-card-body{padding:8px;font-size:11px;color:#7a8aaa;}
-.res-card-title{font-weight:600;color:var(--tx);font-size:12px;margin-bottom:2px;}
-
-.class-highlight{background:rgba(0,0,0,.3);border-radius:10px;padding:12px 14px;margin-top:.8rem;}
-.ch-title{font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
-.bp-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
-.bp-tag{font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;
-  border-radius:5px;flex-shrink:0;}
-.bp-active{background:rgba(34,211,238,.15);color:var(--cy);border:1px solid rgba(34,211,238,.35);}
-.bp-dim{background:rgba(255,255,255,.04);color:var(--mu);border:1px solid var(--bd);}
-.bp-arrow{font-size:10px;color:var(--mu);}
-
-/* TAILWIND TABLE */
-.tw-table{width:100%;border-collapse:collapse;font-size:13px;}
-.tw-table th{padding:9px 12px;text-align:left;font-size:11.5px;color:var(--mu);
+/* COMPARE TABLE */
+.cmp{width:100%;border-collapse:collapse;font-size:13px;}
+.cmp th{padding:9px 12px;text-align:left;font-size:11.5px;color:var(--mu);
   font-weight:500;border-bottom:1px solid var(--bd);}
-.tw-table td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:middle;}
-.tw-table tr:last-child td{border-bottom:none;}
-.tw-table tr:hover td{background:rgba(255,255,255,.02);}
-.tw-pills{display:flex;gap:4px;flex-wrap:wrap;}
+.cmp td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.cmp tr:last-child td{border-bottom:none;}
+.cmp tr:hover td{background:rgba(255,255,255,.02);}
 
-/* GRID VISUAL EXAMPLES */
-.grid-ex{background:#060c20;border-radius:10px;padding:12px;margin:.7rem 0;}
-.gex-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--or);
-  margin-bottom:8px;letter-spacing:.05em;}
-.gex-grid{display:grid;gap:5px;}
-.gex-item{border-radius:5px;padding:6px 8px;font-size:11px;font-family:'JetBrains Mono',monospace;
-  text-align:center;display:flex;align-items:center;justify-content:center;min-height:32px;}
-.gc1{background:rgba(251,146,60,.15);color:var(--or);}
-.gc2{background:rgba(167,139,250,.15);color:var(--pu);}
-.gc3{background:rgba(34,211,238,.12);color:var(--cy);}
-.gc4{background:rgba(244,114,182,.12);color:var(--pk);}
-.gc5{background:rgba(52,211,153,.12);color:var(--g);}
-.gc6{background:rgba(251,191,36,.1);color:var(--y);}
+/* PC */
+.pc{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:1rem;margin-bottom:.7rem;}
+.pn{font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:5px;}
+.pd{font-size:13px;color:#8494b8;margin-bottom:.5rem;}
 
-/* BREAKPOINT CHART */
-.bp-chart{display:flex;flex-direction:column;gap:6px;margin:.7rem 0;}
-.bp-row2{display:flex;align-items:center;gap:10px;}
-.bp-name{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--pu);width:40px;flex-shrink:0;}
-.bp-px{font-size:12px;color:var(--mu);width:80px;flex-shrink:0;}
-.bp-bar{height:8px;border-radius:4px;background:rgba(167,139,250,.2);
-  border-left:2px solid var(--pu);transition:width .3s;}
-.bp-none{color:var(--or);font-size:11px;font-family:'JetBrains Mono',monospace;}
+/* ═══ TEMPLATE LITERAL SIMULATOR ═══ */
+.tl-sim{background:var(--surf);border:1px solid rgba(52,211,153,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.tl-inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:1.2rem;}
+.tl-field{display:flex;flex-direction:column;gap:5px;}
+.tl-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;}
+.tl-input{background:var(--card);border:1px solid rgba(52,211,153,.25);border-radius:8px;
+  padding:8px 12px;color:var(--tx);font-family:'Mitr',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s;}
+.tl-input:focus{border-color:rgba(52,211,153,.6);}
+.tl-output{background:#060c20;border-radius:10px;padding:16px 20px;}
+.tl-out-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+.tl-code-line{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;margin-bottom:4px;}
+.tl-result{font-size:14px;color:var(--js);margin-top:8px;padding:10px 14px;
+  background:rgba(52,211,153,.07);border-radius:8px;border:1px solid rgba(52,211,153,.2);}
+
+/* ═══ COMPONENT VISUALIZER ═══ */
+.comp-vis{background:var(--surf);border:1px solid rgba(167,139,250,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:600px){.cv-grid{grid-template-columns:1fr;}}
+.cv-panel{background:var(--card2);border-radius:12px;overflow:hidden;}
+.cv-panel-head{padding:8px 14px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--bd);}
+.cv-panel-body{padding:14px;}
+
+.cv-inputs{display:flex;flex-direction:column;gap:8px;}
+.cv-field{display:flex;align-items:center;gap:8px;}
+.cv-key{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--jsx);width:60px;flex-shrink:0;}
+.cv-val{background:var(--card);border:1px solid rgba(167,139,250,.25);border-radius:7px;
+  padding:6px 10px;color:var(--tx);font-family:'Mitr',sans-serif;font-size:13px;
+  outline:none;flex:1;transition:border-color .2s;}
+.cv-val:focus{border-color:rgba(167,139,250,.55);}
+
+/* RENDERED CARD */
+.rendered-card{background:white;border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.rc-img{height:80px;display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;background:linear-gradient(135deg,#f3e8ff,#ede9fe);}
+.rc-body{padding:12px 14px;}
+.rc-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
+.rc-role{font-size:12px;color:#6b7280;margin-bottom:6px;}
+.rc-school{font-size:11px;color:#9ca3af;border-top:1px solid #f3f4f6;padding-top:6px;margin-top:6px;}
+.rc-like{display:flex;align-items:center;gap:6px;font-size:12px;color:#6b7280;margin-top:6px;}
+
+/* JSX HIGHLIGHT */
+.jsx-preview{background:#060c20;border-radius:10px;padding:14px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;}
+.jx-tag{color:#89dceb;}.jx-attr{color:#a6e3a1;}.jx-val{color:#f1fa8c;}
+.jx-brace{color:#bd93f9;}.jx-fn{color:#61dafb;}.jx-cm{color:#454c6b;}
+.jx-str{color:#fab387;}.jx-kw{color:#ff79c6;}
+.highlight-prop{background:rgba(167,139,250,.15);border-radius:3px;padding:0 2px;
+  transition:background .3s;}
+
+/* VITE SETUP */
+.setup-steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:14px;position:relative;padding-bottom:1.2rem;}
+.step:last-child{padding-bottom:0;}
+.step:not(:last-child)::after{content:'';position:absolute;left:18px;top:38px;
+  bottom:0;width:1px;background:var(--bd);}
+.step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;}
+.step-body{flex:1;padding-top:6px;}
+.step-title{font-weight:600;font-size:14px;margin-bottom:.4rem;}
+
+/* FOLDER TREE */
+.tree{background:#060c20;border-radius:10px;padding:14px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;}
+.tr{display:flex;align-items:center;gap:6px;}
+.tr-icon{flex-shrink:0;}
+.tr-name{color:#e2e8f0;}
+.tr-dir{color:var(--re);}
+.tr-focus{color:var(--jsx);background:rgba(167,139,250,.1);border-radius:4px;padding:0 6px;}
+.tr-cm{color:#454c6b;font-size:11px;}
+.i1{padding-left:0px;}
+.i2{padding-left:18px;}
+.i3{padding-left:36px;}
+.i4{padding-left:54px;}
 
 /* WORKSHOP */
-.ws{background:linear-gradient(135deg,rgba(251,146,60,.06),rgba(167,139,250,.04));
-  border:1px solid rgba(251,146,60,.18);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws{background:linear-gradient(135deg,rgba(97,218,251,.05),rgba(167,139,250,.04));
+  border:1px solid rgba(97,218,251,.18);border-radius:16px;padding:1.5rem;margin:2rem 0;}
 .ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
 .ws-icon{font-size:1.6rem;}
 .ws-title{font-size:1.1rem;font-weight:700;}
 .ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
 .ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
 .ws-tasks{display:flex;flex-direction:column;gap:8px;}
-.ws-task{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;
+.wt{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;
   display:flex;align-items:flex-start;gap:12px;}
-.wslv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;
-  font-family:'JetBrains Mono',monospace;}
-.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.wlv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.lv1{background:rgba(52,211,153,.15);color:var(--js);border:1px solid rgba(52,211,153,.3);}
 .lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
 .lv3{background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.3);}
-.ws-tt{font-size:13.5px;line-height:1.55;}
-.ws-tt strong{color:var(--tx);}
+.wt-text{font-size:13.5px;line-height:1.55;}
+.wt-text strong{color:var(--tx);}
 
 /* CHALLENGE */
-.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(251,146,60,.04));
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(97,218,251,.04));
   border:1px solid rgba(244,114,182,.22);border-radius:16px;padding:2rem;margin:2rem 0;}
-
-/* PROP CARD */
-.pc{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:1rem;margin-bottom:.7rem;}
-.pn{font-family:'JetBrains Mono',monospace;color:var(--cy);font-size:13px;margin-bottom:5px;}
-.pd{font-size:13px;color:#8494b8;margin-bottom:.5rem;}
 </style>
 </head>
 <body>
 <div id="rp"></div>
 
-<!-- NAV -->
 <nav class="snav">
-  <a class="sni a1" href="#s1">📐 CSS Grid</a>
+  <a class="sni a1" href="#s1">🟢 JS พื้นฐาน</a>
   <span class="nsep">›</span>
-  <a class="sni a2" href="#s2">🟣 Tailwind Grid</a>
+  <a class="sni a2" href="#s2">⚛️ React คืออะไร</a>
   <span class="nsep">›</span>
-  <a class="sni a3" href="#s3">📱 Responsive</a>
+  <a class="sni a3" href="#s3">🛠 Setup</a>
   <span class="nsep">›</span>
-  <a class="sni a4" href="#s4">🏁 Challenge</a>
+  <a class="sni a4" href="#s4">🟣 JSX + Component</a>
+  <span class="nsep">›</span>
+  <a class="sni a5" href="#s5">🏁 Challenge</a>
 </nav>
 
 <div class="page">
 
 <!-- HERO -->
 <div class="hero">
-  <div class="wk-tag">🗂 WEEK 04</div>
-  <h1>CSS Grid &<br><span>Responsive Design</span></h1>
-  <p>จัด layout แบบ 2 มิติด้วย CSS Grid และทำให้เว็บแสดงผลดีบนทุกขนาดหน้าจอด้วย Responsive Design</p>
+  <div class="wk-tag">⚛️ WEEK 08</div>
+  <h1>JavaScript + <span>React เบื้องต้น</span></h1>
+  <p>เรียน JS ที่ React ต้องใช้จริงๆ แล้วสร้าง Component แรกด้วย JSX ทันที — ไม่สอน JS แยก</p>
   <div class="hchips">
-    <span class="hchip" style="background:rgba(251,146,60,.1);color:var(--or);border:1px solid rgba(251,146,60,.25)">📐 CSS Grid</span>
-    <span class="hchip" style="background:rgba(167,139,250,.1);color:var(--pu);border:1px solid rgba(167,139,250,.25)">🟣 Tailwind Grid</span>
-    <span class="hchip" style="background:rgba(34,211,238,.08);color:var(--cy);border:1px solid rgba(34,211,238,.25)">📱 Responsive Design</span>
-    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: Menu Card Grid</span>
+    <span class="hchip" style="background:rgba(52,211,153,.1);color:var(--js);border:1px solid rgba(52,211,153,.25)">🟢 const/let + Template Literal</span>
+    <span class="hchip" style="background:rgba(97,218,251,.1);color:var(--re);border:1px solid rgba(97,218,251,.25)">⚛️ React คืออะไร</span>
+    <span class="hchip" style="background:rgba(167,139,250,.1);color:var(--jsx);border:1px solid rgba(167,139,250,.25)">🟣 JSX + Function Component</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: ProfileCard</span>
   </div>
 </div>
 
 <!-- ═══════════════════════════
-     S1: CSS GRID
+     S1: JS พื้นฐาน
 ════════════════════════════ -->
 <div class="sec" id="s1">
   <div class="sec-head">
-    <span class="sec-num" style="color:var(--or)">01</span>
+    <span class="sec-num" style="color:var(--js)">01</span>
     <div class="sec-line"></div>
   </div>
-  <h2 class="sec-title" style="color:var(--or)">CSS Grid</h2>
-  <p class="sec-sub">จัด layout แบบ 2 มิติ — แถวและคอลัมน์พร้อมกันได้เลย</p>
+  <h2 class="sec-title" style="color:var(--js)">JavaScript พื้นฐาน</h2>
+  <p class="sec-sub">สอนเฉพาะ JS ที่ React ต้องใช้ใน Week นี้ — const/let, string, template literal</p>
 
-  <!-- FLEX VS GRID -->
+  <!-- CONST LET -->
   <div class="card">
-    <div class="card-t"><span>🤔</span> Flexbox กับ Grid — ต่างกันยังไง?</div>
+    <div class="card-t"><span>📦</span> const และ let — ประกาศตัวแปร</div>
     <div class="two">
       <div>
-        <div style="background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);border-radius:10px;padding:14px;margin-bottom:8px;">
-          <div style="color:var(--cy);font-weight:600;font-size:13px;margin-bottom:8px;">Flexbox — 1 มิติ</div>
-          <div style="display:flex;gap:6px;align-items:center;background:rgba(0,0,0,.2);border-radius:7px;padding:10px;">
-            <div style="background:rgba(34,211,238,.25);border-radius:5px;padding:6px 12px;font-size:11px;color:var(--cy);">A</div>
-            <div style="background:rgba(34,211,238,.25);border-radius:5px;padding:6px 12px;font-size:11px;color:var(--cy);">B</div>
-            <div style="background:rgba(34,211,248,.25);border-radius:5px;padding:6px 12px;font-size:11px;color:var(--cy);">C</div>
-          </div>
-          <div style="font-size:12px;color:#7a8aaa;margin-top:8px;">จัดแนวเดียว — แถว หรือ คอลัมน์</div>
+        <div class="cb">
+<span class="cm">// let — เปลี่ยนค่าได้</span>
+<span class="kw">let</span> score = <span class="num">0</span>
+score = <span class="num">10</span>   <span class="cm">// ✅ เปลี่ยนได้</span>
+
+<span class="cm">// const — เปลี่ยนค่าไม่ได้</span>
+<span class="kw">const</span> name = <span class="str">"สมชาย"</span>
+name = <span class="str">"สมหญิง"</span>  <span class="cm">// ❌ Error!</span>
+
+<span class="cm">// React ใช้ const เกือบทั้งหมด</span>
+<span class="kw">const</span> title = <span class="str">"ProfileCard"</span>
+<span class="kw">const</span> age = <span class="num">20</span>
+<span class="kw">const</span> isStudent = <span class="kw">true</span>
         </div>
-        <div class="info io"><span class="ic">✅</span><span>ใช้ Flex เมื่อต้องการ<strong style="color:var(--or)"> Navbar, ปุ่ม, items แนวนอน</strong></span></div>
       </div>
       <div>
-        <div style="background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);border-radius:10px;padding:14px;margin-bottom:8px;">
-          <div style="color:var(--or);font-weight:600;font-size:13px;margin-bottom:8px;">Grid — 2 มิติ</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:rgba(0,0,0,.2);border-radius:7px;padding:10px;">
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">A</div>
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">B</div>
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">C</div>
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">D</div>
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">E</div>
-            <div style="background:rgba(251,146,60,.25);border-radius:4px;padding:6px;text-align:center;font-size:11px;color:var(--or);">F</div>
-          </div>
-          <div style="font-size:12px;color:#7a8aaa;margin-top:8px;">จัดแถวและคอลัมน์พร้อมกัน</div>
+        <div class="pc">
+          <div class="pn" style="color:var(--js);">const</div>
+          <div class="pd">ใช้บ่อยที่สุด — ค่าที่ไม่เปลี่ยนแปลง เช่น ชื่อ, ตัวเลข, function</div>
         </div>
-        <div class="info io"><span class="ic">✅</span><span>ใช้ Grid เมื่อต้องการ<strong style="color:var(--or)"> Card Grid, Layout หน้าเว็บ, Dashboard</strong></span></div>
+        <div class="pc">
+          <div class="pn" style="color:var(--y);">let</div>
+          <div class="pd">ใช้เมื่อต้องการเปลี่ยนค่า เช่น คะแนน, สถานะ, counter</div>
+        </div>
+        <div class="info ir2">
+          <span class="ic">❌</span>
+          <span>ใน React <strong style="color:var(--r)">ห้ามใช้ <code>var</code></strong> — เป็น JS เก่ามีปัญหาเรื่อง scope ใช้แต่ const/let เท่านั้น</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- BASIC GRID -->
+  <!-- TEMPLATE LITERAL -->
   <div class="card">
-    <div class="card-t"><span>⚡</span> เริ่มใช้ Grid — แค่ 2 บรรทัด</div>
+    <div class="card-t"><span>✏️</span> Template Literal — ใส่ตัวแปรใน string</div>
     <div class="two">
       <div>
         <div class="cb">
-<span class="cm">/* ทำให้ container เป็น grid */</span>
-<span class="prop">.container</span> {
-  <span class="prop">display</span>: <span class="val">grid</span>;
-  <span class="prop">grid-template-columns</span>: <span class="val">1fr 1fr 1fr</span>;
-  <span class="prop">gap</span>: <span class="val">16px</span>;
-}
+<span class="kw">const</span> name = <span class="str">"สมชาย"</span>
+<span class="kw">const</span> age = <span class="num">20</span>
+<span class="kw">const</span> school = <span class="str">"วทล."</span>
 
-<span class="cm">/* หรือเขียนย่อด้วย repeat() */</span>
-<span class="prop">.container</span> {
-  <span class="prop">display</span>: <span class="val">grid</span>;
-  <span class="prop">grid-template-columns</span>: <span class="val">repeat(3, 1fr)</span>;
-  <span class="prop">gap</span>: <span class="val">16px</span>;
-}
+<span class="cm">// แบบเดิม — ต่อ string ด้วย +</span>
+<span class="str">"สวัสดี "</span> + name + <span class="str">" อายุ "</span> + age + <span class="str">" ปี"</span>
+
+<span class="cm">// Template Literal — ใช้ backtick + ${}</span>
+<span class="str">`สวัสดี <span class="num">${name}</span> อายุ <span class="num">${age}</span> ปี`</span>
+<span class="str">`เรียนที่ <span class="num">${school}</span>`</span>
+
+<span class="cm">// ใส่ expression ใน ${} ได้เลย</span>
+<span class="str">`ปีหน้าอายุ <span class="num">${age + 1}</span> ปี`</span>
         </div>
-        <div class="info io">
+      </div>
+      <div>
+        <div class="info ij">
           <span class="ic">💡</span>
-          <span><code style="color:var(--or)">1fr</code> = "1 ส่วน" ของพื้นที่ที่เหลือ — <code>repeat(3, 1fr)</code> = 3 คอลัมน์เท่ากันหมด</span>
+          <span>ใช้ <strong style="color:var(--js)">backtick ( ` ) ไม่ใช่ apostrophe ( ' )</strong> — คีย์อยู่มุมบนซ้ายของคีย์บอร์ด</span>
         </div>
-      </div>
-      <div>
-        <div class="grid-ex">
-          <div class="gex-label">repeat(3, 1fr) → 3 คอลัมน์เท่ากัน</div>
-          <div class="gex-grid" style="grid-template-columns:repeat(3,1fr);">
-            <div class="gex-item gc1">A</div>
-            <div class="gex-item gc2">B</div>
-            <div class="gex-item gc3">C</div>
-            <div class="gex-item gc4">D</div>
-            <div class="gex-item gc5">E</div>
-            <div class="gex-item gc6">F</div>
-          </div>
-        </div>
-        <div class="grid-ex">
-          <div class="gex-label">1fr 2fr 1fr → คอลัมน์กลางกว้างกว่า</div>
-          <div class="gex-grid" style="grid-template-columns:1fr 2fr 1fr;">
-            <div class="gex-item gc1">A</div>
-            <div class="gex-item gc2">B กว้าง×2</div>
-            <div class="gex-item gc3">C</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AUTO-FIT MINMAX -->
-  <div class="card">
-    <div class="card-t"><span>✨</span> auto-fill + minmax() — Grid อัตโนมัติ ไม่ต้องรู้ว่ามีกี่คอลัมน์</div>
-    <div class="two">
-      <div>
-        <div class="cb">
-<span class="cm">/* ปรับจำนวนคอลัมน์อัตโนมัติ */</span>
-<span class="prop">grid-template-columns</span>:
-  <span class="val">repeat(auto-fill, minmax(200px, 1fr))</span>;
-
-<span class="cm">/*
- minmax(200px, 1fr):
- - อย่างน้อย 200px
- - อย่างมาก 1fr (เต็มพื้นที่)
- 
- auto-fill: ใส่คอลัมน์ให้มากที่สุด
- เท่าที่จะจุได้ในพื้นที่
-*/</span>
-        </div>
-        <div class="info io">
+        <div class="info ij" style="margin-top:.5rem;">
           <span class="ic">🔥</span>
-          <span>นี่คือ pattern ที่ใช้บ่อยที่สุด — <strong style="color:var(--or)">Responsive Grid โดยไม่ต้อง media query เลย</strong></span>
+          <span>Template Literal ใช้ใน JSX บ่อยมาก เช่น <code style="color:var(--js)">className={`text-${color}-500`}</code></span>
         </div>
-      </div>
-      <div>
-        <div class="grid-ex">
-          <div class="gex-label">minmax(120px,1fr) — ปรับเองอัตโนมัติ</div>
-          <div class="gex-grid" style="grid-template-columns:repeat(auto-fill,minmax(80px,1fr));">
-            <div class="gex-item gc1">ร้าน A</div>
-            <div class="gex-item gc2">ร้าน B</div>
-            <div class="gex-item gc3">ร้าน C</div>
-            <div class="gex-item gc4">ร้าน D</div>
-            <div class="gex-item gc5">ร้าน E</div>
+        <div style="background:#060c20;border-radius:10px;padding:12px 16px;margin-top:.7rem;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);margin-bottom:6px;">เทียบให้เห็น:</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;">
+            <div><span style="color:#f87171;">❌</span> <span style="color:#6b7280;">"Hello " + name + "!"</span></div>
+            <div><span style="color:var(--js);">✅</span> <span style="color:#f1fa8c;">`Hello ${name}!`</span></div>
           </div>
-        </div>
-        <div class="info iy" style="margin-top:.5rem;">
-          <span class="ic">💡</span>
-          <span>ลองย่อหน้าต่าง browser ดู — items จะหัก line อัตโนมัติ</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- COL/ROW SPAN -->
+  <!-- SIMULATOR: TEMPLATE LITERAL -->
   <div class="card">
-    <div class="card-t"><span>📏</span> col-span & row-span — ขยาย item ข้าม cell</div>
+    <div class="card-t"><span>🎮</span> Template Literal Simulator <span class="badge-new">Interactive</span></div>
+    <div class="info ij" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>พิมพ์ข้อมูลด้านล่าง แล้วดู Template Literal สร้าง string ให้อัตโนมัติ</span>
+    </div>
+    <div class="tl-sim">
+      <div class="tl-inputs">
+        <div class="tl-field">
+          <div class="tl-label">name</div>
+          <input class="tl-input" id="tl-name" value="สมชาย" placeholder="ชื่อ">
+        </div>
+        <div class="tl-field">
+          <div class="tl-label">age</div>
+          <input class="tl-input" id="tl-age" value="20" placeholder="อายุ" type="number">
+        </div>
+        <div class="tl-field">
+          <div class="tl-label">school</div>
+          <input class="tl-input" id="tl-school" value="วิทยาลัยเทคนิคเลย" placeholder="โรงเรียน">
+        </div>
+        <div class="tl-field">
+          <div class="tl-label">emoji</div>
+          <input class="tl-input" id="tl-emoji" value="👨‍💻" placeholder="emoji">
+        </div>
+      </div>
+      <div class="tl-output">
+        <div class="tl-out-label">Code ที่เขียน</div>
+        <div class="tl-code-line">
+          <span style="color:#ff79c6;">const</span>
+          <span style="color:#e2e8f0;"> name = </span>
+          <span style="color:#f1fa8c;">"<span id="disp-name">สมชาย</span>"</span>
+        </div>
+        <div class="tl-code-line">
+          <span style="color:#ff79c6;">const</span>
+          <span style="color:#e2e8f0;"> greeting = </span>
+          <span style="color:#f1fa8c;">`<span id="disp-emoji">👨‍💻</span> สวัสดี ฉันชื่อ <span style="color:#bd93f9;">${</span><span style="color:#61dafb;">name</span><span style="color:#bd93f9;">}</span> อายุ <span style="color:#bd93f9;">${</span><span style="color:#61dafb;">age</span><span style="color:#bd93f9;">}</span> ปี เรียนที่ <span style="color:#bd93f9;">${</span><span style="color:#61dafb;">school</span><span style="color:#bd93f9;">}</span>`</span>
+        </div>
+        <div class="tl-result" id="tl-result">
+          👨‍💻 สวัสดี ฉันชื่อ สมชาย อายุ 20 ปี เรียนที่ วิทยาลัยเทคนิคเลย
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARROW FUNCTION -->
+  <div class="card">
+    <div class="card-t"><span>➡️</span> Arrow Function — เขียน function แบบสั้น</div>
     <div class="two">
       <div>
         <div class="cb">
-<span class="cm">/* item ที่อยากให้ขยาย */</span>
-<span class="prop">.item-wide</span> {
-  <span class="prop">grid-column</span>: <span class="val">span 2</span>; <span class="cm">/* กิน 2 คอลัมน์ */</span>
+<span class="cm">// function แบบเดิม</span>
+<span class="kw">function</span> <span class="fn">greet</span>(name) {
+  <span class="kw">return</span> <span class="str">`สวัสดี ${name}`</span>
 }
 
-<span class="prop">.item-tall</span> {
-  <span class="prop">grid-row</span>: <span class="val">span 2</span>;    <span class="cm">/* กิน 2 แถว */</span>
+<span class="cm">// Arrow Function — เหมือนกันทุกอย่าง</span>
+<span class="kw">const</span> <span class="fn">greet</span> = (name) => {
+  <span class="kw">return</span> <span class="str">`สวัสดี ${name}`</span>
 }
 
-<span class="cm">/* กำหนดตำแหน่งแน่นอน */</span>
-<span class="prop">.item-exact</span> {
-  <span class="prop">grid-column</span>: <span class="val">1 / 3</span>;   <span class="cm">/* col 1 ถึง 3 */</span>
-  <span class="prop">grid-row</span>:    <span class="val">1 / 2</span>;   <span class="cm">/* row 1 ถึง 2 */</span>
-}
+<span class="cm">// ถ้า return บรรทัดเดียว ย่อได้</span>
+<span class="kw">const</span> <span class="fn">greet</span> = (name) => <span class="str">`สวัสดี ${name}`</span>
+
+<span class="cm">// เรียกใช้เหมือนกันเลย</span>
+<span class="fn">greet</span>(<span class="str">"สมชาย"</span>)  <span class="cm">// → "สวัสดี สมชาย"</span>
         </div>
       </div>
       <div>
-        <div class="grid-ex">
-          <div class="gex-label">col-span + row-span ผสมกัน</div>
-          <div class="gex-grid" style="grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto auto;">
-            <div class="gex-item gc1" style="grid-column:span 2;padding:12px;">A — span 2 คอลัมน์</div>
-            <div class="gex-item gc4" style="grid-row:span 2;min-height:80px;">B span 2 แถว</div>
-            <div class="gex-item gc2">C</div>
-            <div class="gex-item gc3">D</div>
-            <div class="gex-item gc5">E</div>
-            <div class="gex-item gc6">F</div>
-          </div>
+        <div class="info ij">
+          <span class="ic">💡</span>
+          <span>React Component เขียนด้วย Arrow Function ทุกตัว — ต้องชินกับ syntax นี้</span>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- GRID SIMULATOR -->
-  <div class="card">
-    <div class="card-t"><span>🎮</span> Grid Simulator — ลองกดดูผลได้เลย <span class="badge-new">Interactive</span></div>
-    <div class="info io" style="margin-bottom:.8rem;">
-      <span class="ic">👆</span>
-      <span>เปลี่ยน columns และ gap แล้วดูว่า grid ปรับตัวยังไง พร้อม CSS code ที่ใช้จริง</span>
-    </div>
-    <div class="sim-box">
-      <div class="grid-preview" id="gridPreview">
-        <div class="gi gi1">1</div>
-        <div class="gi gi2">2</div>
-        <div class="gi gi3">3</div>
-        <div class="gi gi4">4</div>
-        <div class="gi gi5">5</div>
-        <div class="gi gi6">6</div>
-      </div>
-      <div class="sim-controls">
-        <div class="ctrl-g">
-          <div class="ctrl-lbl">grid-template-columns</div>
-          <div class="ctrl-btns" id="ctrl-cols">
-            <button class="cbtn" data-cols="repeat(1,1fr)" data-label="1">1 คอลัมน์</button>
-            <button class="cbtn" data-cols="repeat(2,1fr)" data-label="2">2 คอลัมน์</button>
-            <button class="cbtn on" data-cols="repeat(3,1fr)" data-label="3">3 คอลัมน์</button>
-            <button class="cbtn" data-cols="repeat(4,1fr)" data-label="4">4 คอลัมน์</button>
-            <button class="cbtn" data-cols="1fr 2fr" data-label="1fr 2fr">1fr 2fr</button>
-            <button class="cbtn" data-cols="repeat(auto-fill,minmax(100px,1fr))" data-label="auto-fill">auto-fill</button>
-          </div>
-        </div>
-        <div class="ctrl-g">
-          <div class="ctrl-lbl">gap</div>
-          <div class="ctrl-btns" id="ctrl-gap">
-            <button class="cbtn" data-gap="0px">0</button>
-            <button class="cbtn on" data-gap="10px">10px</button>
-            <button class="cbtn" data-gap="16px">16px</button>
-            <button class="cbtn" data-gap="24px">24px</button>
-          </div>
-        </div>
-        <div class="ctrl-g">
-          <div class="ctrl-lbl">item พิเศษ</div>
-          <div class="ctrl-btns">
-            <button class="cbtn" id="toggleSpan">item 1: span 2</button>
-            <button class="cbtn" id="toggleRow">item 2: span 2 แถว</button>
-          </div>
-        </div>
-      </div>
-      <div class="sim-code">
-        <div class="sim-code-title">CSS ที่ได้</div>
-        <div id="grid-out" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;color:#8494b8;">
-          <span class="prop">.container</span> <span style="color:#454c6b;">{</span><br>
-          &nbsp;&nbsp;<span class="prop">display</span>: <span class="val">grid</span>;<br>
-          &nbsp;&nbsp;<span class="prop">grid-template-columns</span>: <span class="val" id="out-cols">repeat(3, 1fr)</span>;<br>
-          &nbsp;&nbsp;<span class="prop">gap</span>: <span class="val" id="out-gap">10px</span>;<br>
-          <span style="color:#454c6b;">}</span>
+        <div style="background:#060c20;border-radius:10px;padding:14px;margin-top:.7rem;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);margin-bottom:8px;">เทียบ syntax:</div>
+          <table style="width:100%;font-size:12px;font-family:'JetBrains Mono',monospace;">
+            <tr><td style="color:var(--mu);padding:4px 0;">function เดิม</td><td style="color:#e2e8f0;">function Fn() {}</td></tr>
+            <tr><td style="color:var(--mu);padding:4px 0;">arrow function</td><td style="color:var(--js);">const Fn = () => {}</td></tr>
+            <tr><td style="color:var(--mu);padding:4px 0;">React ใช้แบบไหน</td><td style="color:var(--re);">arrow function ✅</td></tr>
+          </table>
         </div>
       </div>
     </div>
@@ -499,23 +414,23 @@ hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
     <div class="ws-head">
       <div class="ws-icon">🛠</div>
       <div>
-        <div class="ws-title">Workshop 1 — CSS Grid เบื้องต้น</div>
-        <span class="ws-badge" style="background:rgba(251,146,60,.12);color:var(--or);border:1px solid rgba(251,146,60,.3);">CSS Grid</span>
+        <div class="ws-title">Workshop 1 — JavaScript Console</div>
+        <span class="ws-badge" style="background:rgba(52,211,153,.12);color:var(--js);border:1px solid rgba(52,211,153,.3);">JavaScript</span>
       </div>
     </div>
-    <p class="ws-desc">สร้างไฟล์ <code style="color:var(--or);background:rgba(251,146,60,.1);padding:1px 6px;border-radius:4px;">grid.html</code> ใหม่ ทดลองใช้ CSS Grid เขียน style ใน &lt;style&gt; tag ตรงๆ</p>
+    <p class="ws-desc">เปิด Browser → F12 → Console แล้วลองพิมพ์ JS ตรงๆ ไม่ต้องสร้างไฟล์ใหม่</p>
     <div class="ws-tasks">
-      <div class="ws-task">
-        <div class="wslv lv1">1</div>
-        <div class="ws-tt"><strong>พื้นฐาน:</strong> สร้าง container ที่มี 6 div ข้างใน — ใช้ <code style="color:var(--or)">display:grid</code> + <code style="color:var(--or)">grid-template-columns:repeat(3,1fr)</code> + <code style="color:var(--or)">gap:16px</code> ให้ได้ grid 3 คอลัมน์</div>
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> ประกาศ <code style="color:var(--js)">const name</code> ใส่ชื่อตัวเอง, <code style="color:var(--js)">const age</code> ใส่อายุ แล้วพิมพ์ template literal ออกมาด้วย <code style="color:var(--js)">console.log(`...`)</code></div>
       </div>
-      <div class="ws-task">
-        <div class="wslv lv2">2</div>
-        <div class="ws-tt"><strong>กลาง:</strong> เปลี่ยนเป็น <code style="color:var(--or)">repeat(auto-fill, minmax(180px, 1fr))</code> แล้วลองย่อ-ขยายหน้าต่าง browser ดูว่า column ปรับอัตโนมัติ</div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เขียน arrow function ชื่อ <code style="color:var(--js)">introduce</code> รับ parameter <code style="color:var(--js)">name, age</code> แล้ว return template literal แนะนำตัว เรียกใช้ดูผล</div>
       </div>
-      <div class="ws-task">
-        <div class="wslv lv3">3</div>
-        <div class="ws-tt"><strong>ท้าทาย:</strong> ทำ Layout หน้า Dashboard — มี header <code style="color:var(--or)">grid-column:span 3</code>, sidebar ซ้าย, content กลาง <code style="color:var(--or)">grid-column:span 2</code>, footer <code style="color:var(--or)">span 3</code></div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เขียน arrow function <code style="color:var(--js)">getLevel</code> รับ <code style="color:var(--js)">score</code> แล้ว return <code style="color:var(--js)">"A"</code> ถ้า ≥ 80, <code style="color:var(--js)">"B"</code> ถ้า ≥ 70, <code style="color:var(--js)">"C"</code> ถ้า ≥ 60, <code style="color:var(--js)">"F"</code> ถ้าต่ำกว่า</div>
       </div>
     </div>
   </div>
@@ -524,131 +439,432 @@ hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
 <hr class="shr">
 
 <!-- ═══════════════════════════
-     S2: TAILWIND GRID
+     S2: REACT คืออะไร
 ════════════════════════════ -->
 <div class="sec" id="s2">
   <div class="sec-head">
-    <span class="sec-num" style="color:var(--pu)">02</span>
+    <span class="sec-num" style="color:var(--re)">02</span>
     <div class="sec-line"></div>
   </div>
-  <h2 class="sec-title" style="color:var(--pu)">Tailwind Grid Utilities</h2>
-  <p class="sec-sub">CSS Grid ทุก property มี Tailwind class — เขียนสั้นลงมาก</p>
+  <h2 class="sec-title" style="color:var(--re)">React คืออะไร?</h2>
+  <p class="sec-sub">Library สำหรับสร้าง UI — สร้าง Component แล้วนำมาประกอบเป็นหน้าเว็บ</p>
 
-  <!-- MAPPING TABLE -->
   <div class="card">
-    <div class="card-t"><span>🔄</span> CSS Grid → Tailwind เทียบตรงๆ</div>
-    <div class="info ip" style="margin-bottom:.8rem;">
-      <span class="ic">💡</span>
-      <span>Tailwind แปลง CSS grid ให้เป็น class สั้นๆ — เหมือนเดิมทุกอย่าง แค่เขียนใน HTML ได้เลย</span>
+    <div class="card-t"><span>🤔</span> ทำไมต้องใช้ React?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13.5px;color:#94a3b8;line-height:1.85;margin-bottom:1rem;">
+          เว็บปกติที่เขียนด้วย HTML ล้วน ถ้าอยากอัปเดตข้อมูลต้องโหลดหน้าใหม่ทุกครั้ง<br><br>
+          React ทำให้ <strong style="color:var(--tx)">อัปเดตแค่ส่วนที่เปลี่ยน</strong> โดยไม่ต้อง reload — เร็วและลื่นกว่ามาก
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);border-radius:8px;padding:10px 14px;font-size:13px;">
+            <strong style="color:var(--re);">⚛️ React</strong> — Library ของ Facebook/Meta (2013)
+          </div>
+          <div style="background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);border-radius:8px;padding:10px 14px;font-size:13px;">
+            <strong style="color:var(--re);">🏢 ใครใช้</strong> — Facebook, Instagram, Airbnb, Netflix
+          </div>
+          <div style="background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);border-radius:8px;padding:10px 14px;font-size:13px;">
+            <strong style="color:var(--re);">💼 ตลาดงาน</strong> — เป็นทักษะที่นายจ้างหาบ่อยที่สุด
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">แนวคิด Component-based:</div>
+        <div style="background:#060c20;border-radius:10px;padding:14px;font-size:12px;font-family:'JetBrains Mono',monospace;line-height:2;">
+          <div style="color:#454c6b;margin-bottom:8px;">// หน้าเว็บ = ประกอบจาก Component</div>
+          <div style="color:#89dceb;">&lt;App&gt;</div>
+          <div style="padding-left:16px;color:#a6e3a1;">&lt;Navbar /&gt;</div>
+          <div style="padding-left:16px;color:#a6e3a1;">&lt;HeroSection /&gt;</div>
+          <div style="padding-left:16px;color:#fab387;">&lt;MenuGrid&gt;</div>
+          <div style="padding-left:32px;color:#cba6f7;">&lt;MenuCard /&gt;  ← สร้างครั้งเดียว</div>
+          <div style="padding-left:32px;color:#cba6f7;">&lt;MenuCard /&gt;  ← ใช้ซ้ำได้เลย</div>
+          <div style="padding-left:32px;color:#cba6f7;">&lt;MenuCard /&gt;</div>
+          <div style="padding-left:16px;color:#fab387;">&lt;/MenuGrid&gt;</div>
+          <div style="padding-left:16px;color:#a6e3a1;">&lt;Footer /&gt;</div>
+          <div style="color:#89dceb;">&lt;/App&gt;</div>
+        </div>
+        <div class="info ir">
+          <span class="ic">💡</span>
+          <span><strong style="color:var(--re)">Component = สร้างครั้งเดียว ใช้ซ้ำได้ทุกที่</strong> — เหมือน Lego ประกอบหน้าเว็บ</span>
+        </div>
+      </div>
     </div>
-    <table class="tw-table">
-      <thead><tr><th>CSS</th><th>Tailwind Class</th><th>ความหมาย</th></tr></thead>
+  </div>
+
+  <!-- REACT VS PLAIN HTML -->
+  <div class="card">
+    <div class="card-t"><span>⚖️</span> HTML ธรรมดา vs React</div>
+    <table class="cmp">
+      <thead><tr><th>HTML ธรรมดา</th><th>React</th></tr></thead>
       <tbody>
         <tr>
-          <td><span class="css-pill">display:grid</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">grid</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">เปิดใช้ Grid</td>
+          <td style="font-size:13.5px;color:#8494b8;">เขียนซ้ำถ้าต้องการหลาย card</td>
+          <td style="font-size:13.5px;color:var(--tx);">สร้าง <code style="color:var(--re)">&lt;MenuCard /&gt;</code> ครั้งเดียว เรียกใช้ซ้ำได้</td>
         </tr>
         <tr>
-          <td><span class="css-pill">grid-template-columns: repeat(n,1fr)</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">grid-cols-1</span><span class="tw-pill">grid-cols-2</span><span class="tw-pill">grid-cols-3</span><span class="tw-pill">grid-cols-4</span><span class="tw-pill">...</span><span class="tw-pill">grid-cols-12</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">กำหนดจำนวนคอลัมน์</td>
+          <td style="font-size:13.5px;color:#8494b8;">อัปเดตข้อมูลต้อง JS + DOM manipulation</td>
+          <td style="font-size:13.5px;color:var(--tx);">React อัปเดต UI ให้อัตโนมัติเมื่อข้อมูลเปลี่ยน</td>
         </tr>
         <tr>
-          <td><span class="css-pill">grid-column: span 2</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">col-span-1</span><span class="tw-pill">col-span-2</span><span class="tw-pill">col-span-3</span><span class="tw-pill">col-span-full</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">ขยาย item ข้าม column</td>
+          <td style="font-size:13.5px;color:#8494b8;">ไฟล์ใหญ่ขึ้นเรื่อยๆ จัดการยาก</td>
+          <td style="font-size:13.5px;color:var(--tx);">แบ่งเป็น component เล็กๆ หาง่าย แก้ง่าย</td>
         </tr>
         <tr>
-          <td><span class="css-pill">grid-row: span 2</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">row-span-1</span><span class="tw-pill">row-span-2</span><span class="tw-pill">row-span-3</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">ขยาย item ข้าม row</td>
-        </tr>
-        <tr>
-          <td><span class="css-pill">gap</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">gap-2</span><span class="tw-pill">gap-4</span><span class="tw-pill">gap-6</span><span class="tw-pill">gap-8</span><span class="tw-pill">gap-x-4</span><span class="tw-pill">gap-y-6</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">ระยะห่างระหว่าง items</td>
-        </tr>
-        <tr>
-          <td><span class="css-pill">grid-flow: col</span></td>
-          <td><div class="tw-pills"><span class="tw-pill">grid-flow-row</span><span class="tw-pill">grid-flow-col</span></div></td>
-          <td style="font-size:13px;color:#8494b8;">ทิศทางการไหลของ items</td>
+          <td style="font-size:13.5px;color:#8494b8;">ไม่มีระบบ state/data management</td>
+          <td style="font-size:13.5px;color:var(--tx);">มี useState/props จัดการข้อมูลได้ชัดเจน</td>
         </tr>
       </tbody>
     </table>
   </div>
+</div>
 
-  <!-- TAILWIND EXAMPLES -->
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S3: SETUP
+════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--co)">03</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--co)">Setup — Vite + React</h2>
+  <p class="sec-sub">สร้าง Project ด้วย Vite — เร็วกว่า Create React App มาก</p>
+
   <div class="card">
-    <div class="card-t"><span>💻</span> ตัวอย่างจริง — Card Grid ด้วย Tailwind</div>
+    <div class="card-t"><span>⚡</span> สร้าง Project ใหม่</div>
+    <div class="setup-steps">
+      <div class="step">
+        <div class="step-num" style="background:rgba(251,146,60,.15);color:var(--co);border:1px solid rgba(251,146,60,.3);">1</div>
+        <div class="step-body">
+          <div class="step-title">เปิด Terminal ใน VSCode (<code style="color:var(--co)">Ctrl + ` </code>)</div>
+          <div class="cb">npm create vite@latest my-app -- --template react</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:rgba(251,146,60,.15);color:var(--co);border:1px solid rgba(251,146,60,.3);">2</div>
+        <div class="step-body">
+          <div class="step-title">เข้า folder และติดตั้ง packages</div>
+          <div class="cb">cd my-app
+npm install</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:rgba(251,146,60,.15);color:var(--co);border:1px solid rgba(251,146,60,.3);">3</div>
+        <div class="step-body">
+          <div class="step-title">รัน development server</div>
+          <div class="cb">npm run dev</div>
+          <div class="info io" style="margin-top:.5rem;">
+            <span class="ic">🌐</span>
+            <span>เปิด browser ไปที่ <code style="color:var(--co)">http://localhost:5173</code> — เห็นหน้า React แรกแล้ว!</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:rgba(251,146,60,.15);color:var(--co);border:1px solid rgba(251,146,60,.3);">4</div>
+        <div class="step-body">
+          <div class="step-title">ลบไฟล์ที่ไม่ต้องใช้ออก</div>
+          <div class="cb"><span class="cm"># ลบ CSS และ Asset เริ่มต้นออก</span>
+<span class="cm"># เก็บไว้แค่:</span>
+src/App.jsx      <span class="cm">← แก้ตรงนี้เลย</span>
+src/main.jsx     <span class="cm">← ไม่ต้องแตะ</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLDER STRUCTURE -->
+  <div class="card">
+    <div class="card-t"><span>🗂</span> โครงสร้าง Project</div>
     <div class="two">
       <div>
-        <div class="cb" style="font-size:12px;">
-<span class="cm">&lt;!-- 3 คอลัมน์เท่ากัน --&gt;</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid grid-cols-3 gap-6"</span><span class="t">&gt;</span>
-  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"bg-white rounded-xl p-4"</span><span class="t">&gt;</span>
-    Card 1
-  <span class="t">&lt;/div&gt;</span>
-  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"bg-white rounded-xl p-4"</span><span class="t">&gt;</span>
-    Card 2
-  <span class="t">&lt;/div&gt;</span>
-  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"bg-white rounded-xl p-4"</span><span class="t">&gt;</span>
-    Card 3
-  <span class="t">&lt;/div&gt;</span>
-<span class="t">&lt;/div&gt;</span>
-
-<span class="cm">&lt;!-- col-span ใน Tailwind --&gt;</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid grid-cols-3 gap-4"</span><span class="t">&gt;</span>
-  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"col-span-2 bg-blue-100 p-4"</span><span class="t">&gt;</span>
-    กว้าง 2 คอลัมน์
-  <span class="t">&lt;/div&gt;</span>
-  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"bg-green-100 p-4"</span><span class="t">&gt;</span>
-    ปกติ
-  <span class="t">&lt;/div&gt;</span>
-<span class="t">&lt;/div&gt;</span>
+        <div class="tree">
+          <div class="tr i1"><span class="tr-icon">📁</span><span class="tr-dir">my-app/</span></div>
+          <div class="tr i2"><span class="tr-icon">📁</span><span class="tr-dir">node_modules/</span><span class="tr-cm">← npm install ติดตั้งที่นี่</span></div>
+          <div class="tr i2"><span class="tr-icon">📁</span><span class="tr-dir">public/</span><span class="tr-cm">← ไฟล์ static</span></div>
+          <div class="tr i2"><span class="tr-icon">📁</span><span class="tr-dir">src/</span><span class="tr-cm">← โค้ดทั้งหมดอยู่ที่นี่</span></div>
+          <div class="tr i3"><span class="tr-icon">📁</span><span class="tr-dir">components/</span><span class="tr-cm">← สร้างเอง</span></div>
+          <div class="tr i4"><span class="tr-icon">⚛️</span><span class="tr-focus">ProfileCard.jsx</span></div>
+          <div class="tr i3"><span class="tr-icon">⚛️</span><span class="tr-focus">App.jsx</span><span class="tr-cm">← แก้ตรงนี้</span></div>
+          <div class="tr i3"><span class="tr-icon">📄</span><span class="tr-name">main.jsx</span><span class="tr-cm">← entry point</span></div>
+          <div class="tr i2"><span class="tr-icon">📄</span><span class="tr-name">index.html</span></div>
+          <div class="tr i2"><span class="tr-icon">📄</span><span class="tr-name">package.json</span></div>
+          <div class="tr i2"><span class="tr-icon">📄</span><span class="tr-name">vite.config.js</span></div>
         </div>
       </div>
       <div>
-        <div style="font-size:12px;color:var(--mu);margin-bottom:8px;">ตัวอย่างผลลัพธ์:</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
-          <div style="background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:10px;font-size:12px;color:var(--pu);text-align:center;">Card 1</div>
-          <div style="background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:10px;font-size:12px;color:var(--pu);text-align:center;">Card 2</div>
-          <div style="background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:10px;font-size:12px;color:var(--pu);text-align:center;">Card 3</div>
+        <div class="pc">
+          <div class="pn" style="color:var(--re);">App.jsx</div>
+          <div class="pd">Component หลัก — ทุกอย่างเริ่มจากที่นี่ นำ Component อื่นมาประกอบ</div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-          <div style="grid-column:span 2;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);border-radius:8px;padding:10px;font-size:11px;color:var(--cy);">col-span-2 กว้าง 2 คอลัมน์</div>
-          <div style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px;font-size:11px;color:var(--g);">ปกติ</div>
+        <div class="pc">
+          <div class="pn" style="color:var(--mu);">main.jsx</div>
+          <div class="pd">Entry point — render App เข้า <code>#root</code> ใน index.html ไม่ต้องแก้</div>
         </div>
-        <div class="info ip" style="margin-top:.7rem;">
-          <span class="ic">🎯</span>
-          <span>จำ pattern นี้ไว้: <code style="color:var(--pu)">grid grid-cols-3 gap-6</code> — ใช้บ่อยมากใน project จริง</span>
+        <div class="pc">
+          <div class="pn" style="color:var(--jsx);">components/</div>
+          <div class="pd">สร้าง folder นี้เอง — เก็บ Component ทุกตัว แต่ละไฟล์ชื่อ PascalCase.jsx</div>
+        </div>
+        <div class="info io">
+          <span class="ic">📝</span>
+          <span>ชื่อไฟล์ Component ต้องขึ้นต้นด้วย <strong style="color:var(--co)">ตัวพิมพ์ใหญ่</strong> เสมอ — <code>ProfileCard.jsx</code> ไม่ใช่ <code>profilecard.jsx</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S4: JSX + COMPONENT
+════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--jsx)">04</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--jsx)">JSX + Function Component</h2>
+  <p class="sec-sub">เขียน HTML ใน JavaScript — แล้วส่งข้อมูลเข้า Component ด้วย Props</p>
+
+  <!-- WHAT IS JSX -->
+  <div class="card">
+    <div class="card-t"><span>🧬</span> JSX คืออะไร?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13.5px;color:#94a3b8;line-height:1.85;margin-bottom:.8rem;">
+          JSX = <strong style="color:var(--tx)">JavaScript + XML</strong><br>
+          เขียน HTML ลงไปใน JS ได้เลย — React จะแปลงให้เอง
+        </div>
+        <div class="cb">
+<span class="cm">// JS ปกติ — return string</span>
+<span class="kw">const</span> text = <span class="str">"สวัสดี"</span>
+
+<span class="cm">// JSX — return HTML-like</span>
+<span class="kw">const</span> element = (
+  <span class="jx-tag">&lt;div</span> <span class="jx-attr">className</span>=<span class="jx-str">"card"</span><span class="jx-tag">&gt;</span>
+    <span class="jx-tag">&lt;h1&gt;</span>สวัสดี<span class="jx-tag">&lt;/h1&gt;</span>
+    <span class="jx-tag">&lt;p&gt;</span>ยินดีต้อนรับ<span class="jx-tag">&lt;/p&gt;</span>
+  <span class="jx-tag">&lt;/div&gt;</span>
+)
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">ข้อแตกต่าง HTML vs JSX:</div>
+        <table class="cmp" style="font-size:12.5px;">
+          <thead><tr><th>HTML</th><th>JSX</th></tr></thead>
+          <tbody>
+            <tr><td><code>class="..."</code></td><td><code style="color:var(--jsx)">className="..."</code></td></tr>
+            <tr><td><code>for="..."</code></td><td><code style="color:var(--jsx)">htmlFor="..."</code></td></tr>
+            <tr><td><code>&lt;br&gt;</code></td><td><code style="color:var(--jsx)">&lt;br /&gt;</code> ต้องปิด</td></tr>
+            <tr><td><code>&lt;img&gt;</code></td><td><code style="color:var(--jsx)">&lt;img /&gt;</code> ต้องปิด</td></tr>
+            <tr><td>style="color:red"</td><td><code style="color:var(--jsx)">style={{"{{"}}color:'red'{{"}}"}}</code></td></tr>
+          </tbody>
+        </table>
+        <div class="info ix" style="margin-top:.7rem;">
+          <span class="ic">⚠️</span>
+          <span>ใช้ <code style="color:var(--jsx)">className</code> แทน <code>class</code> เสมอ — ถ้าลืมจะ error ทันที</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNCTION COMPONENT -->
+  <div class="card">
+    <div class="card-t"><span>🧩</span> Function Component — หน่วยพื้นฐานของ React</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="cm">// src/components/ProfileCard.jsx</span>
+
+<span class="kw">const</span> <span class="fn">ProfileCard</span> = () => {
+  <span class="kw">return</span> (
+    <span class="jx-tag">&lt;div</span> <span class="jx-attr">className</span>=<span class="jx-str">"card"</span><span class="jx-tag">&gt;</span>
+      <span class="jx-tag">&lt;span&gt;</span>👨‍💻<span class="jx-tag">&lt;/span&gt;</span>
+      <span class="jx-tag">&lt;h2&gt;</span>สมชาย<span class="jx-tag">&lt;/h2&gt;</span>
+      <span class="jx-tag">&lt;p&gt;</span>นักศึกษา ปวส.1<span class="jx-tag">&lt;/p&gt;</span>
+    <span class="jx-tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="kw">export default</span> ProfileCard
+        </div>
+      </div>
+      <div>
+        <div class="cb">
+<span class="cm">// src/App.jsx — นำมาใช้</span>
+<span class="kw">import</span> ProfileCard <span class="kw">from</span> <span class="str">'./components/ProfileCard'</span>
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="kw">return</span> (
+    <span class="jx-tag">&lt;div&gt;</span>
+      <span class="cm">{/* ใช้เหมือน HTML tag */}</span>
+      <span class="jx-tag">&lt;ProfileCard</span> <span class="jx-tag">/&gt;</span>
+      <span class="jx-tag">&lt;ProfileCard</span> <span class="jx-tag">/&gt;</span>
+      <span class="jx-tag">&lt;ProfileCard</span> <span class="jx-tag">/&gt;</span>
+    <span class="jx-tag">&lt;/div&gt;</span>
+  )
+}
+
+<span class="kw">export default</span> App
+        </div>
+        <div class="info ix">
+          <span class="ic">💡</span>
+          <span>Component ชื่อต้องขึ้นต้น<strong style="color:var(--jsx)">ตัวพิมพ์ใหญ่</strong> — <code>&lt;ProfileCard /&gt;</code> ไม่ใช่ <code>&lt;profilecard /&gt;</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURLY BRACES + PROPS -->
+  <div class="card">
+    <div class="card-t"><span>🔀</span> {} ใส่ค่าใน JSX + Props ส่งข้อมูล</div>
+    <div class="two">
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:6px;"><span style="color:var(--jsx);">{}</span> ในไม่ใส่ string ธรรมดา — ใส่ JS expression</div>
+        <div class="cb">
+<span class="kw">const</span> name = <span class="str">"สมชาย"</span>
+<span class="kw">const</span> age = <span class="num">20</span>
+
+<span class="kw">return</span> (
+  <span class="jx-tag">&lt;div&gt;</span>
+    <span class="cm">{/* ตัวแปร */}</span>
+    <span class="jx-tag">&lt;h2&gt;</span><span class="jx-brace">{name}</span><span class="jx-tag">&lt;/h2&gt;</span>
+
+    <span class="cm">{/* คำนวณ */}</span>
+    <span class="jx-tag">&lt;p&gt;</span>อายุ <span class="jx-brace">{age + 1}</span> ปี<span class="jx-tag">&lt;/p&gt;</span>
+
+    <span class="cm">{/* template literal */}</span>
+    <span class="jx-tag">&lt;p&gt;</span><span class="jx-brace">{`สวัสดี ${name}!`}</span><span class="jx-tag">&lt;/p&gt;</span>
+
+    <span class="cm">{/* เงื่อนไข */}</span>
+    <span class="jx-tag">&lt;p&gt;</span><span class="jx-brace">{age >= 18 ? "ผู้ใหญ่" : "เยาวชน"}</span><span class="jx-tag">&lt;/p&gt;</span>
+  <span class="jx-tag">&lt;/div&gt;</span>
+)
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:6px;">Props — ส่งข้อมูลเข้า Component</div>
+        <div class="cb">
+<span class="cm">// ส่ง props เข้าไป</span>
+<span class="jx-tag">&lt;ProfileCard</span>
+  <span class="jx-attr">name</span>=<span class="jx-str">"สมชาย"</span>
+  <span class="jx-attr">role</span>=<span class="jx-str">"ปวส.1"</span>
+  <span class="jx-attr">emoji</span>=<span class="jx-str">"👨‍💻"</span>
+<span class="jx-tag">/&gt;</span>
+
+<span class="cm">// รับ props ใน Component</span>
+<span class="kw">const</span> <span class="fn">ProfileCard</span> = (props) => {
+  <span class="kw">return</span> (
+    <span class="jx-tag">&lt;div&gt;</span>
+      <span class="jx-tag">&lt;span&gt;</span><span class="jx-brace">{props.emoji}</span><span class="jx-tag">&lt;/span&gt;</span>
+      <span class="jx-tag">&lt;h2&gt;</span><span class="jx-brace">{props.name}</span><span class="jx-tag">&lt;/h2&gt;</span>
+      <span class="jx-tag">&lt;p&gt;</span><span class="jx-brace">{props.role}</span><span class="jx-tag">&lt;/p&gt;</span>
+    <span class="jx-tag">&lt;/div&gt;</span>
+  )
+}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENT VISUALIZER -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> Component Visualizer — ดู Props → Render <span class="badge-new">Interactive</span></div>
+    <div class="info ix" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>แก้ค่า props ทางซ้าย แล้วดู Component render ผลทางขวาแบบ real-time</span>
+    </div>
+    <div class="comp-vis">
+      <div class="cv-grid">
+        <!-- LEFT: PROPS INPUT -->
+        <div>
+          <div class="cv-panel">
+            <div class="cv-panel-head" style="color:var(--jsx);background:rgba(167,139,250,.07);">Props ที่ส่งเข้า Component</div>
+            <div class="cv-panel-body">
+              <div class="cv-inputs">
+                <div class="cv-field">
+                  <span class="cv-key">name</span>
+                  <input class="cv-val" id="cv-name" value="สมชาย ใจดี">
+                </div>
+                <div class="cv-field">
+                  <span class="cv-key">role</span>
+                  <input class="cv-val" id="cv-role" value="นักศึกษา ปวส.1">
+                </div>
+                <div class="cv-field">
+                  <span class="cv-key">school</span>
+                  <input class="cv-val" id="cv-school" value="วท.เลย">
+                </div>
+                <div class="cv-field">
+                  <span class="cv-key">emoji</span>
+                  <input class="cv-val" id="cv-emoji" value="👨‍💻">
+                </div>
+                <div class="cv-field">
+                  <span class="cv-key">color</span>
+                  <select class="cv-val" id="cv-color">
+                    <option value="violet">violet</option>
+                    <option value="cyan">cyan</option>
+                    <option value="orange">orange</option>
+                    <option value="green">green</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-top:1rem;font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace;">JSX ที่ใช้:</div>
+              <div style="background:#060c20;border-radius:8px;padding:10px 12px;margin-top:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.8;color:#8494b8;">
+                <span style="color:#89dceb;">&lt;ProfileCard</span><br>
+                &nbsp;&nbsp;<span style="color:#a6e3a1;">name</span>=<span style="color:#f1fa8c;">"<span id="jsx-name">สมชาย ใจดี</span>"</span><br>
+                &nbsp;&nbsp;<span style="color:#a6e3a1;">role</span>=<span style="color:#f1fa8c;">"<span id="jsx-role">นักศึกษา ปวส.1</span>"</span><br>
+                &nbsp;&nbsp;<span style="color:#a6e3a1;">emoji</span>=<span style="color:#f1fa8c;">"<span id="jsx-emoji">👨‍💻</span>"</span><br>
+                <span style="color:#89dceb;">/&gt;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: RENDERED OUTPUT -->
+        <div>
+          <div class="cv-panel">
+            <div class="cv-panel-head" style="color:var(--re);background:rgba(97,218,251,.06);">ผลลัพธ์ที่ render</div>
+            <div class="cv-panel-body">
+              <div class="rendered-card" id="rendered-card">
+                <div class="rc-img" id="rc-img">👨‍💻</div>
+                <div class="rc-body">
+                  <div class="rc-name" id="rc-name">สมชาย ใจดี</div>
+                  <div class="rc-role" id="rc-role">นักศึกษา ปวส.1</div>
+                  <div class="rc-school" id="rc-school">🏫 วท.เลย</div>
+                  <div class="rc-like">❤️ <span id="rc-likes">0</span> likes <button onclick="document.getElementById('rc-likes').textContent=parseInt(document.getElementById('rc-likes').textContent)+1" style="background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.3);color:var(--pk);padding:2px 8px;border-radius:5px;font-size:11px;cursor:pointer;margin-left:4px;font-family:'Mitr',sans-serif;">❤️ Like</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- WORKSHOP 2 -->
-  <div class="ws">
+  <div class="ws" id="ws2">
     <div class="ws-head">
       <div class="ws-icon">🛠</div>
       <div>
-        <div class="ws-title">Workshop 2 — แปลง Grid เป็น Tailwind</div>
-        <span class="ws-badge" style="background:rgba(167,139,250,.12);color:var(--pu);border:1px solid rgba(167,139,250,.3);">Tailwind Grid</span>
+        <div class="ws-title">Workshop 2 — Component แรก</div>
+        <span class="ws-badge" style="background:rgba(167,139,250,.12);color:var(--jsx);border:1px solid rgba(167,139,250,.3);">JSX + Component</span>
       </div>
     </div>
-    <p class="ws-desc">เปิด <code style="color:var(--pu)">grid.html</code> จาก Workshop 1 แล้วแปลง CSS grid ทั้งหมดเป็น Tailwind class</p>
+    <p class="ws-desc">สร้าง React project ด้วย Vite แล้วสร้าง <code style="color:var(--jsx)">ProfileCard</code> component แรกของตัวเอง</p>
     <div class="ws-tasks">
-      <div class="ws-task">
-        <div class="wslv lv1">1</div>
-        <div class="ws-tt"><strong>พื้นฐาน:</strong> เพิ่ม Tailwind CDN แล้วแปลง <code style="color:var(--pu)">display:grid</code> → <code style="color:var(--pu)">grid</code>, <code style="color:var(--pu)">grid-template-columns:repeat(3,1fr)</code> → <code style="color:var(--pu)">grid-cols-3</code>, <code style="color:var(--pu)">gap:16px</code> → <code style="color:var(--pu)">gap-4</code></div>
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> <code style="color:var(--jsx)">npm create vite@latest</code> → สร้าง <code style="color:var(--jsx)">src/components/ProfileCard.jsx</code> → ใส่ชื่อ, emoji, ชั้นเรียนตัวเองลงไปแบบ hardcode (ยังไม่ใช้ props) → import ใน App.jsx</div>
       </div>
-      <div class="ws-task">
-        <div class="wslv lv2">2</div>
-        <div class="ws-tt"><strong>กลาง:</strong> สร้าง Menu Card Grid จาก cafe.html ด้วย <code style="color:var(--pu)">grid grid-cols-3 gap-6</code> แต่ละ card มีรูป + ชื่อ + ราคา</div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> แปลง ProfileCard ให้รับ <code style="color:var(--jsx)">props</code> — ใช้ <code style="color:var(--jsx)">props.name</code>, <code style="color:var(--jsx)">props.role</code>, <code style="color:var(--jsx)">props.emoji</code> แล้ว render ใน App.jsx 3 card ส่งข้อมูลต่างกัน</div>
       </div>
-      <div class="ws-task">
-        <div class="wslv lv3">3</div>
-        <div class="ws-tt"><strong>ท้าทาย:</strong> ทำ Featured card ตัวแรกให้ใช้ <code style="color:var(--pu)">col-span-2</code> หรือ <code style="color:var(--pu)">col-span-full</code> เพื่อ highlight สินค้าเด่น</div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่ม Tailwind CSS เข้า Vite project (<code style="color:var(--jsx)">npm install tailwindcss @tailwindcss/vite</code>) แล้วจัด style ProfileCard ให้สวยด้วย Tailwind class</div>
       </div>
     </div>
   </div>
@@ -657,284 +873,54 @@ hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
 <hr class="shr">
 
 <!-- ═══════════════════════════
-     S3: RESPONSIVE
+     S5: CHALLENGE
 ════════════════════════════ -->
-<div class="sec" id="s3">
+<div class="sec" id="s5">
   <div class="sec-head">
-    <span class="sec-num" style="color:var(--cy)">03</span>
+    <span class="sec-num" style="color:var(--pk)">05</span>
     <div class="sec-line"></div>
   </div>
-  <h2 class="sec-title" style="color:var(--cy)">Responsive Design</h2>
-  <p class="sec-sub">ทำให้เว็บแสดงผลดีบนทุกขนาดหน้าจอ — มือถือ แท็บเล็ต และ Desktop</p>
-
-  <!-- WHAT IS RESPONSIVE -->
-  <div class="card">
-    <div class="card-t"><span>📱</span> Mobile-First คืออะไร?</div>
-    <div class="two">
-      <div>
-        <p style="font-size:14px;color:#94a3b8;line-height:1.8;margin-bottom:1rem;">
-          Tailwind ใช้แนวคิด <strong style="color:var(--cy)">Mobile-First</strong> — <br>
-          เขียน CSS สำหรับมือถือก่อน แล้วค่อย override เมื่อหน้าจอใหญ่ขึ้น
-        </p>
-        <div class="cb">
-<span class="cm">/* ไม่มี prefix = มือถือ (ทุกขนาด) */</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid-cols-1"</span><span class="t">&gt;</span>
-
-<span class="cm">/* md: = เมื่อหน้าจอ ≥ 768px */</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid-cols-1 md:grid-cols-2"</span><span class="t">&gt;</span>
-
-<span class="cm">/* lg: = เมื่อหน้าจอ ≥ 1024px */</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid-cols-1 md:grid-cols-2 lg:grid-cols-3"</span><span class="t">&gt;</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;font-family:'JetBrains Mono',monospace;">Breakpoints ของ Tailwind</div>
-        <div class="bp-chart">
-          <div class="bp-row2">
-            <div class="bp-name">ไม่มี</div>
-            <div class="bp-px" style="color:var(--or)">0px →</div>
-            <div class="bp-bar" style="width:20%;background:rgba(251,146,60,.25);border-color:var(--or);"></div>
-            <div class="bp-none">มือถือ</div>
-          </div>
-          <div class="bp-row2">
-            <div class="bp-name" style="color:var(--pu)">sm:</div>
-            <div class="bp-px">640px →</div>
-            <div class="bp-bar" style="width:35%;background:rgba(167,139,250,.2);border-color:var(--pu);"></div>
-          </div>
-          <div class="bp-row2">
-            <div class="bp-name" style="color:var(--cy)">md:</div>
-            <div class="bp-px">768px →</div>
-            <div class="bp-bar" style="width:55%;background:rgba(34,211,238,.18);border-color:var(--cy);"></div>
-          </div>
-          <div class="bp-row2">
-            <div class="bp-name" style="color:var(--g)">lg:</div>
-            <div class="bp-px">1024px →</div>
-            <div class="bp-bar" style="width:72%;background:rgba(52,211,153,.15);border-color:var(--g);"></div>
-          </div>
-          <div class="bp-row2">
-            <div class="bp-name" style="color:var(--y)">xl:</div>
-            <div class="bp-px">1280px →</div>
-            <div class="bp-bar" style="width:88%;background:rgba(251,191,36,.12);border-color:var(--y);"></div>
-          </div>
-        </div>
-        <div class="info ic2" style="margin-top:.8rem;">
-          <span class="ic">💡</span>
-          <span>ส่วนใหญ่ใช้แค่ <code style="color:var(--cy)">md:</code> และ <code style="color:var(--cy)">lg:</code> ก็พอแล้วสำหรับงาน</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESPONSIVE GRID PATTERN -->
-  <div class="card">
-    <div class="card-t"><span>🧩</span> Pattern ที่ใช้บ่อยที่สุด — Responsive Card Grid</div>
-    <div class="cb">
-<span class="cm">&lt;!-- 1 คอลัมน์บนมือถือ → 2 บน tablet → 3 บน desktop --&gt;</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"</span><span class="t">&gt;</span>
-  <span class="t">&lt;article</span> <span class="a">class</span>=<span class="v">"bg-white rounded-xl shadow-md overflow-hidden"</span><span class="t">&gt;</span>
-    <span class="t">&lt;img</span> <span class="a">src</span>=<span class="v">"..."</span> <span class="a">class</span>=<span class="v">"w-full h-48 object-cover"</span><span class="t">&gt;</span>
-    <span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"p-4"</span><span class="t">&gt;</span>
-      <span class="t">&lt;h3</span> <span class="a">class</span>=<span class="v">"font-bold text-lg"</span><span class="t">&gt;</span>ชื่อเมนู<span class="t">&lt;/h3&gt;</span>
-      <span class="t">&lt;p</span> <span class="a">class</span>=<span class="v">"text-gray-500 text-sm"</span><span class="t">&gt;</span>คำอธิบาย<span class="t">&lt;/p&gt;</span>
-    <span class="t">&lt;/div&gt;</span>
-  <span class="t">&lt;/article&gt;</span>
-  <span class="cm">&lt;!-- ... card อื่นๆ --&gt;</span>
-<span class="t">&lt;/div&gt;</span>
-    </div>
-    <div class="info ic2">
-      <span class="ic">🔥</span>
-      <span>จำ pattern นี้ไว้: <code style="color:var(--cy)">grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6</code> — ใช้ได้เกือบทุก project</span>
-    </div>
-  </div>
-
-  <!-- ═══ RESPONSIVE SIMULATOR ═══ -->
-  <div class="card">
-    <div class="card-t"><span>🎮</span> Responsive Simulator — ดูผลต่างขนาดหน้าจอ <span class="badge-new">Interactive</span></div>
-    <div class="info ic2" style="margin-bottom:.8rem;">
-      <span class="ic">👆</span>
-      <span>กดเลือกขนาดหน้าจอเพื่อดูว่า layout เปลี่ยนยังไงใน device แต่ละแบบ</span>
-    </div>
-    <div class="res-sim">
-      <div class="device-tabs">
-        <div class="dtab on" id="dtab-sm" onclick="setDevice('sm')">
-          <div class="dtab-icon">📱</div>
-          <div><div>มือถือ</div><div class="dtab-info">< 768px</div></div>
-        </div>
-        <div class="dtab" id="dtab-md" onclick="setDevice('md')">
-          <div class="dtab-icon">📟</div>
-          <div><div>แท็บเล็ต</div><div class="dtab-info">≥ 768px</div></div>
-        </div>
-        <div class="dtab" id="dtab-lg" onclick="setDevice('lg')">
-          <div class="dtab-icon">🖥️</div>
-          <div><div>Desktop</div><div class="dtab-info">≥ 1024px</div></div>
-        </div>
-      </div>
-
-      <div class="device-frame">
-        <div class="frame-bar">
-          <div class="fbar-dot" style="background:#f87171;"></div>
-          <div class="fbar-dot" style="background:#fbbf24;"></div>
-          <div class="fbar-dot" style="background:#34d399;"></div>
-          <div class="frame-url"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);" id="frame-size">📱 320px</div>
-        </div>
-        <div class="frame-content">
-          <div class="res-nav">
-            <div class="res-logo">☕ Café</div>
-            <div class="res-links" id="res-nav-links">
-              <div class="res-link" id="res-hamburger">☰</div>
-            </div>
-          </div>
-          <div style="margin-top:8px;">
-            <div class="res-cards" id="res-cards" style="grid-template-columns:1fr;">
-              <div class="res-card"><div class="res-card-img">☕</div><div class="res-card-body"><div class="res-card-title">อเมริกาโน่</div>฿65</div></div>
-              <div class="res-card"><div class="res-card-img">🍰</div><div class="res-card-body"><div class="res-card-title">เค้กช็อก</div>฿65</div></div>
-              <div class="res-card"><div class="res-card-img">🥐</div><div class="res-card-body"><div class="res-card-title">ครัวซองต์</div>฿55</div></div>
-              <div class="res-card" id="res-card4" style="display:none;"><div class="res-card-img">🍵</div><div class="res-card-body"><div class="res-card-title">ชาไทย</div>฿55</div></div>
-              <div class="res-card" id="res-card5" style="display:none;"><div class="res-card-img">🧇</div><div class="res-card-body"><div class="res-card-title">วาฟเฟิล</div>฿75</div></div>
-              <div class="res-card" id="res-card6" style="display:none;"><div class="res-card-img">🥗</div><div class="res-card-body"><div class="res-card-title">สลัด</div>฿89</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="class-highlight">
-        <div class="ch-title">Tailwind Classes ที่ Active ตอนนี้</div>
-        <div id="active-classes">
-          <div class="bp-row">
-            <span class="bp-tag bp-active">grid-cols-1</span>
-            <span class="bp-arrow">✓ เปิดใช้งาน (ไม่มี prefix)</span>
-          </div>
-          <div class="bp-row">
-            <span class="bp-tag bp-dim">md:grid-cols-2</span>
-            <span class="bp-arrow" style="color:var(--mu);">⋯ รอหน้าจอ ≥ 768px</span>
-          </div>
-          <div class="bp-row">
-            <span class="bp-tag bp-dim">lg:grid-cols-3</span>
-            <span class="bp-arrow" style="color:var(--mu);">⋯ รอหน้าจอ ≥ 1024px</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HIDE/SHOW -->
-  <div class="card">
-    <div class="card-t"><span>👁</span> ซ่อน-แสดง Element ตามขนาดหน้าจอ</div>
-    <div class="two">
-      <div>
-        <div class="cb" style="font-size:12px;">
-<span class="cm">&lt;!-- ซ่อนบนมือถือ แสดงบน md+ --&gt;</span>
-<span class="t">&lt;div</span> <span class="a">class</span>=<span class="v">"hidden md:flex gap-6"</span><span class="t">&gt;</span>
-  <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#"</span><span class="t">&gt;</span>Home<span class="t">&lt;/a&gt;</span>
-  <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#"</span><span class="t">&gt;</span>About<span class="t">&lt;/a&gt;</span>
-<span class="t">&lt;/div&gt;</span>
-
-<span class="cm">&lt;!-- แสดงบนมือถือ ซ่อนบน md+ --&gt;</span>
-<span class="t">&lt;button</span> <span class="a">class</span>=<span class="v">"md:hidden"</span><span class="t">&gt;</span>
-  ☰ เมนู
-<span class="t">&lt;/button&gt;</span>
-
-<span class="cm">&lt;!-- text ขนาดต่างกันตามหน้าจอ --&gt;</span>
-<span class="t">&lt;h1</span> <span class="a">class</span>=<span class="v">"text-2xl md:text-3xl lg:text-5xl"</span><span class="t">&gt;</span>
-  หัวข้อใหญ่
-<span class="t">&lt;/h1&gt;</span>
-        </div>
-      </div>
-      <div>
-        <div class="pc">
-          <div class="pn">hidden md:flex</div>
-          <div class="pd">ซ่อน (display:none) บนมือถือ, แสดงเป็น flex เมื่อ md+</div>
-        </div>
-        <div class="pc">
-          <div class="pn">md:hidden</div>
-          <div class="pd">แสดงตามปกติบนมือถือ, ซ่อนเมื่อ md+</div>
-        </div>
-        <div class="pc">
-          <div class="pn">text-sm md:text-base lg:text-lg</div>
-          <div class="pd">ขนาด text เปลี่ยนตาม breakpoint</div>
-        </div>
-        <div class="info ic2">
-          <span class="ic">🎯</span>
-          <span>Pattern <code style="color:var(--cy)">hidden md:flex</code> + <code style="color:var(--cy)">md:hidden</code> ใช้ทำ Hamburger menu บ่อยมาก</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WORKSHOP 3 -->
-  <div class="ws">
-    <div class="ws-head">
-      <div class="ws-icon">🛠</div>
-      <div>
-        <div class="ws-title">Workshop 3 — Responsive Grid</div>
-        <span class="ws-badge" style="background:rgba(34,211,238,.1);color:var(--cy);border:1px solid rgba(34,211,238,.3);">Responsive</span>
-      </div>
-    </div>
-    <p class="ws-desc">เปิด <code style="color:var(--cy)">cafe.html</code> แล้วทำให้ Menu Card Grid รองรับทุก device</p>
-    <div class="ws-tasks">
-      <div class="ws-task">
-        <div class="wslv lv1">1</div>
-        <div class="ws-tt"><strong>พื้นฐาน:</strong> เปลี่ยน <code style="color:var(--cy)">grid-cols-3</code> เป็น <code style="color:var(--cy)">grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code> แล้วเปิดบนมือถือดูผล (F12 → toggle device toolbar)</div>
-      </div>
-      <div class="ws-task">
-        <div class="wslv lv2">2</div>
-        <div class="ws-tt"><strong>กลาง:</strong> เพิ่ม <code style="color:var(--cy)">hidden md:flex</code> บน div ลิงก์ใน Navbar และเพิ่มปุ่ม <code style="color:var(--cy)">md:hidden</code> hamburger <code>☰</code> ให้แสดงบนมือถือแทน</div>
-      </div>
-      <div class="ws-task">
-        <div class="wslv lv3">3</div>
-        <div class="ws-tt"><strong>ท้าทาย:</strong> ทำให้ section "เกี่ยวกับเรา" เปลี่ยนจาก column เดียวบนมือถือ เป็น 2 คอลัมน์ (รูป + ข้อความ) บน md+ ด้วย <code style="color:var(--cy)">grid-cols-1 md:grid-cols-2</code></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="shr">
-
-<!-- ═══════════════════════════
-     S4: CHALLENGE
-════════════════════════════ -->
-<div class="sec" id="s4">
-  <div class="sec-head">
-    <span class="sec-num" style="color:var(--pk)">04</span>
-    <div class="sec-line"></div>
-  </div>
-  <h2 class="sec-title" style="color:var(--pk)">🏁 ชิ้นงาน Week 4</h2>
-  <p class="sec-sub">รวมทุกอย่างที่เรียนมา — Menu Card Grid ใน cafe.html ให้ Responsive สมบูรณ์</p>
+  <h2 class="sec-title" style="color:var(--pk)">🏁 ชิ้นงาน Week 8</h2>
+  <p class="sec-sub">สร้างหน้า ProfileCard ของตัวเองด้วย React + Props + Tailwind</p>
 
   <div class="challenge">
-    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
-    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.5rem;">อัปเกรด cafe.html ให้ Responsive + Grid สมบูรณ์</div>
-    <p style="font-size:14px;color:#c094b8;line-height:1.7;margin-bottom:1.2rem;">
-      เปิด cafe.html จาก Week 2–3 แล้วอัปเกรดให้ครบทุกอย่างที่เรียนมาใน Week 4 — Grid Layout + Responsive + Col-span
+    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);
+      border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;
+      font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.5rem;">
+      หน้า ProfileCard ของนักเรียนทั้งห้อง
+    </div>
+    <p style="font-size:14px;color:#c094b8;line-height:1.7;margin-bottom:1.5rem;">
+      สร้าง App ที่แสดง ProfileCard ของตัวเองและเพื่อนๆ ในห้อง — ทุก Card ใช้ Component เดียวกันแต่รับ Props ต่างกัน
     </p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-bottom:1.5rem;">
       <div>
-        <div style="font-size:13px;font-weight:600;color:var(--pk);margin-bottom:.6rem;">✅ Checklist Grid</div>
+        <div style="font-size:13px;font-weight:600;color:var(--jsx);margin-bottom:.6rem;">✅ Component ที่ต้องสร้าง</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
-          <div>☐ Menu section ใช้ <code style="color:var(--pu)">grid grid-cols-3 gap-6</code></div>
-          <div>☐ Card แต่ละอันใช้ <code style="color:var(--pu)">&lt;article&gt;</code></div>
-          <div>☐ มีรูป + ชื่อ + คำอธิบาย + ราคา</div>
-          <div>☐ Featured card ใช้ <code style="color:var(--pu)">col-span-2</code> หรือ <code style="color:var(--pu)">col-span-full</code></div>
+          <div>☐ <code style="color:var(--jsx)">ProfileCard.jsx</code> รับ props</div>
+          <div>☐ props: name, role, emoji, school</div>
+          <div>☐ ใช้ <code style="color:var(--jsx)">{props.name}</code> ใน JSX</div>
+          <div>☐ <code style="color:var(--jsx)">export default ProfileCard</code></div>
+          <div>☐ <code style="color:var(--jsx)">import</code> ใช้ใน App.jsx</div>
         </div>
       </div>
       <div>
-        <div style="font-size:13px;font-weight:600;color:var(--cy);margin-bottom:.6rem;">✅ Checklist Responsive</div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.6rem;">✅ App.jsx</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
-          <div>☐ <code style="color:var(--cy)">grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code></div>
-          <div>☐ Navbar ซ่อนเมนูบนมือถือ <code style="color:var(--cy)">hidden md:flex</code></div>
-          <div>☐ About section: <code style="color:var(--cy)">grid-cols-1 md:grid-cols-2</code></div>
-          <div>☐ ทดสอบบน F12 Chrome DevTools</div>
+          <div>☐ render ProfileCard ≥ 3 ใบ</div>
+          <div>☐ ข้อมูลต่างกันทุก Card</div>
+          <div>☐ จัด layout ด้วย Tailwind Grid</div>
+          <div>☐ <code style="color:var(--re)">grid-cols-1 md:grid-cols-3</code></div>
         </div>
       </div>
       <div>
         <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">⭐ Bonus</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
-          <div>☐ Badge "ขายดี" / "ใหม่" บน card บางอัน</div>
-          <div>☐ <code style="color:var(--y)">object-cover h-48</code> บนรูปในการ์ด</div>
-          <div>☐ Hamburger menu button (<code style="color:var(--y)">md:hidden</code>)</div>
-          <div>☐ <code style="color:var(--y)">gap-x-6 gap-y-8</code> แยก horizontal/vertical</div>
+          <div>☐ ใช้ destructuring props</div>
+          <div>☐ <code style="color:var(--y)">const {"{"}name, role{"}"} = props</code></div>
+          <div>☐ เพิ่ม default props</div>
+          <div>☐ Template literal ใน JSX</div>
         </div>
       </div>
     </div>
@@ -942,8 +928,8 @@ hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
     <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px 16px;">
       <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:.5rem;">📤 ส่งงาน</div>
       <div class="cb" style="margin:0;font-size:12px;">
-git add cafe.html
-git commit -m <span class="val">"Week 4 responsive grid layout"</span>
+git add .
+git commit -m <span class="v">"Week 8 ProfileCard component"</span>
 git push
       </div>
     </div>
@@ -952,27 +938,28 @@ git push
 
 <!-- SUMMARY -->
 <div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
-  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 4</div>
+  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 8</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
-    <div style="background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.15);border-radius:10px;padding:12px 14px;">
-      <div style="color:var(--or);font-weight:600;font-size:13px;margin-bottom:4px;">✓ CSS Grid</div>
-      <div style="font-size:12px;color:var(--mu);">display:grid, grid-template-columns, repeat(), fr, gap, col-span</div>
+    <div style="background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--js);font-weight:600;font-size:13px;margin-bottom:4px;">✓ JavaScript</div>
+      <div style="font-size:12px;color:var(--mu);">const/let, template literal `${}`, arrow function () =></div>
+    </div>
+    <div style="background:rgba(97,218,251,.06);border:1px solid rgba(97,218,251,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--re);font-weight:600;font-size:13px;margin-bottom:4px;">✓ React</div>
+      <div style="font-size:12px;color:var(--mu);">Library, Component-based, Vite setup, โครงสร้าง project</div>
     </div>
     <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:12px 14px;">
-      <div style="color:var(--pu);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Tailwind Grid</div>
-      <div style="font-size:12px;color:var(--mu);">grid, grid-cols-*, gap-*, col-span-*, row-span-*</div>
-    </div>
-    <div style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:10px;padding:12px 14px;">
-      <div style="color:var(--cy);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Responsive</div>
-      <div style="font-size:12px;color:var(--mu);">Mobile-first, sm:/md:/lg:, hidden md:flex, md:hidden</div>
+      <div style="color:var(--jsx);font-weight:600;font-size:13px;margin-bottom:4px;">✓ JSX + Component</div>
+      <div style="font-size:12px;color:var(--mu);">className, {}, Function Component, Props, export/import</div>
     </div>
     <div style="background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.15);border-radius:10px;padding:12px 14px;">
       <div style="color:var(--pk);font-weight:600;font-size:13px;margin-bottom:4px;">✓ ชิ้นงาน</div>
-      <div style="font-size:12px;color:var(--mu);">cafe.html — Responsive Menu Card Grid → push GitHub</div>
+      <div style="font-size:12px;color:var(--mu);">ProfileCard component + Props + Tailwind → push GitHub</div>
     </div>
   </div>
   <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
-    <strong style="color:var(--g)">Week 5 →</strong> Forms & Input Styling — form, input types, label, :focus/:hover, Tailwind ring & placeholder
+    <strong style="color:var(--js)">Week 9 →</strong> Object & Destructuring + Props ขั้นสูง — MenuCard รับ props จาก array ข้อมูลจริง
   </div>
 </div>
 
@@ -986,7 +973,6 @@ window.addEventListener('scroll',()=>{
 });
 
 // NAV ACTIVE
-const secs=document.querySelectorAll('.sec');
 const obs=new IntersectionObserver(e=>{
   e.forEach(en=>{
     if(en.isIntersecting){
@@ -996,89 +982,49 @@ const obs=new IntersectionObserver(e=>{
     }
   });
 },{threshold:0.2});
-secs.forEach(s=>obs.observe(s));
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
 
-// ═══ GRID SIMULATOR ═══
-const gp=document.getElementById('gridPreview');
-let gState={cols:'repeat(3,1fr)',gap:'10px'};
-let span1=false,span2=false;
-
-function applyGrid(){
-  gp.style.gridTemplateColumns=gState.cols;
-  gp.style.gap=gState.gap;
-  document.getElementById('out-cols').textContent=gState.cols;
-  document.getElementById('out-gap').textContent=gState.gap;
-  // apply/remove spans
-  const i1=gp.children[0],i2=gp.children[1];
-  i1.style.gridColumn=span1?'span 2':'';
-  i2.style.gridRow=span2?'span 2':'';
+// ═══ TEMPLATE LITERAL SIMULATOR ═══
+function updateTL(){
+  const name=document.getElementById('tl-name').value||'...';
+  const age=document.getElementById('tl-age').value||'...';
+  const school=document.getElementById('tl-school').value||'...';
+  const emoji=document.getElementById('tl-emoji').value||'⭐';
+  document.getElementById('disp-name').textContent=name;
+  document.getElementById('disp-emoji').textContent=emoji;
+  document.getElementById('tl-result').textContent=
+    `${emoji} สวัสดี ฉันชื่อ ${name} อายุ ${age} ปี เรียนที่ ${school}`;
 }
+['tl-name','tl-age','tl-school','tl-emoji'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updateTL);
+});
 
-document.querySelectorAll('#ctrl-cols .cbtn').forEach(btn=>{
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('#ctrl-cols .cbtn').forEach(b=>b.classList.remove('on'));
-    this.classList.add('on');
-    gState.cols=this.dataset.cols;
-    applyGrid();
-  });
-});
-document.querySelectorAll('#ctrl-gap .cbtn').forEach(btn=>{
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('#ctrl-gap .cbtn').forEach(b=>b.classList.remove('on'));
-    this.classList.add('on');
-    gState.gap=this.dataset.gap;
-    applyGrid();
-  });
-});
-document.getElementById('toggleSpan').addEventListener('click',function(){
-  span1=!span1;
-  this.classList.toggle('on',span1);
-  applyGrid();
-});
-document.getElementById('toggleRow').addEventListener('click',function(){
-  span2=!span2;
-  this.classList.toggle('on',span2);
-  applyGrid();
-});
-applyGrid();
-
-// ═══ RESPONSIVE SIMULATOR ═══
-const deviceConfig={
-  sm:{cols:1,size:'📱 ~375px',show3:false,showLinks:false},
-  md:{cols:2,size:'📟 ~768px',show3:false,showLinks:true},
-  lg:{cols:3,size:'🖥️ ~1280px',show3:true,showLinks:true}
+// ═══ COMPONENT VISUALIZER ═══
+const colorMap={
+  violet:{bg:'linear-gradient(135deg,#f3e8ff,#ede9fe)',text:'#7c3aed'},
+  cyan:{bg:'linear-gradient(135deg,#ecfeff,#cffafe)',text:'#0891b2'},
+  orange:{bg:'linear-gradient(135deg,#fff7ed,#ffedd5)',text:'#c2410c'},
+  green:{bg:'linear-gradient(135deg,#f0fdf4,#dcfce7)',text:'#166534'},
 };
-const activeClassesHTML={
-  sm:`<div class="bp-row"><span class="bp-tag bp-active">grid-cols-1</span><span class="bp-arrow">✓ เปิดใช้งาน</span></div>
-      <div class="bp-row"><span class="bp-tag bp-dim">md:grid-cols-2</span><span class="bp-arrow" style="color:var(--mu);">⋯ รอหน้าจอ ≥ 768px</span></div>
-      <div class="bp-row"><span class="bp-tag bp-dim">lg:grid-cols-3</span><span class="bp-arrow" style="color:var(--mu);">⋯ รอหน้าจอ ≥ 1024px</span></div>`,
-  md:`<div class="bp-row"><span class="bp-tag bp-dim">grid-cols-1</span><span class="bp-arrow" style="color:var(--mu);">⋯ override แล้ว</span></div>
-      <div class="bp-row"><span class="bp-tag bp-active">md:grid-cols-2</span><span class="bp-arrow">✓ เปิดใช้งาน (≥ 768px)</span></div>
-      <div class="bp-row"><span class="bp-tag bp-dim">lg:grid-cols-3</span><span class="bp-arrow" style="color:var(--mu);">⋯ รอหน้าจอ ≥ 1024px</span></div>`,
-  lg:`<div class="bp-row"><span class="bp-tag bp-dim">grid-cols-1</span><span class="bp-arrow" style="color:var(--mu);">⋯ override แล้ว</span></div>
-      <div class="bp-row"><span class="bp-tag bp-dim">md:grid-cols-2</span><span class="bp-arrow" style="color:var(--mu);">⋯ override แล้ว</span></div>
-      <div class="bp-row"><span class="bp-tag bp-active">lg:grid-cols-3</span><span class="bp-arrow">✓ เปิดใช้งาน (≥ 1024px)</span></div>`
-};
-
-function setDevice(d){
-  const cfg=deviceConfig[d];
-  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('dtab-'+d).classList.add('on');
-  document.getElementById('frame-size').textContent=cfg.size;
-  document.getElementById('res-cards').style.gridTemplateColumns=`repeat(${cfg.cols},1fr)`;
-  // show/hide extra cards
-  ['res-card4','res-card5','res-card6'].forEach(id=>{
-    document.getElementById(id).style.display=cfg.show3?'block':'none';
-  });
-  // nav links
-  const links=document.getElementById('res-nav-links');
-  if(cfg.showLinks){
-    links.innerHTML=`<div class="res-link">เมนู</div><div class="res-link">เกี่ยวกับ</div><div class="res-link">ติดต่อ</div>`;
-  } else {
-    links.innerHTML=`<div class="res-link" id="res-hamburger">☰</div>`;
-  }
-  document.getElementById('active-classes').innerHTML=activeClassesHTML[d];
+function updateCV(){
+  const name=document.getElementById('cv-name').value||'...';
+  const role=document.getElementById('cv-role').value||'...';
+  const school=document.getElementById('cv-school').value||'...';
+  const emoji=document.getElementById('cv-emoji').value||'⭐';
+  const color=document.getElementById('cv-color').value;
+  const cm=colorMap[color]||colorMap.violet;
+  document.getElementById('rc-name').textContent=name;
+  document.getElementById('rc-role').textContent=role;
+  document.getElementById('rc-school').textContent='🏫 '+school;
+  document.getElementById('rc-img').textContent=emoji;
+  document.getElementById('rc-img').style.background=cm.bg;
+  document.getElementById('jsx-name').textContent=name;
+  document.getElementById('jsx-role').textContent=role;
+  document.getElementById('jsx-emoji').textContent=emoji;
 }
+['cv-name','cv-role','cv-school','cv-emoji','cv-color'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updateCV);
+});
 </script>
 </body>
 </html>
