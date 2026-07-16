@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>React Layout Test — 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,0.09);--bd2:rgba(130,150,255,0.2);
+  --re:#61dafb;--re2:#38bdf8;    /* React blue */
+  --g:#34d399;--g2:#10b981;      /* green */
+  --pu:#a78bfa;--pu2:#8b5cf6;   /* purple */
+  --or:#fb923c;--or2:#f97316;   /* orange */
+  --pk:#f472b6;--y:#fbbf24;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;
+  font-weight:400;line-height:1.7;min-height:100vh;}
+.wrap{max-width:920px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+
+/* TOP HEADER */
+.top-header{background:linear-gradient(135deg,rgba(97,218,251,.08),rgba(167,139,250,.06));
+  border:1px solid rgba(97,218,251,.2);border-radius:18px;padding:2rem 2.5rem;
+  margin-bottom:2rem;position:relative;overflow:hidden;}
+.top-header::before{content:'';position:absolute;top:-40px;right:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(97,218,251,.08),transparent 70%);
+  pointer-events:none;}
+.course-tag{font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--re);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem;}
+.test-title{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700;line-height:1.1;margin-bottom:.4rem;}
+.test-title span{color:var(--re);}
+.test-sub{color:#7a8aaa;font-size:14px;margin-bottom:1.2rem;}
+.meta-row{display:flex;gap:12px;flex-wrap:wrap;}
+.meta-chip{display:flex;align-items:center;gap:6px;padding:5px 14px;
+  border-radius:8px;font-size:13px;font-weight:500;}
+
+/* SECTION */
+.section{margin-bottom:2rem;}
+.section-title{font-size:1.1rem;font-weight:700;margin-bottom:1rem;
+  display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:1.4rem 1.5rem;margin-bottom:.8rem;}
+.card-head{font-size:14px;font-weight:600;margin-bottom:.8rem;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* LAYOUT PREVIEW */
+.layouts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:640px){.layouts{grid-template-columns:1fr;}}
+.layout-card{background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+.lc-head{padding:14px 16px;border-bottom:1px solid var(--bd);}
+.lc-badge{display:inline-block;width:28px;height:28px;border-radius:50%;
+  font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
+.lc-name{font-weight:700;font-size:14px;}
+.lc-desc{font-size:12px;color:var(--mu);}
+.lc-preview{padding:10px;}
+
+/* MOCK LAYOUT A */
+.mock{background:#060c20;border-radius:8px;overflow:hidden;font-size:10px;
+  font-family:'JetBrains Mono',monospace;}
+.m-header{background:rgba(97,218,251,.12);border-bottom:1px solid rgba(97,218,251,.15);
+  padding:6px 10px;text-align:center;color:var(--re);}
+.m-nav{background:rgba(167,139,250,.1);border-bottom:1px solid rgba(167,139,250,.15);
+  padding:5px 10px;display:flex;gap:8px;color:var(--pu);}
+.m-body{display:flex;gap:4px;padding:6px;}
+.m-sidebar{background:rgba(52,211,153,.08);border-radius:5px;padding:6px 8px;
+  width:60px;flex-shrink:0;color:var(--g);font-size:9px;}
+.m-sidebar div{background:rgba(52,211,153,.2);border-radius:3px;padding:2px 4px;margin-bottom:3px;}
+.m-main{flex:1;background:rgba(255,255,255,.03);border-radius:5px;padding:6px 8px;
+  color:#9aa3b8;font-size:9px;}
+.m-img{width:55px;flex-shrink:0;display:flex;flex-direction:column;gap:3px;}
+.m-img-block{background:rgba(251,146,60,.15);border-radius:4px;flex:1;
+  display:flex;align-items:center;justify-content:center;color:var(--or);font-size:8px;}
+
+/* MOCK LAYOUT B */
+.m-hero{background:rgba(251,146,60,.12);border-bottom:1px solid rgba(251,146,60,.15);
+  padding:14px 10px;text-align:center;color:var(--or);font-size:9px;}
+.m-twocol{display:flex;gap:4px;padding:6px;}
+.m-story{flex:1;background:rgba(255,255,255,.03);border-radius:5px;padding:6px;
+  font-size:9px;color:#9aa3b8;}
+.m-social{width:50px;flex-shrink:0;background:rgba(167,139,250,.08);
+  border-radius:5px;padding:6px;font-size:8px;color:var(--pu);}
+.m-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:6px;}
+.m-grid-item{background:rgba(97,218,251,.1);border-radius:4px;padding:5px 4px;
+  font-size:8px;color:var(--re);text-align:center;}
+.m-footer{background:rgba(255,255,255,.04);padding:5px 10px;
+  text-align:center;font-size:8px;color:var(--mu);}
+.m-responsive-note{background:rgba(34,211,153,.06);border:1px dashed rgba(34,211,153,.25);
+  border-radius:4px;padding:4px 6px;margin:4px;font-size:8px;color:var(--g);}
+
+/* COMPONENT TREE */
+.tree-wrap{background:#060c20;border-radius:10px;padding:14px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;}
+.tr{display:flex;align-items:center;gap:6px;}
+.tr-branch{color:var(--mu);}
+.tr-jsx{color:var(--re);}
+.tr-file{color:var(--pu);}
+.tr-tag{font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.tr-html{background:rgba(52,211,153,.12);color:var(--g);}
+.tr-tw{background:rgba(97,218,251,.1);color:var(--re);}
+.tr-gr{background:rgba(251,146,60,.1);color:var(--or);}
+.tr-cm{color:#454c6b;font-size:10.5px;margin-left:4px;}
+.i0{padding-left:0;}
+.i1{padding-left:16px;}
+.i2{padding-left:32px;}
+.i3{padding-left:48px;}
+
+/* COMPONENTS TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.comp-table th{padding:8px 12px;text-align:left;font-size:11.5px;color:var(--mu);
+  font-weight:500;border-bottom:1px solid var(--bd);letter-spacing:.04em;}
+.comp-table td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:rgba(255,255,255,.02);}
+.jsx-tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--re);
+  background:rgba(97,218,251,.1);padding:2px 7px;border-radius:4px;}
+.req-chip{font-size:11px;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;
+  display:inline-block;margin:1px;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:14px;padding-bottom:1.2rem;position:relative;}
+.step:not(:last-child)::after{content:'';position:absolute;left:17px;top:37px;
+  bottom:0;width:1px;background:var(--bd);}
+.step-num{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;border:1px solid;}
+.step-body{flex:1;padding-top:5px;}
+.step-title{font-weight:600;font-size:14px;margin-bottom:.4rem;}
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:8px;
+  padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;
+  line-height:1.8;overflow-x:auto;margin:.5rem 0;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.cm{color:#454c6b;}
+
+/* SCORING */
+.score-table{width:100%;border-collapse:collapse;font-size:13px;}
+.score-table th{padding:10px 14px;text-align:left;font-size:12px;color:var(--mu);
+  font-weight:600;border-bottom:2px solid var(--bd);letter-spacing:.04em;text-transform:uppercase;}
+.score-table td{padding:10px 14px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.score-table tr:last-child td{border-bottom:none;}
+.score-num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;}
+.score-table tbody tr:hover td{background:rgba(255,255,255,.02);}
+.score-total{background:rgba(97,218,251,.07);border-top:2px solid rgba(97,218,251,.2);}
+.score-total td{padding:14px;}
+
+/* INFO BOX */
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
+.ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.io{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);color:#f0c8a0;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+
+/* BADGE */
+.week4-badge{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.3);
+  color:var(--or);padding:3px 10px;border-radius:6px;
+  font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;}
+.react-badge{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(97,218,251,.12);border:1px solid rgba(97,218,251,.3);
+  color:var(--re);padding:3px 10px;border-radius:6px;
+  font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;}
+
+/* GRID DEMO IN CARD */
+.grid-demo{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:.5rem 0;}
+.gd-item{background:rgba(97,218,251,.1);border:1px solid rgba(97,218,251,.2);
+  border-radius:6px;padding:8px;font-size:11.5px;text-align:center;color:var(--re);}
+
+/* RESPONSIVE DEMO */
+.res-demo{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.rd-device{background:rgba(0,0,0,.3);border-radius:8px;padding:8px 12px;text-align:center;}
+.rd-label{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.rd-grid{display:inline-grid;gap:3px;}
+
+/* SUBMISSION */
+.submit-card{background:linear-gradient(135deg,rgba(97,218,251,.06),rgba(52,211,153,.04));
+  border:1px solid rgba(97,218,251,.2);border-radius:14px;padding:1.5rem;}
+
+/* PRINT HINT */
+@media print{
+  body{background:white;color:#1a1a2e;}
+  .card,.layout-card,.submit-card{border:1px solid #ddd;background:white;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP HEADER -->
+  <div class="top-header">
+    <div class="course-tag">⚛️ 31901-2004 · การพัฒนาซอฟต์แวร์ด้วยเทคโนโลยี Front-End</div>
+    <h1 class="test-title"><span>React</span> Layout Test</h1>
+    <p class="test-sub">แบ่ง Component + สร้าง Layout ด้วย Tailwind CSS · รวม Grid & Responsive จาก Week 4</p>
+    <div class="meta-row">
+      <span class="meta-chip" style="background:rgba(97,218,251,.1);color:var(--re);border:1px solid rgba(97,218,251,.25)">⚛️ React 19 + Vite</span>
+      <span class="meta-chip" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.25)">🎨 Tailwind CSS v4</span>
+      <span class="meta-chip" style="background:rgba(251,146,60,.1);color:var(--or);border:1px solid rgba(251,146,60,.25)">📐 CSS Grid Week 4</span>
+      <span class="meta-chip" style="background:rgba(255,255,255,.06);color:#8494b8;border:1px solid var(--bd)">⏱ 1.5–2 ชั่วโมง</span>
+      <span class="meta-chip" style="background:rgba(255,255,255,.06);color:#8494b8;border:1px solid var(--bd)">👤 เดี่ยว</span>
+    </div>
+  </div>
+
+  <!-- NOTICE -->
+  <div class="info ig" style="margin-bottom:1.5rem;">
+    <span class="ic">⚠️</span>
+    <span>ไม่ต้องทำหน้าตาเหมือนเป๊ะ — แต่ <strong style="color:var(--g)">โครงสร้าง Layout และการแบ่ง Component ต้องตรงตามที่กำหนด</strong> · ทำทั้ง 2 Layout แยกกันคนละ Project หรือใช้ React Router 2 หน้าใน Project เดียวก็ได้</span>
+  </div>
+
+  <!-- LAYOUT PREVIEW -->
+  <div class="section">
+    <div class="section-title" style="color:var(--re)">👁 ตัวอย่าง Layout ที่ต้องสร้าง</div>
+    <div class="layouts">
+      <!-- LAYOUT A -->
+      <div class="layout-card">
+        <div class="lc-head">
+          <div class="lc-badge" style="background:rgba(97,218,251,.15);color:var(--re);">A</div>
+          <div class="lc-name">Corporate Layout</div>
+          <div class="lc-desc">Header · Navbar · Sidebar + Content + Image</div>
+          <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;">
+            <span class="react-badge">Flex Layout</span>
+          </div>
+        </div>
+        <div class="lc-preview">
+          <div class="mock">
+            <div class="m-header">⚛️ SiteHeader — Logo + Tagline</div>
+            <div class="m-nav">
+              <span>Home</span><span>About</span><span>Services</span>
+              <span>Portfolio</span><span>Blog</span><span>Contact</span>
+            </div>
+            <div class="m-body">
+              <div class="m-sidebar">
+                <div>หน้าแรก</div>
+                <div style="background:rgba(52,211,153,.4);">บริการ ★</div>
+                <div>ผลงาน</div>
+                <div>ทีมงาน</div>
+              </div>
+              <div class="m-main">
+                <div style="color:var(--tx);font-size:10px;margin-bottom:3px;">🔵 หัวข้อหลัก H2</div>
+                <div style="margin-bottom:3px;">ข้อความย่อหน้าที่หนึ่ง บรรยายเนื้อหา...</div>
+                <div>ข้อความย่อหน้าที่สอง รายละเอียดเพิ่มเติม...</div>
+              </div>
+              <div class="m-img">
+                <div class="m-img-block">IMG 1</div>
+                <div class="m-img-block">IMG 2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAYOUT B -->
+      <div class="layout-card">
+        <div class="lc-head">
+          <div class="lc-badge" style="background:rgba(251,146,60,.15);color:var(--or);">B</div>
+          <div class="lc-name">Product Layout</div>
+          <div class="lc-desc">Header · Nav · Hero · 2-Col · Cards · Footer</div>
+          <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;">
+            <span class="react-badge">Flex + Grid</span>
+            <span class="week4-badge">📐 Week 4</span>
+          </div>
+        </div>
+        <div class="lc-preview">
+          <div class="mock">
+            <div class="m-header" style="background:rgba(167,139,250,.1);color:var(--pu);">
+              AppHeader — Logo + Social Links
+            </div>
+            <div class="m-nav" style="background:rgba(52,211,153,.08);color:var(--g);justify-content:space-between;">
+              <span>Home · About · Shop · Blog · Sale · Contact</span>
+              <span>[🔍 search]</span>
+            </div>
+            <div class="m-hero" style="height:38px;display:flex;align-items:center;justify-content:center;">
+              🖼️ HeroBanner — รูปใหญ่เต็มความกว้าง
+            </div>
+            <div class="m-twocol">
+              <div class="m-story">
+                📖 StorySection<br>รูป + ข้อความ<br>+ ปุ่ม Download
+              </div>
+              <div class="m-social">
+                📹 Video<br>🔗 Share<br>→ Links
+              </div>
+            </div>
+            <div class="m-responsive-note">📐 grid-cols-1 md:grid-cols-2 lg:grid-cols-4</div>
+            <div class="m-grid">
+              <div class="m-grid-item">Card 1</div>
+              <div class="m-grid-item">Card 2</div>
+              <div class="m-grid-item">Card 3</div>
+              <div class="m-grid-item">Card 4</div>
+            </div>
+            <div class="m-footer">AppFooter — Links · Copyright</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT A DETAILS -->
+  <div class="section">
+    <div class="section-title" style="color:var(--re)">🅰 Layout A — Corporate</div>
+
+    <div class="card">
+      <div class="card-head">
+        🧩 Components ที่ต้องสร้าง
+        <span class="react-badge">5 Components</span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Component (.jsx)</th>
+            <th>Semantic Tag</th>
+            <th>เนื้อหาที่ต้องมี</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="jsx-tag">SiteHeader.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;header&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">Logo + ชื่อบริษัท + Tagline จัดกึ่งกลาง</td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">NavBar.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;nav&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">แถบเมนูแนวนอน 6 ลิงก์ พื้นหลังเข้ม</td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">SidebarNav.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;aside&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">รายการลิงก์แนวตั้ง มี active state (className เปลี่ยนสี)</td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">MainContent.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;main&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">หัวข้อ H2 + ข้อความ 2 ย่อหน้า</td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">ImageColumn.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;aside&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">placeholder รูป 2 รูปซ้อนกัน (div สีพื้นหลังได้)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-head">🌳 Component Tree — App.jsx ประกอบ</div>
+      <div class="tree-wrap">
+        <div class="tr i0"><span style="color:var(--re);">App.jsx</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;SiteHeader /&gt;</span> <span class="tr-tag tr-html">header</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;NavBar /&gt;</span> <span class="tr-tag tr-html">nav</span></div>
+        <div class="tr i1"><span class="tr-branch">└─</span> <span style="color:var(--y);">div</span><span style="color:var(--mu);"> className="flex gap-6 p-6"</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;SidebarNav /&gt;</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">w-40</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;MainContent /&gt;</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">flex-1</span></div>
+        <div class="tr i2"><span class="tr-branch">└─</span> <span class="tr-jsx">&lt;ImageColumn /&gt;</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">w-40</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">📁 โครงสร้างไฟล์</div>
+      <div class="tree-wrap">
+        <div class="tr i0"><span style="color:var(--re);">src/</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-file">components/</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">SiteHeader.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">NavBar.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">SidebarNav.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">MainContent.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">└─</span> <span class="tr-jsx">ImageColumn.jsx</span></div>
+        <div class="tr i1"><span class="tr-branch">└─</span> <span class="tr-jsx">App.jsx</span> <span class="tr-cm">← ประกอบทุก component</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT B DETAILS -->
+  <div class="section">
+    <div class="section-title" style="color:var(--or)">🅱 Layout B — Product
+      <span class="week4-badge" style="font-size:11px;">📐 Grid + Responsive</span>
+    </div>
+
+    <div class="info io">
+      <span class="ic">📐</span>
+      <span>Layout B รวมเนื้อหา <strong style="color:var(--or)">Week 4 — CSS Grid & Responsive Design</strong> เข้ามาด้วย — NewsletterCards ต้องใช้ Grid จริงๆ และ Layout ต้องรองรับทุก device</span>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        🧩 Components ที่ต้องสร้าง
+        <span class="react-badge">7 Components</span>
+        <span class="week4-badge">Grid + Responsive</span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Component (.jsx)</th>
+            <th>Semantic Tag</th>
+            <th>เนื้อหาที่ต้องมี</th>
+            <th>Week 4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="jsx-tag">AppHeader.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;header&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">Logo วงกลม + ชื่อ/คำอธิบาย + Social icons ขวา</td>
+            <td><span class="req-chip" style="background:rgba(97,218,251,.1);color:var(--re);">flex justify-between</span></td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">TopNav.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;nav&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">เมนู 6 ลิงก์ + Search input ขวา</td>
+            <td><span class="req-chip" style="background:rgba(97,218,251,.1);color:var(--re);">flex items-center</span></td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">HeroBanner.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;section&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">placeholder ภาพใหญ่เต็มความกว้าง w-full</td>
+            <td><span class="req-chip" style="background:rgba(52,211,153,.1);color:var(--g);">w-full</span></td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">StorySection.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;article&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">รูป + ข้อความ 2 ย่อหน้า + ปุ่ม Download/Purchase</td>
+            <td><span class="req-chip" style="background:rgba(97,218,251,.1);color:var(--re);">flex-1</span></td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">SocialSidebar.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;aside&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">Video placeholder + Share Links + Navigation list</td>
+            <td><span class="req-chip" style="background:rgba(167,139,250,.1);color:var(--pu);">w-48 shrink-0</span></td>
+          </tr>
+          <tr style="background:rgba(251,146,60,.04);">
+            <td><span class="jsx-tag" style="color:var(--or);background:rgba(251,146,60,.15);">NewsletterCards.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;section&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">Card 4 ใบ — ชื่อ + รูป + ปุ่ม Subscribe</td>
+            <td>
+              <span class="req-chip" style="background:rgba(251,146,60,.15);color:var(--or);">CSS Grid ✦</span>
+              <span class="req-chip" style="background:rgba(52,211,153,.1);color:var(--g);">Responsive</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="jsx-tag">AppFooter.jsx</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);">&lt;footer&gt;</span></td>
+            <td style="font-size:13px;color:#8494b8;">ลิงก์กึ่งกลาง + copyright</td>
+            <td><span class="req-chip" style="background:rgba(97,218,251,.1);color:var(--re);">flex justify-center</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- WEEK 4 REQUIREMENTS -->
+    <div class="card" style="border-color:rgba(251,146,60,.25);">
+      <div class="card-head">
+        📐 ข้อกำหนด Week 4 — Grid & Responsive
+        <span class="week4-badge">บังคับ</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--or);margin-bottom:.6rem;">NewsletterCards — ต้องใช้ CSS Grid</div>
+          <div class="cb" style="font-size:12px;">
+<span class="cm">// NewsletterCards.jsx</span>
+<span class="kw">const</span> <span class="fn">NewsletterCards</span> = () => {
+  <span class="kw">return</span> (
+    &lt;<span class="fn">section</span> className=<span class="str">"grid
+      grid-cols-1
+      md:grid-cols-2
+      lg:grid-cols-4
+      gap-6 p-6"</span>&gt;
+      &lt;<span class="fn">article</span>&gt;Card 1&lt;/<span class="fn">article</span>&gt;
+      &lt;<span class="fn">article</span>&gt;Card 2&lt;/<span class="fn">article</span>&gt;
+      &lt;<span class="fn">article</span>&gt;Card 3&lt;/<span class="fn">article</span>&gt;
+      &lt;<span class="fn">article</span>&gt;Card 4&lt;/<span class="fn">article</span>&gt;
+    &lt;/<span class="fn">section</span>&gt;
+  )
+}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:.6rem;">Responsive ที่ต้องทำ</div>
+          <div class="res-demo">
+            <div class="rd-device">
+              <div class="rd-label">📱 Mobile</div>
+              <div class="rd-grid" style="grid-template-columns:1fr;gap:2px;">
+                <div style="background:rgba(251,146,60,.2);border-radius:3px;padding:4px 12px;font-size:10px;color:var(--or);">Card 1</div>
+                <div style="background:rgba(251,146,60,.2);border-radius:3px;padding:4px 12px;font-size:10px;color:var(--or);">Card 2</div>
+                <div style="background:rgba(251,146,60,.2);border-radius:3px;padding:4px 12px;font-size:10px;color:var(--or);">Card 3</div>
+                <div style="background:rgba(251,146,60,.2);border-radius:3px;padding:4px 12px;font-size:10px;color:var(--or);">Card 4</div>
+              </div>
+              <div style="font-size:9px;color:var(--mu);margin-top:4px;">grid-cols-1</div>
+            </div>
+            <div class="rd-device">
+              <div class="rd-label">📟 Tablet</div>
+              <div class="rd-grid" style="grid-template-columns:1fr 1fr;gap:2px;">
+                <div style="background:rgba(97,218,251,.15);border-radius:3px;padding:4px 8px;font-size:10px;color:var(--re);">C1</div>
+                <div style="background:rgba(97,218,251,.15);border-radius:3px;padding:4px 8px;font-size:10px;color:var(--re);">C2</div>
+                <div style="background:rgba(97,218,251,.15);border-radius:3px;padding:4px 8px;font-size:10px;color:var(--re);">C3</div>
+                <div style="background:rgba(97,218,251,.15);border-radius:3px;padding:4px 8px;font-size:10px;color:var(--re);">C4</div>
+              </div>
+              <div style="font-size:9px;color:var(--mu);margin-top:4px;">md:grid-cols-2</div>
+            </div>
+            <div class="rd-device">
+              <div class="rd-label">🖥️ Desktop</div>
+              <div class="rd-grid" style="grid-template-columns:repeat(4,1fr);gap:2px;">
+                <div style="background:rgba(52,211,153,.15);border-radius:3px;padding:4px 5px;font-size:9px;color:var(--g);">C1</div>
+                <div style="background:rgba(52,211,153,.15);border-radius:3px;padding:4px 5px;font-size:9px;color:var(--g);">C2</div>
+                <div style="background:rgba(52,211,153,.15);border-radius:3px;padding:4px 5px;font-size:9px;color:var(--g);">C3</div>
+                <div style="background:rgba(52,211,153,.15);border-radius:3px;padding:4px 5px;font-size:9px;color:var(--g);">C4</div>
+              </div>
+              <div style="font-size:9px;color:var(--mu);margin-top:4px;">lg:grid-cols-4</div>
+            </div>
+          </div>
+          <div class="info io" style="margin-top:.7rem;">
+            <span class="ic">📐</span>
+            <span>2-column section (StorySection + SocialSidebar) ต้องใช้ <code style="color:var(--or)">flex-col md:flex-row</code> เพื่อ stack บนมือถือ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">🌳 Component Tree — App.jsx ประกอบ</div>
+      <div class="tree-wrap">
+        <div class="tr i0"><span style="color:var(--re);">App.jsx</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;AppHeader /&gt;</span> <span class="tr-tag tr-html">header</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;TopNav /&gt;</span> <span class="tr-tag tr-html">nav</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;HeroBanner /&gt;</span> <span class="tr-tag tr-tw">w-full</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span style="color:var(--y);">div</span><span style="color:var(--mu);"> className="flex flex-col md:flex-row gap-6 p-6"</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;StorySection /&gt;</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">flex-1</span></div>
+        <div class="tr i2"><span class="tr-branch">└─</span> <span class="tr-jsx">&lt;SocialSidebar /&gt;</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">w-48 shrink-0</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-jsx">&lt;NewsletterCards /&gt;</span> <span class="tr-tag tr-gr">grid-cols-1→4</span> <span class="week4-badge" style="font-size:10px;">Week 4</span></div>
+        <div class="tr i1"><span class="tr-branch">└─</span> <span class="tr-jsx">&lt;AppFooter /&gt;</span> <span class="tr-tag tr-html">footer</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">📁 โครงสร้างไฟล์</div>
+      <div class="tree-wrap">
+        <div class="tr i0"><span style="color:var(--re);">src/</span></div>
+        <div class="tr i1"><span class="tr-branch">├─</span> <span class="tr-file">components/</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">AppHeader.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">TopNav.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">HeroBanner.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">StorySection.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx">SocialSidebar.jsx</span></div>
+        <div class="tr i2"><span class="tr-branch">├─</span> <span class="tr-jsx" style="color:var(--or);">NewsletterCards.jsx</span> <span class="tr-cm">← Grid + Responsive</span></div>
+        <div class="tr i2"><span class="tr-branch">└─</span> <span class="tr-jsx">AppFooter.jsx</span></div>
+        <div class="tr i1"><span class="tr-branch">└─</span> <span class="tr-jsx">App.jsx</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="section">
+    <div class="section-title" style="color:var(--g)">🚀 ขั้นตอนการทำ</div>
+    <div class="card">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:rgba(97,218,251,.15);color:var(--re);border-color:rgba(97,218,251,.3);">1</div>
+          <div class="step-body">
+            <div class="step-title">สร้าง React Project (ทำ 2 Project แยกกัน หรือ Project เดียวก็ได้)</div>
+            <div class="cb">npm create vite@latest layout-a -- --template react
+cd layout-a && npm install</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:rgba(52,211,153,.15);color:var(--g);border-color:rgba(52,211,153,.3);">2</div>
+          <div class="step-body">
+            <div class="step-title">ติดตั้ง Tailwind CSS v4</div>
+            <div class="cb">npm install tailwindcss @tailwindcss/vite</div>
+            <div style="font-size:12.5px;color:#8494b8;margin-top:.4rem;">เพิ่ม <code style="color:var(--re);">tailwindcss()</code> ใน vite.config.js และ <code style="color:var(--re);">@import "tailwindcss"</code> ใน index.css</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:rgba(167,139,250,.15);color:var(--pu);border-color:rgba(167,139,250,.3);">3</div>
+          <div class="step-body">
+            <div class="step-title">สร้าง Components ใน src/components/</div>
+            <div class="cb"><span class="cm">// ตัวอย่าง Component พื้นฐาน</span>
+<span class="kw">const</span> <span class="fn">SiteHeader</span> = () => {
+  <span class="kw">return</span> (
+    &lt;header className=<span class="str">"text-center py-6 bg-white border-b"</span>&gt;
+      &lt;h1 className=<span class="str">"text-2xl font-bold"</span>&gt;Company Name&lt;/h1&gt;
+      &lt;p className=<span class="str">"text-gray-500 text-sm"</span>&gt;Tagline here&lt;/p&gt;
+    &lt;/header&gt;
+  )
+}
+<span class="kw">export default</span> SiteHeader</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:rgba(251,146,60,.15);color:var(--or);border-color:rgba(251,146,60,.3);">4</div>
+          <div class="step-body">
+            <div class="step-title">ประกอบ Components ใน App.jsx</div>
+            <div class="cb"><span class="kw">import</span> SiteHeader <span class="kw">from</span> <span class="str">'./components/SiteHeader'</span>
+<span class="kw">import</span> NavBar <span class="kw">from</span> <span class="str">'./components/NavBar'</span>
+<span class="cm">// ... import อื่นๆ</span>
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;<span class="fn">SiteHeader</span> /&gt;
+      &lt;<span class="fn">NavBar</span> /&gt;
+      &lt;div className=<span class="str">"flex gap-6 p-6"</span>&gt;
+        <span class="cm">{/* components ที่เหลือ */}</span>
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+<span class="kw">export default</span> App</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:rgba(52,211,153,.15);color:var(--g);border-color:rgba(52,211,153,.3);">5</div>
+          <div class="step-body">
+            <div class="step-title">Push GitHub</div>
+            <div class="cb">git add .
+git commit -m <span class="str">"React Layout Test — Layout A & B"</span>
+git push</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORING -->
+  <div class="section">
+    <div class="section-title" style="color:var(--y)">📊 เกณฑ์คะแนน</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th style="padding:12px 16px;">หัวข้อ</th>
+            <th style="padding:12px 16px;">รายละเอียด</th>
+            <th style="padding:12px 16px;text-align:right;">คะแนน</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- COMPONENT -->
+          <tr>
+            <td colspan="3" style="background:rgba(97,218,251,.04);padding:8px 16px;
+              font-size:12px;color:var(--re);font-family:'JetBrains Mono',monospace;
+              letter-spacing:.08em;text-transform:uppercase;">
+              ⚛️ การแบ่ง Component — 30 คะแนน
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Layout A — Component ครบ</td>
+            <td style="font-size:13px;color:#8494b8;">มีไฟล์ .jsx แยกครบ 5 component ตามที่กำหนด</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--re);">15</span></td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Layout B — Component ครบ</td>
+            <td style="font-size:13px;color:#8494b8;">มีไฟล์ .jsx แยกครบ 7 component ตามที่กำหนด</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--re);">15</span></td>
+          </tr>
+          <!-- LAYOUT -->
+          <tr>
+            <td colspan="3" style="background:rgba(167,139,250,.04);padding:8px 16px;
+              font-size:12px;color:var(--pu);font-family:'JetBrains Mono',monospace;
+              letter-spacing:.08em;text-transform:uppercase;">
+              📐 Layout Structure — 30 คะแนน
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Layout A — โครงสร้าง</td>
+            <td style="font-size:13px;color:#8494b8;"><code style="color:var(--pu)">flex gap-6</code> : SidebarNav (w-40) + MainContent (flex-1) + ImageColumn (w-40)</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--pu);">15</span></td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Layout B — โครงสร้าง</td>
+            <td style="font-size:13px;color:#8494b8;">Hero เต็มกว้าง, 2-col (<code style="color:var(--pu)">flex-col md:flex-row</code>), Grid cards, Footer</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--pu);">15</span></td>
+          </tr>
+          <!-- WEEK 4 -->
+          <tr>
+            <td colspan="3" style="background:rgba(251,146,60,.04);padding:8px 16px;
+              font-size:12px;color:var(--or);font-family:'JetBrains Mono',monospace;
+              letter-spacing:.08em;text-transform:uppercase;">
+              📐 Week 4 — Grid & Responsive — 25 คะแนน
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">NewsletterCards — CSS Grid</td>
+            <td style="font-size:13px;color:#8494b8;">ใช้ <code style="color:var(--or)">grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4</code> จริงๆ ไม่ใช้ flex แทน</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--or);">15</span></td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Responsive Layout B</td>
+            <td style="font-size:13px;color:#8494b8;">2-col ใช้ <code style="color:var(--or)">flex-col md:flex-row</code> / เมนูใช้ <code style="color:var(--or)">hidden md:flex</code> ถ้ามี</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--or);">10</span></td>
+          </tr>
+          <!-- QUALITY -->
+          <tr>
+            <td colspan="3" style="background:rgba(52,211,153,.04);padding:8px 16px;
+              font-size:12px;color:var(--g);font-family:'JetBrains Mono',monospace;
+              letter-spacing:.08em;text-transform:uppercase;">
+              ✨ Tailwind + คุณภาพโค้ด — 15 คะแนน
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">ใช้ Tailwind ถูกต้อง</td>
+            <td style="font-size:13px;color:#8494b8;">ไม่มี style="" inline, ใช้ className + utility class ทั้งหมด</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--g);">8</span></td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">โค้ดสะอาด อ่านง่าย</td>
+            <td style="font-size:13px;color:#8494b8;">ชื่อ Component สื่อความหมาย, มี export default ครบ, import ถูกต้อง</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--g);">7</span></td>
+          </tr>
+          <!-- BONUS -->
+          <tr>
+            <td colspan="3" style="background:rgba(251,191,36,.04);padding:8px 16px;
+              font-size:12px;color:var(--y);font-family:'JetBrains Mono',monospace;
+              letter-spacing:.08em;text-transform:uppercase;">
+              ⭐ Bonus
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">ทำ Layout A + B ใน Project เดียว</td>
+            <td style="font-size:13px;color:#8494b8;">ใช้ React Router — มี 2 เส้นทาง /layout-a และ /layout-b</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--y);">+5</span></td>
+          </tr>
+          <tr>
+            <td style="font-size:13.5px;">Props ใน NewsletterCards</td>
+            <td style="font-size:13px;color:#8494b8;">รับข้อมูล card จาก array + <code style="color:var(--y)">.map()</code> render แทน copy-paste 4 อัน</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--y);">+5</span></td>
+          </tr>
+          <!-- TOTAL -->
+          <tr class="score-total">
+            <td colspan="2" style="font-size:15px;font-weight:700;">รวมทั้งหมด</td>
+            <td style="text-align:right;"><span class="score-num" style="color:var(--re);font-size:1.8rem;">100</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SUBMISSION -->
+  <div class="submit-card">
+    <div style="font-size:1rem;font-weight:700;color:var(--re);margin-bottom:.8rem;">📤 การส่งงาน</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:.4rem;">Project A</div>
+        <div class="cb" style="font-size:11.5px;">cd layout-a
+git init
+git add .
+git commit -m <span class="str">"Layout A Corporate"</span>
+git remote add origin [url]
+git push -u origin main</div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:.4rem;">Project B</div>
+        <div class="cb" style="font-size:11.5px;">cd layout-b
+git init
+git add .
+git commit -m <span class="str">"Layout B Product + Grid"</span>
+git remote add origin [url]
+git push -u origin main</div>
+      </div>
+    </div>
+    <div class="info ig">
+      <span class="ic">✅</span>
+      <span>ส่ง GitHub Repository URL ทั้งสองอัน (หรืออันเดียวถ้าทำใน Project เดียว) ผ่าน LMS ภายในกำหนดส่ง</span>
+    </div>
+  </div>
+
+</div><!-- end wrap -->
+</body>
+</html>
