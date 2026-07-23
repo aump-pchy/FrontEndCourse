@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Week 9 — Object & Destructuring | 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,0.09);--bd2:rgba(130,150,255,0.2);
+  --y:#fbbf24;--y2:#f59e0b;       /* yellow — JS */
+  --or:#fb923c;--or2:#f97316;     /* orange — Object */
+  --pu:#a78bfa;--pu2:#8b5cf6;    /* purple — Destructuring */
+  --re:#61dafb;--re2:#38bdf8;     /* React blue — Props */
+  --pk:#f472b6;--g:#34d399;--r:#f87171;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;font-weight:400;line-height:1.7;overflow-x:hidden;}
+
+#rp{position:fixed;top:0;left:0;height:3px;width:0;z-index:999;
+  background:linear-gradient(90deg,var(--y),var(--or),var(--pu),var(--re));}
+
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  height:52px;display:flex;align-items:center;gap:6px;padding:0 1.5rem;overflow-x:auto;}
+.sni{white-space:nowrap;padding:5px 14px;border-radius:100px;font-size:13px;font-weight:500;
+  color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
+.sni:hover{color:var(--tx);border-color:var(--bd2);background:var(--card);}
+.sni.a1.on{color:var(--or);border-color:rgba(251,146,60,.35);}
+.sni.a2.on{color:var(--pu);border-color:rgba(167,139,250,.35);}
+.sni.a3.on{color:var(--re);border-color:rgba(97,218,251,.35);}
+.sni.a4.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
+.nsep{color:var(--bd2);font-size:11px;flex-shrink:0;}
+
+.page{max-width:880px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+/* HERO */
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
+.wk-tag{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);
+  color:var(--or);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.hero h1 span{background:linear-gradient(135deg,var(--or),var(--pu));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#94a3c8;font-size:15px;max-width:560px;margin-bottom:1.8rem;}
+.hchips{display:flex;gap:8px;flex-wrap:wrap;}
+.hchip{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;}
+
+/* SECTION */
+.sec{padding:3.5rem 0 1rem;}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:.4rem;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bd);}
+.sec-title{font-size:clamp(1.5rem,3.5vw,2rem);font-weight:700;margin-bottom:.4rem;}
+.sec-sub{color:#7a8aaa;font-size:14px;margin-bottom:2rem;}
+hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:640px){.two{grid-template-columns:1fr;}}
+
+/* CODE */
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:10px;
+  padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.7rem 0;user-select:text;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#454c6b;}.t{color:#89dceb;}.a{color:#a6e3a1;}.v{color:#fab387;}
+.key{color:#a6e3a1;}.val2{color:#fab387;}.op{color:#ff79c6;}
+
+/* INFO */
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
+.ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.io{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);color:#f0c8a0;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ir2{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
+
+.badge-new{background:rgba(244,114,182,.1);color:var(--pk);border:1px solid rgba(244,114,182,.25);
+  padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
+.pc{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:1rem;margin-bottom:.7rem;}
+.pn{font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:5px;}
+.pd{font-size:13px;color:#8494b8;}
+
+/* ═══ OBJECT EXPLORER ═══ */
+.obj-sim{background:var(--surf);border:1px solid rgba(251,146,60,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.obj-display{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:600px){.obj-display{grid-template-columns:1fr;}}
+
+.obj-block{background:#060c20;border:1px solid rgba(251,146,60,.15);border-radius:12px;padding:16px 20px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;}
+.obj-title{font-size:10px;color:var(--mu);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+.obj-brace{color:#454c6b;}
+.obj-key{color:var(--a);cursor:pointer;transition:color .15s;}
+.obj-key:hover{color:var(--or);}
+.obj-key.active{color:var(--or);background:rgba(251,146,60,.1);border-radius:3px;padding:0 4px;}
+.obj-colon{color:#454c6b;}
+.obj-str{color:#f1fa8c;}
+.obj-num{color:#bd93f9;}
+.obj-bool{color:#ff79c6;}
+
+.obj-result{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);
+  border-radius:10px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;}
+.obj-result-title{font-size:10px;color:var(--mu);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;}
+.obj-access{color:#8494b8;margin-bottom:4px;}
+.obj-result-val{color:var(--or);font-size:15px;font-weight:500;}
+
+/* ═══ DESTRUCTURING VISUALIZER ═══ */
+.des-sim{background:var(--surf);border:1px solid rgba(167,139,250,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.des-flow{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:center;margin-bottom:1rem;}
+@media(max-width:600px){.des-flow{grid-template-columns:1fr;}}
+.des-arrow{text-align:center;color:var(--pu);font-size:1.5rem;}
+.des-panel{background:#060c20;border-radius:12px;padding:14px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;}
+.des-panel-title{font-size:10px;color:var(--mu);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.des-prop{display:flex;align-items:center;gap:8px;margin-bottom:4px;cursor:pointer;border-radius:6px;padding:2px 4px;transition:background .15s;}
+.des-prop:hover{background:rgba(167,139,250,.08);}
+.des-prop.matched{background:rgba(167,139,250,.12);}
+.des-check{width:16px;height:16px;border-radius:50%;border:1px solid var(--bd2);
+  display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .2s;}
+.des-check.on{background:var(--pu);border-color:var(--pu);color:white;}
+.dp-key{color:var(--a);}
+.dp-val{color:#f1fa8c;}
+
+.des-output{background:#060c20;border-radius:12px;padding:14px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2;}
+.des-output-title{font-size:10px;color:var(--mu);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.des-var{transition:all .2s;border-radius:4px;padding:0 4px;}
+.des-var.lit{background:rgba(167,139,250,.15);color:var(--pu);}
+.des-var.dim{color:#454c6b;}
+
+/* ═══ PROPS PATTERN CARDS ═══ */
+.pattern-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.pattern-grid{grid-template-columns:1fr;}}
+.pattern-card{background:var(--card2);border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.pattern-head{padding:10px 14px;border-bottom:1px solid var(--bd);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.pattern-body{padding:14px;}
+.good{border-color:rgba(52,211,153,.25);}
+.good .pattern-head{background:rgba(52,211,153,.06);color:var(--g);}
+.bad{border-color:rgba(248,113,113,.2);}
+.bad .pattern-head{background:rgba(248,113,113,.06);color:var(--r);}
+
+/* ═══ SPREAD VISUALIZER ═══ */
+.spread-demo{display:flex;flex-direction:column;gap:8px;}
+.spread-row{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:13px;flex-wrap:wrap;}
+.sp-obj{background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);border-radius:8px;padding:8px 14px;color:var(--or);}
+.sp-arrow{color:var(--pu);font-size:1.2rem;}
+.sp-result{background:rgba(97,218,251,.08);border:1px solid rgba(97,218,251,.2);border-radius:8px;padding:8px 14px;color:var(--re);flex:1;}
+
+/* WORKSHOP */
+.ws{background:linear-gradient(135deg,rgba(251,146,60,.06),rgba(167,139,250,.04));
+  border:1px solid rgba(251,146,60,.18);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.ws-icon{font-size:1.6rem;}
+.ws-title{font-size:1.1rem;font-weight:700;}
+.ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
+.ws-tasks{display:flex;flex-direction:column;gap:8px;}
+.wt{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;}
+.wlv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
+.lv3{background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.3);}
+.wt-text{font-size:13.5px;line-height:1.55;}
+.wt-text strong{color:var(--tx);}
+
+/* CHALLENGE */
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(97,218,251,.04));
+  border:1px solid rgba(244,114,182,.22);border-radius:16px;padding:2rem;margin:2rem 0;}
+
+/* RENDERED MENU CARD */
+.menu-card-demo{background:white;border-radius:14px;overflow:hidden;width:180px;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);flex-shrink:0;}
+.mc-img{height:80px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.mc-body{padding:12px 14px;}
+.mc-name{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
+.mc-desc{font-size:11px;color:#6b7280;margin-bottom:6px;}
+.mc-price{font-size:13px;font-weight:700;color:#f97316;}
+.mc-badge{display:inline-block;padding:2px 8px;border-radius:100px;
+  font-size:10px;font-weight:600;margin-top:4px;}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+
+<nav class="snav">
+  <a class="sni a1" href="#s1">🟡 JS Object</a>
+  <span class="nsep">›</span>
+  <a class="sni a2" href="#s2">🟣 Destructuring</a>
+  <span class="nsep">›</span>
+  <a class="sni a3" href="#s3">⚛️ Props ขั้นสูง</a>
+  <span class="nsep">›</span>
+  <a class="sni a4" href="#s4">🏁 Challenge</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wk-tag">⚛️ WEEK 09</div>
+  <h1>Object &<br><span>Destructuring</span></h1>
+  <p>เรียน JS Object ตอนที่ React ต้องการส่งข้อมูลหลายอย่างพร้อมกัน — แล้วใช้ Destructuring เขียน Props ให้สั้นและอ่านง่าย</p>
+  <div class="hchips">
+    <span class="hchip" style="background:rgba(251,146,60,.1);color:var(--or);border:1px solid rgba(251,146,60,.25)">🟡 JS Object {}</span>
+    <span class="hchip" style="background:rgba(167,139,250,.1);color:var(--pu);border:1px solid rgba(167,139,250,.25)">🟣 Destructuring</span>
+    <span class="hchip" style="background:rgba(97,218,251,.1);color:var(--re);border:1px solid rgba(97,218,251,.25)">⚛️ Props Pattern</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: MenuCard จาก Data</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     S1: JS OBJECT
+════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--or)">01</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--or)">JavaScript Object</h2>
+  <p class="sec-sub">เก็บข้อมูลหลายอย่างไว้ในตัวแปรเดียว — เหมาะกับข้อมูลที่เกี่ยวข้องกัน</p>
+
+  <!-- WHY OBJECT -->
+  <div class="card">
+    <div class="card-t"><span>🤔</span> ทำไมต้องมี Object?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ แบบเดิม — ตัวแปรกระจาย</div>
+        <div class="cb">
+<span class="cm">// ข้อมูลกาแฟ 1 แก้ว ใช้ 4 ตัวแปร</span>
+<span class="kw">const</span> name = <span class="str">"ลาเต้"</span>
+<span class="kw">const</span> price = <span class="num">80</span>
+<span class="kw">const</span> emoji = <span class="str">"☕"</span>
+<span class="kw">const</span> isBestseller = <span class="kw">true</span>
+
+<span class="cm">// ถ้ามี 10 เมนู = 40 ตัวแปร 😱</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--g);margin-bottom:6px;">✅ ใช้ Object — มัดรวมกัน</div>
+        <div class="cb">
+<span class="cm">// ข้อมูลทั้งหมดอยู่ใน object เดียว</span>
+<span class="kw">const</span> latte = {
+  <span class="key">name</span>: <span class="str">"ลาเต้"</span>,
+  <span class="key">price</span>: <span class="num">80</span>,
+  <span class="key">emoji</span>: <span class="str">"☕"</span>,
+  <span class="key">isBestseller</span>: <span class="kw">true</span>
+}
+
+<span class="cm">// อ่านค่า</span>
+latte.<span class="key">name</span>   <span class="cm">// → "ลาเต้"</span>
+latte.<span class="key">price</span>  <span class="cm">// → 80</span>
+        </div>
+      </div>
+    </div>
+    <div class="info io">
+      <span class="ic">💡</span>
+      <span>Object เหมาะเมื่อข้อมูลเป็น <strong style="color:var(--or)">"ของชิ้นเดียวที่มีหลาย property"</strong> — เมนูอาหาร, ข้อมูลนักเรียน, สินค้า</span>
+    </div>
+  </div>
+
+  <!-- DOT NOTATION -->
+  <div class="card">
+    <div class="card-t"><span>🔑</span> Dot Notation — เข้าถึงค่าใน Object</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="kw">const</span> menu = {
+  <span class="key">name</span>: <span class="str">"อเมริกาโน่"</span>,
+  <span class="key">price</span>: <span class="num">65</span>,
+  <span class="key">emoji</span>: <span class="str">"☕"</span>,
+  <span class="key">category</span>: <span class="str">"เครื่องดื่ม"</span>,
+  <span class="key">isBestseller</span>: <span class="kw">false</span>
+}
+
+<span class="cm">// อ่านค่า</span>
+menu.<span class="key">name</span>     <span class="cm">// "อเมริกาโน่"</span>
+menu.<span class="key">price</span>    <span class="cm">// 65</span>
+menu.<span class="key">emoji</span>    <span class="cm">// "☕"</span>
+
+<span class="cm">// ใช้ใน template literal</span>
+<span class="str">`${menu.emoji} ${menu.name} ฿${menu.price}`</span>
+<span class="cm">// → "☕ อเมริกาโน่ ฿65"</span>
+
+<span class="cm">// แก้ค่า (ถ้าใช้ let)</span>
+<span class="kw">let</span> item = { <span class="key">price</span>: <span class="num">65</span> }
+item.<span class="key">price</span> = <span class="num">70</span>  <span class="cm">// เปลี่ยนได้</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:8px;">Object ซ้อน Object ได้ (Nested)</div>
+        <div class="cb">
+<span class="kw">const</span> cafe = {
+  <span class="key">name</span>: <span class="str">"Morning Glow"</span>,
+  <span class="key">location</span>: {
+    <span class="key">city</span>: <span class="str">"เลย"</span>,
+    <span class="key">zip</span>: <span class="str">"42000"</span>
+  },
+  <span class="key">rating</span>: <span class="num">4.9</span>
+}
+
+<span class="cm">// เข้าถึง nested</span>
+cafe.<span class="key">location</span>.<span class="key">city</span>  <span class="cm">// "เลย"</span>
+cafe.<span class="key">rating</span>         <span class="cm">// 4.9</span>
+        </div>
+        <div class="info io" style="margin-top:.7rem;">
+          <span class="ic">⚠️</span>
+          <span>ชื่อ key ใน object <strong style="color:var(--or)">ไม่มีลำดับ</strong> — ต่างจาก array ที่มี index 0,1,2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECT EXPLORER SIMULATOR -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> Object Explorer — กดคลิก Key เพื่อดูค่า <span class="badge-new">Interactive</span></div>
+    <div class="info io" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>คลิกชื่อ key ทางซ้าย แล้วดูว่า dot notation เข้าถึงค่าอะไร</span>
+    </div>
+    <div class="obj-sim">
+      <div class="obj-display">
+        <div class="obj-block">
+          <div class="obj-title">Object: menu</div>
+          <div class="obj-brace">{</div>
+          <div style="padding-left:16px;">
+            <div><span class="obj-key" data-key="name" data-val='"ลาเต้"' data-type="str">name</span><span class="obj-colon">: </span><span class="obj-str">"ลาเต้"</span>,</div>
+            <div><span class="obj-key" data-key="price" data-val="80" data-type="num">price</span><span class="obj-colon">: </span><span class="obj-num">80</span>,</div>
+            <div><span class="obj-key" data-key="emoji" data-val='"☕"' data-type="str">emoji</span><span class="obj-colon">: </span><span class="obj-str">"☕"</span>,</div>
+            <div><span class="obj-key" data-key="category" data-val='"เครื่องดื่ม"' data-type="str">category</span><span class="obj-colon">: </span><span class="obj-str">"เครื่องดื่ม"</span>,</div>
+            <div><span class="obj-key" data-key="isBestseller" data-val="true" data-type="bool">isBestseller</span><span class="obj-colon">: </span><span class="obj-bool">true</span></div>
+          </div>
+          <div class="obj-brace">}</div>
+        </div>
+        <div class="obj-result">
+          <div class="obj-result-title">ผลลัพธ์</div>
+          <div class="obj-access" id="obj-access-line">menu.<span style="color:var(--or)">???</span></div>
+          <div style="font-size:12px;color:var(--mu);margin-bottom:8px;">↓ ได้ค่า</div>
+          <div class="obj-result-val" id="obj-result-val">← คลิก key ทางซ้าย</div>
+          <div style="font-size:11px;color:var(--mu);margin-top:8px;" id="obj-type-label"></div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);">
+            <div style="font-size:11px;color:var(--mu);margin-bottom:6px;font-family:'JetBrains Mono',monospace;">Template literal:</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#f1fa8c;" id="obj-template">
+              `${menu.???}` → ???
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 1 -->
+  <div class="ws" id="ws1">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 1 — JS Object</div>
+        <span class="ws-badge" style="background:rgba(251,146,60,.12);color:var(--or);border:1px solid rgba(251,146,60,.3);">JavaScript Object</span>
+      </div>
+    </div>
+    <p class="ws-desc">เปิด Console (F12) แล้วลองสร้าง Object และเข้าถึงค่าด้วย dot notation</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง object ชื่อ <code style="color:var(--or)">myInfo</code> มี key: name, age, school, emoji แล้วพิมพ์แต่ละ key ด้วย <code style="color:var(--or)">console.log(myInfo.name)</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> สร้าง object <code style="color:var(--or)">menuItem</code> มี name, price, emoji, category, isBestseller แล้วพิมพ์ด้วย template literal <code style="color:var(--or)">`${menuItem.emoji} ${menuItem.name} ฿${menuItem.price}`</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> สร้าง array of objects ชื่อ <code style="color:var(--or)">menu</code> มี 3 item แล้วเข้าถึงด้วย <code style="color:var(--or)">menu[0].name</code>, <code style="color:var(--or)">menu[1].price</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S2: DESTRUCTURING
+════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--pu)">02</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--pu)">Destructuring</h2>
+  <p class="sec-sub">แกะค่าออกจาก Object มาใส่ตัวแปรเดี่ยวๆ — เขียนโค้ดสั้นลงมาก</p>
+
+  <!-- WHAT IS DESTRUCTURING -->
+  <div class="card">
+    <div class="card-t"><span>📦</span> Destructuring คืออะไร?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ แบบเดิม — ยาว</div>
+        <div class="cb">
+<span class="kw">const</span> menu = {
+  <span class="key">name</span>: <span class="str">"ลาเต้"</span>,
+  <span class="key">price</span>: <span class="num">80</span>,
+  <span class="key">emoji</span>: <span class="str">"☕"</span>
+}
+
+<span class="cm">// ต้องพิมพ์ menu. ทุกครั้ง</span>
+<span class="kw">const</span> name  = menu.<span class="key">name</span>
+<span class="kw">const</span> price = menu.<span class="key">price</span>
+<span class="kw">const</span> emoji = menu.<span class="key">emoji</span>
+
+console.log(name, price, emoji)
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--pu);margin-bottom:6px;">✅ Destructuring — สั้นกว่ามาก</div>
+        <div class="cb">
+<span class="kw">const</span> menu = {
+  <span class="key">name</span>: <span class="str">"ลาเต้"</span>,
+  <span class="key">price</span>: <span class="num">80</span>,
+  <span class="key">emoji</span>: <span class="str">"☕"</span>
+}
+
+<span class="cm">// แกะออกมาทีเดียว</span>
+<span class="kw">const</span> { name, price, emoji } = menu
+
+<span class="cm">// ใช้ได้เลยโดยไม่ต้อง menu.</span>
+console.log(name, price, emoji)
+<span class="cm">// "ลาเต้" 80 "☕"</span>
+        </div>
+      </div>
+    </div>
+    <div class="info ip">
+      <span class="ic">💡</span>
+      <span>ชื่อตัวแปรต้อง <strong style="color:var(--pu)">ตรงกับชื่อ key</strong> ใน object — <code>{"{"}name{"}"}</code> จะดึง key ชื่อ <code>name</code> ออกมา</span>
+    </div>
+  </div>
+
+  <!-- RENAME + DEFAULT -->
+  <div class="card">
+    <div class="card-t"><span>🔧</span> เทคนิคเพิ่มเติม — เปลี่ยนชื่อ & ค่า Default</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">เปลี่ยนชื่อตัวแปร (rename)</div>
+        <div class="cb">
+<span class="kw">const</span> menu = { <span class="key">name</span>: <span class="str">"ลาเต้"</span> }
+
+<span class="cm">// key : ชื่อใหม่</span>
+<span class="kw">const</span> { <span class="key">name</span>: menuName } = menu
+
+console.log(menuName) <span class="cm">// "ลาเต้"</span>
+console.log(name)     <span class="cm">// ❌ Error! name ไม่มีอยู่</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">ค่า Default (ถ้า key ไม่มีใน object)</div>
+        <div class="cb">
+<span class="kw">const</span> menu = {
+  <span class="key">name</span>: <span class="str">"ลาเต้"</span>,
+  <span class="key">price</span>: <span class="num">80</span>
+  <span class="cm">// ไม่มี emoji</span>
+}
+
+<span class="kw">const</span> {
+  name,
+  price,
+  emoji = <span class="str">"☕"</span>  <span class="cm">// ถ้าไม่มี ใช้ค่านี้</span>
+} = menu
+
+console.log(emoji) <span class="cm">// "☕" (default)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESTRUCTURING SIMULATOR -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> Destructuring Visualizer — เลือก Key ที่ต้องการ <span class="badge-new">Interactive</span></div>
+    <div class="info ip" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>คลิก checkbox ของ key ที่ต้องการ — ดู destructuring syntax และตัวแปรที่ได้</span>
+    </div>
+    <div class="des-sim">
+      <div class="des-flow">
+        <div class="des-panel">
+          <div class="des-panel-title">Object ต้นทาง</div>
+          <div id="des-source">
+            <div class="des-prop" data-key="name" data-val='"ลาเต้"'>
+              <div class="des-check" id="dck-name"></div>
+              <span class="dp-key">name</span><span style="color:#454c6b;">: </span><span class="dp-val">"ลาเต้"</span>
+            </div>
+            <div class="des-prop" data-key="price" data-val="80">
+              <div class="des-check" id="dck-price"></div>
+              <span class="dp-key">price</span><span style="color:#454c6b;">: </span><span class="dp-val">80</span>
+            </div>
+            <div class="des-prop" data-key="emoji" data-val='"☕"'>
+              <div class="des-check" id="dck-emoji"></div>
+              <span class="dp-key">emoji</span><span style="color:#454c6b;">: </span><span class="dp-val">"☕"</span>
+            </div>
+            <div class="des-prop" data-key="category" data-val='"เครื่องดื่ม"'>
+              <div class="des-check" id="dck-category"></div>
+              <span class="dp-key">category</span><span style="color:#454c6b;">: </span><span class="dp-val">"เครื่องดื่ม"</span>
+            </div>
+            <div class="des-prop" data-key="isBestseller" data-val="true">
+              <div class="des-check" id="dck-isBestseller"></div>
+              <span class="dp-key">isBestseller</span><span style="color:#454c6b;">: </span><span class="dp-val">true</span>
+            </div>
+          </div>
+        </div>
+        <div class="des-arrow">→</div>
+        <div class="des-output">
+          <div class="des-output-title">Code ที่ได้</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;">
+            <span style="color:#ff79c6;">const</span> {
+            <div style="padding-left:14px;" id="des-keys-display">
+              <span style="color:#454c6b;">← เลือก key ทางซ้าย</span>
+            </div>
+            } = menu
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);">
+            <div style="font-size:10px;color:var(--mu);letter-spacing:.1em;margin-bottom:6px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">ตัวแปรที่ใช้ได้</div>
+            <div id="des-vars" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#454c6b;">
+              ยังไม่ได้เลือก
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESTRUCTURING IN FUNCTION -->
+  <div class="card">
+    <div class="card-t"><span>⚡</span> Destructuring ใน Function Parameter — ใช้บ่อยมากใน React</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">แบบเดิม — รับ props ทั้งก้อน</div>
+        <div class="cb">
+<span class="cm">// ต้องพิมพ์ props. ทุกที่</span>
+<span class="kw">const</span> <span class="fn">MenuCard</span> = (props) => {
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;span&gt;{props.emoji}&lt;/span&gt;
+      &lt;h3&gt;{props.name}&lt;/h3&gt;
+      &lt;p&gt;฿{props.price}&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--pu);margin-bottom:6px;">✅ Destructuring — อ่านง่ายกว่า</div>
+        <div class="cb">
+<span class="cm">// destructure ตรงใน parameter</span>
+<span class="kw">const</span> <span class="fn">MenuCard</span> = ({ emoji, name, price }) => {
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;span&gt;{emoji}&lt;/span&gt;
+      &lt;h3&gt;{name}&lt;/h3&gt;
+      &lt;p&gt;฿{price}&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
+        </div>
+        <div class="info ip" style="margin-top:.7rem;">
+          <span class="ic">🔥</span>
+          <span>นี่คือ pattern ที่ React developer ใช้บ่อยที่สุด — <strong style="color:var(--pu)">destructure ตรงใน parameter</strong> เลย</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 2 -->
+  <div class="ws">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 2 — Destructuring</div>
+        <span class="ws-badge" style="background:rgba(167,139,250,.12);color:var(--pu);border:1px solid rgba(167,139,250,.3);">Destructuring</span>
+      </div>
+    </div>
+    <p class="ws-desc">เปิด <code style="color:var(--pu)">ProfileCard.jsx</code> จาก Week 8 แล้วแปลงให้ใช้ Destructuring</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> เปลี่ยน <code style="color:var(--pu)">(props) =></code> เป็น <code style="color:var(--pu)">({'{'} name, role, emoji {'}'}) =></code> แล้วลบ <code style="color:var(--pu)">props.</code> ออกจากทุกที่ใน JSX</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่ม default value — <code style="color:var(--pu)">emoji = "👤"</code> ในส่วน destructuring เพื่อให้มี fallback ถ้าไม่ส่ง emoji มา แล้วทดสอบโดยลบ emoji prop ออกจาก App.jsx</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> สร้าง object <code style="color:var(--pu)">const student = {"{"} name:"...", role:"...", emoji:"..." {"}"}</code> ใน App.jsx แล้วส่งด้วย <code style="color:var(--pu)">name={"{"}student.name{"}"}</code> ทีละ property</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S3: REACT PROPS ขั้นสูง
+════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--re)">03</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--re)">Props ขั้นสูง</h2>
+  <p class="sec-sub">ส่ง Object เป็น Props และใช้ Spread Operator ให้โค้ดสั้นลงครึ่งนึง</p>
+
+  <!-- PATTERNS -->
+  <div class="card">
+    <div class="card-t"><span>🔀</span> 3 วิธีส่ง Props — เทียบให้เห็น</div>
+
+    <div class="pattern-grid">
+      <div class="pattern-card bad">
+        <div class="pattern-head">❌ แบบที่ 1 — Hardcode</div>
+        <div class="pattern-body">
+          <div class="cb" style="font-size:12px;">
+<span class="cm">// App.jsx</span>
+&lt;<span class="fn">MenuCard</span>
+  name=<span class="str">"ลาเต้"</span>
+  price=<span class="num">{80}</span>
+  emoji=<span class="str">"☕"</span>
+  isBestseller=<span class="kw">{true}</span>
+/&gt;
+          </div>
+          <div style="font-size:12px;color:#f87171;margin-top:.5rem;">เปลี่ยนข้อมูลทีต้องแก้ไฟล์</div>
+        </div>
+      </div>
+      <div class="pattern-card good">
+        <div class="pattern-head">✅ แบบที่ 2 — จาก Object</div>
+        <div class="pattern-body">
+          <div class="cb" style="font-size:12px;">
+<span class="kw">const</span> latte = {
+  name: <span class="str">"ลาเต้"</span>, price: <span class="num">80</span>,
+  emoji: <span class="str">"☕"</span>, isBestseller: <span class="kw">true</span>
+}
+&lt;<span class="fn">MenuCard</span>
+  name=<span class="kw">{latte.name}</span>
+  price=<span class="kw">{latte.price}</span>
+  emoji=<span class="kw">{latte.emoji}</span>
+/&gt;
+          </div>
+          <div style="font-size:12px;color:var(--g);margin-top:.5rem;">ข้อมูลอยู่ที่เดียว แก้ง่าย</div>
+        </div>
+      </div>
+      <div class="pattern-card good" style="grid-column:1/-1;">
+        <div class="pattern-head">🔥 แบบที่ 3 — Spread Operator (ดีที่สุด)</div>
+        <div class="pattern-body">
+          <div class="spread-demo">
+            <div class="spread-row">
+              <div class="sp-obj">latte = {"{"} name, price, emoji, isBestseller {"}"}</div>
+              <div class="sp-arrow">→</div>
+              <div class="sp-result">&lt;MenuCard <strong style="color:var(--pu)">{"{"}...latte{"}"}</strong> /&gt;</div>
+            </div>
+          </div>
+          <div class="cb" style="font-size:12px;margin-top:.7rem;">
+<span class="kw">const</span> latte = { <span class="key">name</span>:<span class="str">"ลาเต้"</span>, <span class="key">price</span>:<span class="num">80</span>, <span class="key">emoji</span>:<span class="str">"☕"</span>, <span class="key">isBestseller</span>:<span class="kw">true</span> }
+
+<span class="cm">// ... คือ "กระจาย" ทุก key ออกมาเป็น props อัตโนมัติ</span>
+&lt;<span class="fn">MenuCard</span> {...latte} /&gt;
+
+<span class="cm">// เหมือนกับเขียนแบบนี้เลย:</span>
+&lt;<span class="fn">MenuCard</span> name=<span class="kw">{latte.name}</span> price=<span class="kw">{latte.price}</span> emoji=<span class="kw">{latte.emoji}</span> isBestseller=<span class="kw">{latte.isBestseller}</span> /&gt;
+          </div>
+          <div class="info ir">
+            <span class="ic">🔥</span>
+            <span><code style="color:var(--re)">{"{"}...object{"}"}</code> = <strong style="color:var(--re)">Spread Operator</strong> — กระจาย key ทั้งหมดออกมาเป็น props ทีเดียวเลย ประหยัดการพิมพ์มาก</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARRAY OF OBJECTS → CARDS -->
+  <div class="card">
+    <div class="card-t"><span>📋</span> Array of Objects — ข้อมูลหลายชิ้น</div>
+    <div class="two">
+      <div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// App.jsx — เก็บข้อมูลเป็น array</span>
+<span class="kw">const</span> menuData = [
+  {
+    <span class="key">id</span>: <span class="num">1</span>,
+    <span class="key">name</span>: <span class="str">"ลาเต้"</span>,
+    <span class="key">price</span>: <span class="num">80</span>,
+    <span class="key">emoji</span>: <span class="str">"☕"</span>,
+    <span class="key">isBestseller</span>: <span class="kw">true</span>
+  },
+  {
+    <span class="key">id</span>: <span class="num">2</span>,
+    <span class="key">name</span>: <span class="str">"อเมริกาโน่"</span>,
+    <span class="key">price</span>: <span class="num">65</span>,
+    <span class="key">emoji</span>: <span class="str">"☕"</span>,
+    <span class="key">isBestseller</span>: <span class="kw">false</span>
+  },
+  {
+    <span class="key">id</span>: <span class="num">3</span>,
+    <span class="key">name</span>: <span class="str">"บราวนี่</span><span class="str">"</span>,
+    <span class="key">price</span>: <span class="num">65</span>,
+    <span class="key">emoji</span>: <span class="str">"🍫"</span>,
+    <span class="key">isBestseller</span>: <span class="kw">false</span>
+  }
+]
+
+<span class="cm">// ใช้ Spread ส่ง props</span>
+&lt;div className=<span class="str">"grid grid-cols-3 gap-4"</span>&gt;
+  &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">0</span>]} /&gt;
+  &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">1</span>]} /&gt;
+  &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">2</span>]} /&gt;
+&lt;/div&gt;
+        </div>
+        <div class="info iy">
+          <span class="ic">🔮</span>
+          <span>Week 11 จะสอนใช้ <code style="color:var(--y)">.map()</code> render อัตโนมัติ — แทนที่จะเรียกทีละ [0], [1], [2]</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">MenuCard.jsx ที่รับ props:</div>
+        <div class="cb" style="font-size:12px;">
+<span class="kw">const</span> <span class="fn">MenuCard</span> = ({
+  name,
+  price,
+  emoji,
+  isBestseller = <span class="kw">false</span>  <span class="cm">// default</span>
+}) => {
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"bg-white rounded-xl shadow-md overflow-hidden"</span>&gt;
+      <span class="cm">{/* Badge ถ้าขายดี */}</span>
+      {isBestseller && (
+        &lt;div className=<span class="str">"text-xs text-green-600 border border-green-400
+          rounded-full px-2 py-0.5 inline-block m-2"</span>&gt;
+          ⭐ ขายดี
+        &lt;/div&gt;
+      )}
+      &lt;div className=<span class="str">"text-4xl p-4"</span>&gt;{emoji}&lt;/div&gt;
+      &lt;div className=<span class="str">"px-4 pb-4"</span>&gt;
+        &lt;h3 className=<span class="str">"font-bold text-gray-800"</span>&gt;{name}&lt;/h3&gt;
+        &lt;p className=<span class="str">"text-orange-500 font-semibold"</span>&gt;฿{price}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+<span class="kw">export default</span> MenuCard
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD PREVIEW -->
+    <div style="margin-top:1rem;">
+      <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">ผลลัพธ์:</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div class="menu-card-demo">
+          <div style="padding:6px 10px;">
+            <span style="background:#dcfce7;color:#16a34a;border:1px solid #86efac;border-radius:100px;font-size:10px;padding:2px 8px;">⭐ ขายดี</span>
+          </div>
+          <div class="mc-img" style="background:#fef9c3;">☕</div>
+          <div class="mc-body"><div class="mc-name">ลาเต้</div><div class="mc-price">฿80</div></div>
+        </div>
+        <div class="menu-card-demo">
+          <div class="mc-img" style="background:#f0fdf4;">☕</div>
+          <div class="mc-body"><div class="mc-name">อเมริกาโน่</div><div class="mc-price">฿65</div></div>
+        </div>
+        <div class="menu-card-demo">
+          <div class="mc-img" style="background:#fdf2f8;">🍫</div>
+          <div class="mc-body"><div class="mc-name">บราวนี่</div><div class="mc-price">฿65</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONDITIONAL RENDERING -->
+  <div class="card">
+    <div class="card-t"><span>❓</span> Conditional Rendering — แสดงตามเงื่อนไข</div>
+    <div class="two">
+      <div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// && — แสดงเมื่อเงื่อนไขเป็น true</span>
+{isBestseller && (
+  &lt;span&gt;⭐ ขายดี&lt;/span&gt;
+)}
+
+<span class="cm">// ternary — true/false ต่างกัน</span>
+{isBestseller
+  ? &lt;span&gt;⭐ ขายดี&lt;/span&gt;
+  : &lt;span&gt;สินค้าทั่วไป&lt;/span&gt;
+}
+
+<span class="cm">// แสดง className ตามเงื่อนไข</span>
+&lt;p className={`
+  font-bold
+  ${isBestseller ? "text-green-600" : "text-gray-800"}
+`}&gt;
+  {name}
+&lt;/p&gt;
+        </div>
+      </div>
+      <div>
+        <div class="info ir">
+          <span class="ic">💡</span>
+          <span><code style="color:var(--re)">{"{"}condition && &lt;JSX /&gt;{"}"}</code> — แสดงเฉพาะเมื่อ condition เป็น true ใช้บ่อยมากสำหรับ badge, label, icon พิเศษ</span>
+        </div>
+        <div style="background:#060c20;border-radius:10px;padding:14px;margin-top:.8rem;">
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px;font-family:'JetBrains Mono',monospace;">ตัวอย่าง Badge:</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="background:#dcfce7;color:#16a34a;border:1px solid #86efac;border-radius:100px;font-size:11px;padding:2px 10px;white-space:nowrap;">⭐ ขายดี</div>
+              <span style="font-size:12px;color:var(--mu);">isBestseller = true</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="background:#fef9c3;color:#ca8a04;border:1px solid #fde047;border-radius:100px;font-size:11px;padding:2px 10px;white-space:nowrap;">✨ ใหม่</div>
+              <span style="font-size:12px;color:var(--mu);">isNew = true</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 3 -->
+  <div class="ws">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 3 — Props ขั้นสูง + Spread</div>
+        <span class="ws-badge" style="background:rgba(97,218,251,.12);color:var(--re);border:1px solid rgba(97,218,251,.3);">React Props</span>
+      </div>
+    </div>
+    <p class="ws-desc">สร้าง <code style="color:var(--re)">MenuCard.jsx</code> ใหม่ที่รับ props ด้วย destructuring และแสดง badge เงื่อนไข</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง MenuCard รับ <code style="color:var(--re)">{'{'} name, price, emoji {'}'}</code> แล้วสร้าง array <code style="color:var(--re)">menuData</code> ใน App.jsx แล้วส่งด้วย <code style="color:var(--re)">{'<'}MenuCard {...menuData[0]} /{'>'}</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่ม <code style="color:var(--re)">isBestseller = false</code> เป็น default prop แล้วใช้ <code style="color:var(--re)">{'{'} isBestseller && &lt;span&gt;⭐ ขายดี&lt;/span&gt; {'}'}</code> แสดง badge</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่ม className เปลี่ยนสีชื่อเมนูตาม isBestseller ด้วย template literal ใน className — <code style="color:var(--re)">{"`"}font-bold {'${'} isBestseller ? 'text-orange-500' : 'text-gray-800' {'}'}{"`"}</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S4: CHALLENGE
+════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--pk)">04</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--pk)">🏁 ชิ้นงาน Week 9</h2>
+  <p class="sec-sub">MenuCard Grid จาก Array of Objects — ข้อมูลแยกจาก UI</p>
+
+  <div class="challenge">
+    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);
+      border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;
+      font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.5rem;">
+      สร้าง Menu Grid จาก Array of Objects
+    </div>
+    <p style="font-size:14px;color:#c094b8;line-height:1.7;margin-bottom:1.5rem;">
+      อัปเกรด Project จาก Week 8 — ข้อมูลเมนูต้องอยู่ใน array of objects ไม่ hardcode ใน JSX และส่งด้วย Spread Operator
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--or);margin-bottom:.6rem;">✅ Data Layer</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ สร้าง <code style="color:var(--or)">menuData</code> array ใน App.jsx</div>
+          <div>☐ มีอย่างน้อย 4 items</div>
+          <div>☐ แต่ละ item มี id, name, price, emoji, isBestseller</div>
+          <div>☐ มีอย่างน้อย 1 ที่ isBestseller: true</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--pu);margin-bottom:.6rem;">✅ MenuCard Component</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ รับ props ด้วย destructuring</div>
+          <div>☐ isBestseller = false (default)</div>
+          <div>☐ แสดง badge "⭐ ขายดี" ด้วย && </div>
+          <div>☐ className เปลี่ยนตาม isBestseller</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.6rem;">✅ App.jsx</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ ส่ง props ด้วย <code style="color:var(--re)">{'<'}MenuCard {'{'} ...item {'}'} /{'>'}</code></div>
+          <div>☐ Layout ด้วย <code style="color:var(--re)">grid grid-cols-2 lg:grid-cols-4</code></div>
+          <div>☐ ไม่มี hardcode ข้อมูลใน JSX</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">⭐ Bonus</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ เพิ่ม isNew badge ด้วย && แยกต่างหาก</div>
+          <div>☐ แสดงหมวดหมู่ด้วย key category</div>
+          <div>☐ ย้าย menuData ไปแยกไฟล์ <code style="color:var(--y)">src/data/menu.js</code></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:.5rem;">📤 ส่งงาน</div>
+      <div class="cb" style="margin:0;font-size:12px;">
+git add .
+git commit -m <span class="v">"Week 9 MenuCard with object props & destructuring"</span>
+git push
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
+  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 9</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
+    <div style="background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--or);font-weight:600;font-size:13px;margin-bottom:4px;">✓ JS Object</div>
+      <div style="font-size:12px;color:var(--mu);">{"{"} key: value {"}"}, dot notation, nested object, array of objects</div>
+    </div>
+    <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--pu);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Destructuring</div>
+      <div style="font-size:12px;color:var(--mu);">const {"{"} name, price {"}"} = obj, default value, destructure ใน parameter</div>
+    </div>
+    <div style="background:rgba(97,218,251,.06);border:1px solid rgba(97,218,251,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--re);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Props ขั้นสูง</div>
+      <div style="font-size:12px;color:var(--mu);">Spread {"{"} ...obj {"}"}, conditional rendering &&, className dynamic</div>
+    </div>
+    <div style="background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--pk);font-weight:600;font-size:13px;margin-bottom:4px;">✓ ชิ้นงาน</div>
+      <div style="font-size:12px;color:var(--mu);">MenuCard + Array of Objects + Spread Props → push GitHub</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
+    <strong style="color:var(--g)">Week 10 →</strong> useState + Event Handler — onClick, onChange, นับ Like ❤️, toggle show/hide
+  </div>
+</div>
+
+</div>
+
+<script>
+// PROGRESS
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('rp').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+// NAV
+const obs=new IntersectionObserver(e=>{
+  e.forEach(en=>{
+    if(en.isIntersecting){
+      document.querySelectorAll('.sni').forEach(a=>a.classList.remove('on'));
+      const a=document.querySelector(`.sni[href="#${en.target.id}"]`);
+      if(a)a.classList.add('on');
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+
+// ═══ OBJECT EXPLORER ═══
+const objData={
+  name:{val:'"ลาเต้"',type:'string',display:'ลาเต้'},
+  price:{val:'80',type:'number',display:'80'},
+  emoji:{val:'"☕"',type:'string',display:'☕'},
+  category:{val:'"เครื่องดื่ม"',type:'string',display:'เครื่องดื่ม'},
+  isBestseller:{val:'true',type:'boolean',display:'true'}
+};
+document.querySelectorAll('.obj-key').forEach(el=>{
+  el.addEventListener('click',function(){
+    document.querySelectorAll('.obj-key').forEach(k=>k.classList.remove('active'));
+    this.classList.add('active');
+    const key=this.dataset.key;
+    const d=objData[key];
+    document.getElementById('obj-access-line').innerHTML=`menu.<span style="color:var(--or)">${key}</span>`;
+    document.getElementById('obj-result-val').textContent=d.display;
+    document.getElementById('obj-type-label').textContent=`type: ${d.type}`;
+    document.getElementById('obj-template').textContent=`\`\${menu.${key}}\` → ${d.display}`;
+  });
+});
+
+// ═══ DESTRUCTURING SIMULATOR ═══
+const selected=new Set();
+document.querySelectorAll('.des-prop').forEach(el=>{
+  el.addEventListener('click',function(){
+    const key=this.dataset.key;
+    const val=this.dataset.val;
+    const chk=document.getElementById('dck-'+key);
+    if(selected.has(key)){
+      selected.delete(key);
+      chk.classList.remove('on');
+      chk.textContent='';
+      this.classList.remove('matched');
+    } else {
+      selected.add(key);
+      chk.classList.add('on');
+      chk.textContent='✓';
+      this.classList.add('matched');
+    }
+    updateDes();
+  });
+});
+
+function updateDes(){
+  const keys=[...selected];
+  const kDisplay=document.getElementById('des-keys-display');
+  const vDisplay=document.getElementById('des-vars');
+  if(keys.length===0){
+    kDisplay.innerHTML='<span style="color:#454c6b;">← เลือก key ทางซ้าย</span>';
+    vDisplay.innerHTML='<span style="color:#454c6b;">ยังไม่ได้เลือก</span>';
+    return;
+  }
+  kDisplay.innerHTML=keys.map(k=>`<span style="color:#a6e3a1;">${k}</span>,`).join('<br>').replace(/,$/,'');
+  vDisplay.innerHTML=keys.map(k=>{
+    const d=document.querySelector(`.des-prop[data-key="${k}"]`);
+    return `<div><span style="color:#a6e3a1;">${k}</span> <span style="color:#454c6b;">=</span> <span style="color:#f1fa8c;">${d.dataset.val}</span></div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
