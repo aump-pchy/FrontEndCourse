@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงาน — YOLO Detect บุคคลจากวิดีโอ Real-time บน Google Colab</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Sarabun:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#2563eb;--sky:#0ea5e9;--emerald:#10b981;--amber:#f59e0b;
+  --rose:#f43f5e;--purple:#7c3aed;--indigo:#4f46e5;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --mono:'IBM Plex Mono',monospace;--sans:'Sarabun',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.75}
+
+/* HEADER */
+.hero{background:linear-gradient(135deg,#1e3a8a,#2563eb 60%,#0ea5e9);color:#fff;text-align:center;padding:56px 20px 60px}
+.hero-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:4px 16px;border-radius:20px;font-size:13px;margin-bottom:16px;font-family:var(--mono)}
+.hero h1{font-size:clamp(24px,4.5vw,40px);font-weight:900;line-height:1.3;margin-bottom:10px}
+.hero p{font-size:16px;opacity:.9;max-width:560px;margin:0 auto}
+
+.wrap{max-width:880px;margin:0 auto;padding:40px 20px 80px}
+
+/* GOAL BOX */
+.goal-box{background:var(--card);border:2px solid var(--blue);border-radius:16px;padding:24px;margin-bottom:32px;display:flex;gap:16px;align-items:flex-start}
+.goal-icon{font-size:32px}
+.goal-title{font-size:17px;font-weight:800;margin-bottom:6px;color:var(--blue)}
+.goal-body{font-size:15px;color:var(--muted);line-height:1.7}
+
+/* CHECKLIST */
+.checklist{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:20px 24px;margin-bottom:32px}
+.checklist-title{font-size:15px;font-weight:800;margin-bottom:10px;color:#92400e}
+.check-item{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#78350f;margin-bottom:6px}
+
+/* STEPS */
+.step{background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.step-head{display:flex;align-items:center;gap:14px;padding:20px 24px;border-bottom:1px solid var(--border)}
+.step-num{width:42px;height:42px;border-radius:12px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:18px;font-weight:700;flex-shrink:0}
+.step-title{font-size:18px;font-weight:800}
+.step-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.step-body{padding:20px 24px}
+
+.instr{font-size:15px;margin-bottom:14px;line-height:1.8}
+.instr b{color:var(--blue)}
+
+/* CODE */
+.code-wrap{background:#0f172a;border-radius:12px;overflow:hidden;margin:14px 0}
+.code-header{background:#1e293b;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.code-title{font-family:var(--mono);font-size:11px;color:#94a3b8}
+.code-copy{font-family:var(--mono);font-size:11px;color:#94a3b8;background:rgba(148,163,184,.12);border:1px solid rgba(148,163,184,.3);border-radius:5px;padding:3px 10px;cursor:pointer}
+.code-copy:hover{background:rgba(148,163,184,.25);color:#fff}
+pre{padding:18px 20px;font-family:var(--mono);font-size:13px;line-height:1.85;overflow-x:auto;color:#e2e8f0}
+.kw{color:#c084fc}.fn{color:#67e8f9}.st{color:#86efac}.cm{color:#64748b;font-style:italic}.nu{color:#fbbf24}.at{color:#fb923c}
+
+/* NOTE BOXES */
+.note{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:12px 16px;margin:12px 0;font-size:14px;border:1px solid}
+.note.tip{background:#ecfdf5;border-color:#a7f3d0}
+.note.warn{background:#fffbeb;border-color:#fde68a}
+.note.danger{background:#fef2f2;border-color:#fecaca}
+.note-icon{flex-shrink:0}
+
+/* EXPECTED RESULT */
+.expect{background:#f0f9ff;border:1px dashed var(--sky);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:14px}
+.expect b{color:var(--sky)}
+
+/* CHECKPOINT */
+.checkpoint{background:var(--emerald);color:#fff;border-radius:10px;padding:12px 18px;margin-top:14px;font-size:14px;font-weight:700;display:flex;gap:8px;align-items:center}
+
+/* PARAM TABLE */
+.param-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+.param-table th{background:#f1f5f9;text-align:left;padding:10px 12px;font-weight:700;border:1px solid var(--border)}
+.param-table td{padding:10px 12px;border:1px solid var(--border)}
+.param-table code{font-family:var(--mono);font-size:13px;background:#f1f5f9;padding:1px 6px;border-radius:4px;color:var(--blue)}
+
+/* TROUBLESHOOT */
+.ts-item{border-left:4px solid var(--rose);background:#fef2f2;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px}
+.ts-problem{font-weight:800;font-size:14px;color:#991b1b;margin-bottom:4px}
+.ts-solve{font-size:14px;color:#7f1d1d}
+
+/* SUBMISSION */
+.submit-box{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:18px;padding:28px;margin-top:32px}
+.submit-title{font-size:20px;font-weight:900;margin-bottom:12px}
+.submit-item{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-bottom:8px;opacity:.95}
+
+footer{text-align:center;padding:24px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">31906-2016 · Object Detection · ใบงาน</div>
+  <h1>ตรวจจับบุคคลจากวิดีโอแบบ Real-time<br>ด้วย YOLO11 บน Google Colab</h1>
+  <p>ทำตามทีละขั้นตอน อ่านให้ครบก่อนพิมพ์โค้ด แล้วรันไปทีละเซล</p>
+</div>
+
+<div class="wrap">
+
+  <!-- GOAL -->
+  <div class="goal-box">
+    <div class="goal-icon">🎯</div>
+    <div>
+      <div class="goal-title">เป้าหมายของใบงานนี้</div>
+      <div class="goal-body">เขียนโปรแกรมที่โหลดวิดีโอ ตรวจจับเฉพาะ "บุคคล" (person) ด้วย YOLO11 ทีละเฟรม วาดกรอบและ label บนวิดีโอ แล้วบันทึกเป็นไฟล์วิดีโอผลลัพธ์ที่ดาวน์โหลดกลับมาดูได้</div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist">
+    <div class="checklist-title">✅ เตรียมตัวก่อนเริ่ม</div>
+    <div class="check-item">☐ มีบัญชี Google (Gmail) สำหรับเข้า Google Colab</div>
+    <div class="check-item">☐ มีไฟล์วิดีโอสั้น ๆ (5-15 วินาที) ที่มีคนอยู่ในวิดีโอ — ถ่ายจากมือถือได้เลย นามสกุล .mp4</div>
+    <div class="check-item">☐ วิดีโอไม่ควรยาวเกิน 30 วินาที (จะได้ประมวลผลเร็ว)</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">เปิด Google Colab และเปิดใช้งาน GPU</div>
+        <div class="step-sub">ตั้งค่าเครื่องมือให้พร้อมก่อนเริ่มเขียนโค้ด</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">1.1 เปิดเบราว์เซอร์ พิมพ์ <b>colab.research.google.com</b> แล้วกด Enter</div>
+      <div class="instr">1.2 ล็อกอินด้วย Google Account ของตัวเอง (ถ้ายังไม่ได้ล็อกอิน)</div>
+      <div class="instr">1.3 กดปุ่ม <b>"New notebook"</b> (สีน้ำเงิน มุมล่างขวา) เพื่อสร้างไฟล์ใหม่</div>
+      <div class="instr">1.4 เปลี่ยนชื่อไฟล์ที่มุมซ้ายบน จาก "Untitled" เป็น <b>PersonDetection.ipynb</b></div>
+      <div class="instr">1.5 เปิด GPU: ไปที่เมนู <b>Runtime → Change runtime type</b></div>
+      <div class="instr">1.6 ในช่อง "Hardware accelerator" เลือก <b>T4 GPU</b> แล้วกด <b>Save</b></div>
+      <div class="note tip">
+        <span class="note-icon">💡</span>
+        <div>ทำไมต้องเปิด GPU? เพราะ YOLO จะประมวลผลวิดีโอเร็วขึ้นมาก ถ้าใช้ CPU (ไม่เปิด GPU) จะช้ากว่าหลายเท่าตัว</div>
+      </div>
+      <div class="checkpoint">✓ Checkpoint: มุมขวาบนของ Colab ควรมีคำว่า "T4" ปรากฏอยู่</div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">ติดตั้ง Ultralytics (YOLO Library)</div>
+        <div class="step-sub">Cell แรกของโปรแกรม</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">2.1 คลิกที่ช่องสีเทา (เรียกว่า "เซล" หรือ Cell) ในหน้า Colab</div>
+      <div class="instr">2.2 พิมพ์โค้ดด้านล่างนี้ลงไปในเซล (หรือ copy แล้ววาง)</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 1 — ติดตั้ง Library</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="fn">!pip install</span> ultralytics opencv-python <span class="at">-q</span></pre>
+      </div>
+      <div class="instr">2.3 กด <b>Shift + Enter</b> เพื่อรันเซลนี้ (หรือกดปุ่ม ▶ ทางซ้ายของเซล)</div>
+      <div class="instr">2.4 รอจนกว่าจะขึ้นเครื่องหมาย ✓ สีเขียวหน้าเซล (ใช้เวลาประมาณ 10-30 วินาที)</div>
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div>ถ้าเห็นตัวอักษรสีแดงเยอะ ๆ (error) ให้ตรวจว่าพิมพ์คำสั่งถูกต้อง มี <code>!</code> นำหน้า <code>pip</code> หรือไม่</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">อัปโหลดไฟล์วิดีโอ</div>
+        <div class="step-sub">นำวิดีโอจากเครื่องเข้าสู่ Colab</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">3.1 คลิกที่ <b>"+ Code"</b> ด้านบนเพื่อสร้างเซลใหม่ (เซลที่ 2)</div>
+      <div class="instr">3.2 พิมพ์โค้ดนี้ลงไป</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 2 — อัปโหลดวิดีโอ</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> google.colab <span class="kw">import</span> files
+
+<span class="cm"># กดปุ่ม "Choose Files" ที่จะปรากฏขึ้น แล้วเลือกไฟล์วิดีโอจากเครื่อง</span>
+uploaded = files.upload()
+
+<span class="cm"># เก็บชื่อไฟล์วิดีโอที่อัปโหลดไว้ในตัวแปร</span>
+video_filename = <span class="fn">list</span>(uploaded.keys())[<span class="nu">0</span>]
+<span class="fn">print</span>(<span class="st">f"อัปโหลดสำเร็จ: {video_filename}"</span>)</pre>
+      </div>
+      <div class="instr">3.3 รันเซล (Shift + Enter) จะมีปุ่ม <b>"Choose Files"</b> ปรากฏขึ้นด้านล่างเซล</div>
+      <div class="instr">3.4 คลิกปุ่มนั้น แล้วเลือกไฟล์วิดีโอ .mp4 ที่เตรียมไว้จากเครื่องคอมพิวเตอร์</div>
+      <div class="instr">3.5 รอจนแถบสีฟ้าอัปโหลดเต็ม 100%</div>
+      <div class="checkpoint">✓ Checkpoint: ต้องเห็นข้อความ "อัปโหลดสำเร็จ: ชื่อไฟล์วิดีโอของคุณ.mp4"</div>
+    </div>
+  </div>
+
+  <!-- STEP 3B - GOOGLE DRIVE -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">3.5</div>
+      <div>
+        <div class="step-title">เก็บวิดีโอลง Google Drive (แนะนำอย่างยิ่ง)</div>
+        <div class="step-sub">กันไม่ต้องอัปโหลดใหม่ทุกครั้งที่ Colab หลุด</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div><b>ทำไมต้องทำขั้นตอนนี้?</b> ไฟล์ที่อัปโหลดด้วย <code>files.upload()</code> จะอยู่แค่ชั่วคราวใน Colab — ถ้า Session หลุด (disconnect) หรือปิดแท็บ ไฟล์จะ<b>หายหมด</b> ต้องอัปโหลดใหม่ทุกครั้ง ถ้าเก็บไว้ใน Google Drive จะไม่ต้องอัปโหลดซ้ำอีกเลย</div>
+      </div>
+
+      <div class="instr">3.5.1 สร้างเซลใหม่ แล้วพิมพ์โค้ดนี้เพื่อเชื่อมต่อ Google Drive</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซล — เชื่อมต่อ Google Drive</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> google.colab <span class="kw">import</span> drive
+drive.mount(<span class="st">'/content/drive'</span>)
+
+<span class="fn">print</span>(<span class="st">"เชื่อมต่อ Google Drive สำเร็จ!"</span>)</pre>
+      </div>
+      <div class="instr">3.5.2 รันเซล จะมี popup ขึ้นมาให้กด <b>"Connect to Google Drive"</b> แล้วเลือกบัญชี Google เดียวกับที่ล็อกอิน Colab อยู่ กด <b>Allow</b> ทุกขั้นตอน</div>
+      <div class="instr">3.5.3 ถ้าเชื่อมต่อสำเร็จ Drive ของคุณจะถูก mount ไว้ที่ path <code>/content/drive/MyDrive/</code></div>
+
+      <div class="instr">3.5.4 สร้างโฟลเดอร์เก็บงานวิชานี้ไว้ใน Drive แล้วคัดลอกวิดีโอที่อัปโหลดไปเก็บถาวร</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซล — สร้างโฟลเดอร์และบันทึกวิดีโอลง Drive</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">import</span> os, shutil
+
+<span class="cm"># สร้างโฟลเดอร์เก็บงานไว้ใน Drive (ทำครั้งเดียว ครั้งต่อไปจะข้ามอัตโนมัติ)</span>
+drive_folder = <span class="st">'/content/drive/MyDrive/ObjectDetection_Videos'</span>
+os.makedirs(drive_folder, exist_ok=<span class="nu">True</span>)
+
+<span class="cm"># คัดลอกวิดีโอที่เพิ่งอัปโหลดจาก Step 3 ไปเก็บใน Drive</span>
+drive_path = <span class="fn">f"{drive_folder}/{video_filename}"</span>
+shutil.copy(video_filename, drive_path)
+
+<span class="fn">print</span>(<span class="st">f"บันทึกวิดีโอไว้ที่: {drive_path}"</span>)
+<span class="fn">print</span>(<span class="st">"ครั้งหน้าไม่ต้องอัปโหลดใหม่ ใช้โค้ดขั้นตอน 3.5.5 โหลดจาก Drive ได้เลย"</span>)</pre>
+      </div>
+      <div class="checkpoint">✓ Checkpoint: เข้า drive.google.com ต้องเห็นโฟลเดอร์ "ObjectDetection_Videos" พร้อมไฟล์วิดีโอ</div>
+
+      <div class="instr" style="margin-top:20px"><b>📂 ครั้งต่อไป (ถ้ามีวิดีโอใน Drive อยู่แล้ว) — ข้าม Step 3 ได้เลย ใช้โค้ดนี้แทน:</b></div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซล — โหลดวิดีโอจาก Drive ที่มีอยู่แล้ว</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> google.colab <span class="kw">import</span> drive
+drive.mount(<span class="st">'/content/drive'</span>)
+
+<span class="cm"># ระบุชื่อไฟล์วิดีโอที่เคยเก็บไว้ใน Drive</span>
+video_filename = <span class="st">'/content/drive/MyDrive/ObjectDetection_Videos/ชื่อไฟล์วิดีโอของคุณ.mp4'</span>
+
+<span class="kw">import</span> os
+<span class="kw">if</span> os.path.exists(video_filename):
+    <span class="fn">print</span>(<span class="st">f"พบไฟล์แล้ว: {video_filename}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"ไม่พบไฟล์ ตรวจสอบชื่อไฟล์หรือ path อีกครั้ง"</span>)</pre>
+      </div>
+      <div class="note tip">
+        <span class="note-icon">💡</span>
+        <div>วิธีหาชื่อไฟล์แน่นอน: เข้า <b>drive.google.com</b> → เปิดโฟลเดอร์ ObjectDetection_Videos → คลิกขวาที่ไฟล์ → "Get link" หรือดูชื่อไฟล์ตรง ๆ แล้วพิมพ์ตามในโค้ดด้านบน (ตัวพิมพ์เล็ก-ใหญ่ต้องตรงกันเป๊ะ)</div>
+      </div>
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div>หลังจาก mount Drive แล้ว ให้ข้ามไปทำ <b>Step 4</b> ต่อได้เลย โดยไม่ต้องอัปโหลดไฟล์ใหม่ผ่าน Step 3 อีก</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">โหลดโมเดล YOLO11</div>
+        <div class="step-sub">เตรียม AI ที่จะใช้ตรวจจับ</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">4.1 สร้างเซลใหม่ (เซลที่ 3) แล้วพิมพ์โค้ดนี้</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 3 — โหลดโมเดล YOLO11</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+<span class="cm"># โหลดโมเดล YOLO11 nano (ตัวเล็กสุด เร็วสุด)</span>
+<span class="cm"># ครั้งแรกจะดาวน์โหลดไฟล์โมเดลอัตโนมัติ (ประมาณ 6MB)</span>
+model = YOLO(<span class="st">'yolo11n.pt'</span>)
+
+<span class="fn">print</span>(<span class="st">"โหลดโมเดลสำเร็จ!"</span>)
+<span class="fn">print</span>(<span class="st">f"โมเดลนี้รู้จักวัตถุทั้งหมด {len(model.names)} ประเภท"</span>)
+<span class="fn">print</span>(<span class="st">f"class 0 คือ: {model.names[0]}"</span>)  <span class="cm"># ต้องขึ้นว่า 'person'</span></pre>
+      </div>
+      <div class="note tip">
+        <span class="note-icon">💡</span>
+        <div>YOLO11 ถูกเทรนมาให้รู้จักวัตถุ 80 ประเภทจาก COCO Dataset โดย <b>class 0 คือ "person" (บุคคล)</b> เสมอ — นี่คือเหตุผลที่เราจะกรองเฉพาะ class 0</div>
+      </div>
+      <div class="checkpoint">✓ Checkpoint: บรรทัดสุดท้ายต้องขึ้นว่า "class 0 คือ: person"</div>
+    </div>
+  </div>
+
+  <!-- STEP 5 - THE MAIN ONE -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">เขียนโปรแกรมตรวจจับบุคคลทีละเฟรม</div>
+        <div class="step-sub">ส่วนหลักของงาน — อ่านทำความเข้าใจให้ดีก่อนพิมพ์</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">5.1 วิดีโอคือภาพนิ่งหลายๆ ภาพ (เฟรม) ที่เล่นต่อกันเร็วๆ — โปรแกรมนี้จะ<b>อ่านวิดีโอทีละเฟรม</b> ส่งแต่ละเฟรมให้ YOLO ตรวจจับ วาดกรอบ แล้วต่อเฟรมกลับเป็นวิดีโอใหม่</div>
+      <div class="instr">5.2 สร้างเซลใหม่ (เซลที่ 4) แล้วพิมพ์โค้ดทั้งหมดนี้</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 4 — ตรวจจับบุคคลทีละเฟรม</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">import</span> cv2
+
+<span class="cm"># ─── เปิดไฟล์วิดีโอที่อัปโหลด ───</span>
+cap = cv2.VideoCapture(video_filename)
+
+<span class="cm"># ─── อ่านข้อมูลของวิดีโอต้นฉบับ ───</span>
+fps    = <span class="fn">int</span>(cap.get(cv2.CAP_PROP_FPS))          <span class="cm"># ความเร็วเฟรม (เฟรม/วินาที)</span>
+width  = <span class="fn">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))  <span class="cm"># ความกว้างวิดีโอ</span>
+height = <span class="fn">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) <span class="cm"># ความสูงวิดีโอ</span>
+total_frames = <span class="fn">int</span>(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+<span class="fn">print</span>(<span class="st">f"วิดีโอต้นฉบับ: {width}x{height}, {fps} FPS, {total_frames} เฟรม"</span>)
+
+<span class="cm"># ─── เตรียมไฟล์วิดีโอผลลัพธ์ ───</span>
+fourcc = cv2.VideoWriter_fourcc(<span class="at">*</span><span class="st">'mp4v'</span>)
+out = cv2.VideoWriter(<span class="st">'output_result.mp4'</span>, fourcc, fps, (width, height))
+
+<span class="cm"># ─── ตัวนับจำนวนบุคคลสูงสุดที่เจอในเฟรมเดียว ───</span>
+max_person_count = <span class="nu">0</span>
+frame_number = <span class="nu">0</span>
+
+<span class="cm"># ─── วนลูปอ่านวิดีโอทีละเฟรมจนกว่าจะหมด ───</span>
+<span class="kw">while</span> cap.isOpened():
+    ret, frame = cap.read()   <span class="cm"># ret=True ถ้าอ่านเฟรมได้สำเร็จ</span>
+    <span class="kw">if</span> <span class="kw">not</span> ret:
+        <span class="kw">break</span>    <span class="cm"># วิดีโอหมดแล้ว ออกจากลูป</span>
+
+    frame_number += <span class="nu">1</span>
+
+    <span class="cm"># ─── ส่งเฟรมนี้ให้ YOLO ตรวจจับ กรองเฉพาะ class 0 (person) ───</span>
+    results = model(frame, classes=[<span class="nu">0</span>], conf=<span class="nu">0.4</span>, verbose=<span class="nu">False</span>)
+    result = results[<span class="nu">0</span>]
+
+    <span class="cm"># ─── นับจำนวนคนที่เจอในเฟรมนี้ ───</span>
+    person_count = <span class="fn">len</span>(result.boxes)
+    <span class="kw">if</span> person_count > max_person_count:
+        max_person_count = person_count
+
+    <span class="cm"># ─── วาดกรอบ + label บนเฟรม ───</span>
+    annotated_frame = result.plot()
+
+    <span class="cm"># ─── เขียนตัวเลขจำนวนคนที่มุมซ้ายบนของเฟรม ───</span>
+    cv2.putText(annotated_frame, <span class="st">f"Persons: {person_count}"</span>,
+                (<span class="nu">20</span>, <span class="nu">40</span>), cv2.FONT_HERSHEY_SIMPLEX,
+                <span class="nu">1</span>, (<span class="nu">0</span>, <span class="nu">255</span>, <span class="nu">0</span>), <span class="nu">2</span>)
+
+    <span class="cm"># ─── บันทึกเฟรมนี้ลงในวิดีโอผลลัพธ์ ───</span>
+    out.write(annotated_frame)
+
+    <span class="cm"># ─── แสดงความคืบหน้าทุก 30 เฟรม ───</span>
+    <span class="kw">if</span> frame_number % <span class="nu">30</span> == <span class="nu">0</span>:
+        <span class="fn">print</span>(<span class="st">f"ประมวลผลแล้ว {frame_number}/{total_frames} เฟรม"</span>)
+
+<span class="cm"># ─── ปิดไฟล์วิดีโอทั้งสอง ───</span>
+cap.release()
+out.release()
+
+<span class="fn">print</span>(<span class="st">f"\n✅ เสร็จสิ้น! ประมวลผลทั้งหมด {frame_number} เฟรม"</span>)
+<span class="fn">print</span>(<span class="st">f"👤 พบจำนวนบุคคลสูงสุดในเฟรมเดียว: {max_person_count} คน"</span>)</pre>
+      </div>
+      <div class="instr">5.3 รันเซลนี้ (Shift + Enter) แล้วรอ — จะเห็นข้อความ "ประมวลผลแล้ว..." ขึ้นเรื่อยๆ</div>
+      <div class="note warn">
+        <span class="note-icon">⏳</span>
+        <div>ขั้นตอนนี้ใช้เวลานานที่สุด (อาจ 30 วินาที ถึง 2-3 นาที ขึ้นอยู่กับความยาววิดีโอ) <b>ห้ามกดรันเซลอื่นซ้อนระหว่างนี้</b> รอให้เสร็จก่อน</div>
+      </div>
+      <div class="checkpoint">✓ Checkpoint: ต้องเห็นข้อความ "✅ เสร็จสิ้น!" พร้อมจำนวนเฟรมและจำนวนบุคคลสูงสุด</div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">6</div>
+      <div>
+        <div class="step-title">ดูตัวอย่างผลลัพธ์ในเซล</div>
+        <div class="step-sub">เช็คก่อนดาวน์โหลด</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">6.1 สร้างเซลใหม่ (เซลที่ 5) เพื่อดูภาพตัวอย่างจากวิดีโอผลลัพธ์</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 5 — ดูภาพตัวอย่าง</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cm"># เปิดวิดีโอผลลัพธ์ที่บันทึกไว้ ดูเฟรมกลางวิดีโอเป็นตัวอย่าง</span>
+cap_check = cv2.VideoCapture(<span class="st">'output_result.mp4'</span>)
+total = <span class="fn">int</span>(cap_check.get(cv2.CAP_PROP_FRAME_COUNT))
+cap_check.set(cv2.CAP_PROP_POS_FRAMES, total <span class="at">//</span> <span class="nu">2</span>)  <span class="cm"># ไปที่เฟรมกลางวิดีโอ</span>
+
+ret, sample_frame = cap_check.read()
+cap_check.release()
+
+<span class="kw">if</span> ret:
+    sample_rgb = cv2.cvtColor(sample_frame, cv2.COLOR_BGR2RGB)
+    plt.figure(figsize=(<span class="nu">10</span>, <span class="nu">7</span>))
+    plt.imshow(sample_rgb)
+    plt.axis(<span class="st">'off'</span>)
+    plt.title(<span class="st">'ตัวอย่างผลลัพธ์ — เฟรมกลางวิดีโอ'</span>)
+    plt.show()</pre>
+      </div>
+      <div class="instr">6.2 รันเซล จะเห็นภาพนิ่งจากวิดีโอ พร้อมกรอบสี่เหลี่ยมรอบคนที่ตรวจจับได้</div>
+      <div class="expect">📸 <b>ผลลัพธ์ที่ควรเห็น:</b> ภาพจากวิดีโอ มีกรอบสีเขียว/ฟ้าล้อมรอบคนในภาพ พร้อมคำว่า "person" และเปอร์เซ็นต์ความมั่นใจกำกับไว้ที่มุมกรอบ และตัวเลข "Persons: X" ที่มุมซ้ายบน</div>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">7</div>
+      <div>
+        <div class="step-title">ดาวน์โหลดวิดีโอผลลัพธ์กลับเครื่อง</div>
+        <div class="step-sub">ขั้นตอนสุดท้าย</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instr">7.1 สร้างเซลสุดท้าย (เซลที่ 6) แล้วพิมพ์โค้ดนี้</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซลที่ 6 — ดาวน์โหลดผลลัพธ์</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> google.colab <span class="kw">import</span> files
+
+files.download(<span class="st">'output_result.mp4'</span>)</pre>
+      </div>
+      <div class="instr">7.2 รันเซล — ไฟล์จะถูกดาวน์โหลดลงโฟลเดอร์ Downloads ของเครื่องอัตโนมัติ</div>
+      <div class="instr">7.3 เปิดไฟล์ <b>output_result.mp4</b> ด้วยโปรแกรมเล่นวิดีโอเพื่อดูผลลัพธ์เต็ม</div>
+      <div class="checkpoint">🎉 เสร็จสมบูรณ์! คุณมีวิดีโอที่ตรวจจับบุคคลด้วย YOLO11 แล้ว</div>
+    </div>
+  </div>
+
+  <!-- STEP 8 - WEBCAM -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">8</div>
+      <div>
+        <div class="step-title">🌟 ขั้นสูง: เปิดเว็บแคมตรวจจับแบบ Real-time</div>
+        <div class="step-sub">ได้จริง! แต่ทำงานต่างจากปกตินิดหน่อย — อ่านให้เข้าใจก่อน</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div><b>ทำไมเว็บแคมบน Colab ถึงไม่เหมือนบนเครื่องตัวเอง?</b> Colab รันอยู่บน Server ของ Google ไม่ใช่เครื่องเรา จึงต่อกล้องโดยตรงแบบ <code>cv2.VideoCapture(0)</code> ไม่ได้ ต้องใช้ <b>JavaScript</b> ขอสิทธิ์เข้าถึงกล้องจากเบราว์เซอร์ของเรา แล้วส่งภาพแต่ละเฟรมกลับมาให้ Python ประมวลผล — จึงเรียกว่า "เกือบ real-time" (มีดีเลย์เล็กน้อยจากการส่งข้อมูลไปมา)</div>
+      </div>
+
+      <div class="instr">8.1 สร้างเซลใหม่ แล้วพิมพ์โค้ด JavaScript Helper นี้ก่อน (โค้ดนี้ยาวหน่อย แต่ copy วางได้เลยไม่ต้องแก้ไข)</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซล A — ตัวช่วยเชื่อมกล้องเบราว์เซอร์ (รันแค่ครั้งเดียว)</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> IPython.display <span class="kw">import</span> display, Javascript
+<span class="kw">from</span> google.colab.output <span class="kw">import</span> eval_js
+<span class="kw">from</span> base64 <span class="kw">import</span> b64decode, b64encode
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> cv2
+
+<span class="cm"># ─── ฟังก์ชันเริ่มสตรีมกล้อง (ขอสิทธิ์เข้าถึงกล้องจากเบราว์เซอร์) ───</span>
+<span class="kw">def</span> <span class="fn">start_webcam_stream</span>():
+    js = Javascript(<span class="st">'''
+        var video;
+        var div = null;
+        var stream;
+        var captureCanvas;
+
+        function removeDom() {
+            if (div !== null) { div.remove(); div = null; }
+            if (stream) { stream.getVideoTracks()[0].stop(); }
+        }
+
+        async function startStream() {
+            div = document.createElement('div');
+            document.body.appendChild(div);
+            video = document.createElement('video');
+            video.style.display = 'block';
+            video.width = 640;
+            stream = await navigator.mediaDevices.getUserMedia({video: true});
+            div.appendChild(video);
+            video.srcObject = stream;
+            await video.play();
+            captureCanvas = document.createElement('canvas');
+            captureCanvas.width = 640;
+            captureCanvas.height = 480;
+            return 'started';
+        }
+
+        async function grabFrame() {
+            var ctx = captureCanvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, 640, 480);
+            return captureCanvas.toDataURL('image/jpeg', 0.8);
+        }
+
+        window.startStream = startStream;
+        window.grabFrame = grabFrame;
+        window.removeDom = removeDom;
+    '''</span>)
+    display(js)
+    eval_js(<span class="st">'startStream()'</span>)
+    <span class="fn">print</span>(<span class="st">"✅ กล้องเริ่มทำงานแล้ว — เบราว์เซอร์จะขอสิทธิ์เข้าถึงกล้อง กด Allow"</span>)
+
+<span class="cm"># ─── ฟังก์ชันดึงภาพ 1 เฟรมจากกล้อง แปลงเป็น OpenCV image ───</span>
+<span class="kw">def</span> <span class="fn">get_webcam_frame</span>():
+    data_url = eval_js(<span class="st">'grabFrame()'</span>)
+    header, encoded = data_url.split(<span class="st">','</span>, <span class="nu">1</span>)
+    img_bytes = b64decode(encoded)
+    img_array = np.frombuffer(img_bytes, dtype=np.uint8)
+    frame = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    <span class="kw">return</span> frame
+
+<span class="cm"># ─── ฟังก์ชันปิดกล้อง ───</span>
+<span class="kw">def</span> <span class="fn">stop_webcam_stream</span>():
+    eval_js(<span class="st">'removeDom()'</span>)
+    <span class="fn">print</span>(<span class="st">"ปิดกล้องแล้ว"</span>)
+
+<span class="fn">print</span>(<span class="st">"ตัวช่วยกล้องพร้อมใช้งาน — ไปทำเซล B ต่อได้เลย"</span>)</pre>
+      </div>
+      <div class="instr">8.2 รันเซล A ก่อน (Shift + Enter) — จะขึ้นข้อความ "ตัวช่วยกล้องพร้อมใช้งาน"</div>
+
+      <div class="instr" style="margin-top:16px">8.3 สร้างเซลใหม่ (เซล B) แล้วพิมพ์โค้ดนี้เพื่อเริ่มตรวจจับจากกล้องจริง</div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-title">เซล B — ตรวจจับบุคคลจากเว็บแคม Real-time</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">from</span> IPython.display <span class="kw">import</span> clear_output
+
+<span class="cm"># ─── เปิดกล้อง (เบราว์เซอร์จะขอสิทธิ์ — กด Allow) ───</span>
+start_webcam_stream()
+
+<span class="cm"># ─── กำหนดจำนวนเฟรมที่จะจับ (ปรับได้ตามต้องการ) ───</span>
+num_frames = <span class="nu">30</span>   <span class="cm"># จับ 30 เฟรม แล้วหยุดอัตโนมัติ</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(num_frames):
+    <span class="cm"># ─── ดึง 1 เฟรมจากกล้อง ───</span>
+    frame = get_webcam_frame()
+
+    <span class="cm"># ─── ส่งให้ YOLO ตรวจจับเฉพาะคน ───</span>
+    results = model(frame, classes=[<span class="nu">0</span>], conf=<span class="nu">0.4</span>, verbose=<span class="nu">False</span>)
+    annotated = results[<span class="nu">0</span>].plot()
+    person_count = <span class="fn">len</span>(results[<span class="nu">0</span>].boxes)
+
+    <span class="cm"># ─── แสดงผลแบบ real-time (เขียนทับภาพเดิมทุกเฟรม) ───</span>
+    clear_output(wait=<span class="nu">True</span>)
+    annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+    plt.figure(figsize=(<span class="nu">8</span>, <span class="nu">6</span>))
+    plt.imshow(annotated_rgb)
+    plt.axis(<span class="st">'off'</span>)
+    plt.title(<span class="st">f'Frame {i+1}/{num_frames} — Persons: {person_count}'</span>)
+    plt.show()
+
+<span class="cm"># ─── ปิดกล้องเมื่อจับครบตามจำนวนแล้ว ───</span>
+stop_webcam_stream()
+<span class="fn">print</span>(<span class="st">"✅ จบการตรวจจับแบบ real-time"</span>)</pre>
+      </div>
+      <div class="instr">8.4 รันเซล B — เบราว์เซอร์จะขึ้น popup ขอสิทธิ์เข้าถึงกล้อง กด <b>"Allow"</b></div>
+      <div class="instr">8.5 ภาพจากกล้องจะขึ้นทีละเฟรม พร้อมกรอบตรวจจับคนและตัวเลขจำนวนคน อัปเดตต่อเนื่อง 30 เฟรม แล้วหยุดเอง</div>
+
+      <div class="note tip">
+        <span class="note-icon">💡</span>
+        <div><b>ทำไมเห็นภาพเป็นเฟรม ๆ ไม่เนียนเหมือนวิดีโอ?</b> เพราะทุกเฟรมต้องเดินทาง: กล้อง → เบราว์เซอร์ → ส่งผ่านอินเทอร์เน็ตไป Colab Server → YOLO ประมวลผล → ส่งกลับมาแสดง จึงมีดีเลย์มากกว่าการรันบนเครื่องตัวเองโดยตรง แต่ก็ยังถือว่าเป็น "real-time" ในระดับที่ใช้งานได้จริง</div>
+      </div>
+      <div class="note danger">
+        <span class="note-icon">🚫</span>
+        <div>ถ้าต้องการหยุดกลางคัน ให้กดปุ่ม ⏹ (Stop) ที่เซล แล้วรันเซลนี้เพื่อปิดกล้องให้แน่ใจ: <code>stop_webcam_stream()</code></div>
+      </div>
+      <div class="checkpoint">✓ Checkpoint: เห็นภาพจากกล้องตัวเองพร้อมกรอบตรวจจับคนเปลี่ยนไปเรื่อย ๆ ในเซลเดียวกัน</div>
+    </div>
+  </div>
+
+  <!-- PARAMETER REFERENCE -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">📖</div>
+      <div>
+        <div class="step-title">อ้างอิง: parameter ที่ปรับได้</div>
+        <div class="step-sub">ลองปรับค่าเหล่านี้เพื่อดูผลที่เปลี่ยนไป</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <table class="param-table">
+        <tr><th>Parameter</th><th>ความหมาย</th><th>ค่าแนะนำ</th></tr>
+        <tr><td><code>classes=[0]</code></td><td>ตรวจจับเฉพาะ class 0 (person) เท่านั้น</td><td>[0] สำหรับคนอย่างเดียว</td></tr>
+        <tr><td><code>conf=0.4</code></td><td>ความมั่นใจขั้นต่ำที่จะนับว่าเจอวัตถุ (0-1)</td><td>0.3–0.5</td></tr>
+        <tr><td><code>'yolo11n.pt'</code></td><td>ขนาดโมเดล (n=เร็วสุด, s, m, l, x=แม่นสุด)</td><td>n สำหรับทดสอบเร็ว</td></tr>
+      </table>
+      <div class="note tip">
+        <span class="note-icon">🧪</span>
+        <div>ลองเปลี่ยน <code>conf=0.4</code> เป็น <code>conf=0.6</code> แล้วรันใหม่ — สังเกตว่าจำนวนกรอบที่เจอจะน้อยลง เพราะต้องมั่นใจมากขึ้นถึงจะนับ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">🔧</div>
+      <div>
+        <div class="step-title">แก้ปัญหาที่พบบ่อย</div>
+        <div class="step-sub">ถ้าติดปัญหา อ่านตรงนี้ก่อนถามครู</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="ts-item">
+        <div class="ts-problem">❌ NameError: name 'video_filename' is not defined</div>
+        <div class="ts-solve">→ ลืมรันเซลที่ 3 (อัปโหลดวิดีโอ) หรือ Colab หลุด session ให้กลับไปรันเซลที่ 3 ใหม่</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ วิดีโอผลลัพธ์เปิดไม่ได้ / เล่นไม่ขึ้นภาพ</div>
+        <div class="ts-solve">→ บาง codec อาจไม่รองรับในบางโปรแกรม ลองเปิดด้วย VLC Player หรือเปลี่ยน fourcc เป็น <code>cv2.VideoWriter_fourcc(*'avc1')</code></div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ ประมวลผลนานมาก ไม่ขยับ</div>
+        <div class="ts-solve">→ ตรวจสอบว่าเปิด GPU T4 แล้วหรือยัง (ขั้นตอนที่ 1.5-1.6) ถ้าลืมเปิดจะช้ากว่าปกติมาก</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ ไม่พบคนในวิดีโอเลย (Persons: 0 ตลอด)</div>
+        <div class="ts-solve">→ ลองลด <code>conf=0.4</code> เป็น <code>conf=0.25</code> หรือตรวจสอบว่าวิดีโอมีคนอยู่จริงและแสงสว่างเพียงพอ</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ FileNotFoundError ตอนโหลดวิดีโอจาก Drive</div>
+        <div class="ts-solve">→ ชื่อไฟล์หรือ path พิมพ์ไม่ตรง เข้า drive.google.com เช็คชื่อไฟล์ให้ตรงเป๊ะ (รวมตัวพิมพ์เล็ก-ใหญ่และนามสกุลไฟล์)</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ เว็บแคมไม่ขึ้น popup ขอสิทธิ์ หรือกด Allow แล้วไม่มีอะไรเกิดขึ้น</div>
+        <div class="ts-solve">→ เบราว์เซอร์บางตัวบล็อกกล้องจาก iframe ของ Colab ลองใช้ Chrome และเช็คไอคอนกล้องที่แถบ URL ด้านบนว่าอนุญาตไว้หรือยัง หรือลอง reload หน้าแล้วรันเซล A ใหม่</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-problem">❌ กล้องเปิดค้าง ปิดไม่ได้</div>
+        <div class="ts-solve">→ รันคำสั่ง <code>stop_webcam_stream()</code> ในเซลใหม่ ถ้ายังไม่หายให้กด Runtime → Restart session</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMISSION -->
+  <div class="submit-box">
+    <div class="submit-title">📤 สิ่งที่ต้องส่ง</div>
+    <div class="submit-item">✅ ไฟล์ Colab Notebook (.ipynb) — File → Download → Download .ipynb</div>
+    <div class="submit-item">✅ ไฟล์วิดีโอผลลัพธ์ output_result.mp4</div>
+    <div class="submit-item">✅ Screenshot หน้าจอที่แสดงข้อความ "✅ เสร็จสิ้น!" พร้อมจำนวนบุคคลสูงสุด</div>
+  </div>
+
+</div>
+
+<footer>31906-2016 Object Detection · ใบงาน YOLO Person Detection · วิทยาลัยเทคนิคเลย</footer>
+
+<script>
+function copyCode(btn){
+  const pre=btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='copied!';btn.style.color='#4ade80';
+    setTimeout(()=>{btn.textContent='copy';btn.style.color='';},1500);
+  });
+}
+</script>
+</body>
+</html>
