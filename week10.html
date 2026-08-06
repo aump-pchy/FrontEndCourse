@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Week 10 — useState & Events | 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,0.09);--bd2:rgba(130,150,255,0.2);
+  --g:#34d399;--g2:#10b981;       /* green — useState */
+  --y:#fbbf24;--y2:#f59e0b;       /* yellow — Events */
+  --re:#61dafb;--re2:#38bdf8;     /* React blue — Patterns */
+  --pk:#f472b6;--pk2:#ec4899;     /* pink */
+  --pu:#a78bfa;--or:#fb923c;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;font-weight:400;line-height:1.7;overflow-x:hidden;}
+
+#rp{position:fixed;top:0;left:0;height:3px;width:0;z-index:999;
+  background:linear-gradient(90deg,var(--g),var(--y),var(--re),var(--pk));}
+
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  height:52px;display:flex;align-items:center;gap:6px;padding:0 1.5rem;overflow-x:auto;}
+.sni{white-space:nowrap;padding:5px 14px;border-radius:100px;font-size:13px;font-weight:500;
+  color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
+.sni:hover{color:var(--tx);border-color:var(--bd2);background:var(--card);}
+.sni.a1.on{color:var(--g);border-color:rgba(52,211,153,.35);}
+.sni.a2.on{color:var(--y);border-color:rgba(251,191,36,.35);}
+.sni.a3.on{color:var(--re);border-color:rgba(97,218,251,.35);}
+.sni.a4.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
+.nsep{color:var(--bd2);font-size:11px;flex-shrink:0;}
+
+.page{max-width:880px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
+.wk-tag{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);
+  color:var(--g);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.hero h1 span{background:linear-gradient(135deg,var(--g),var(--re));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#94a3c8;font-size:15px;max-width:560px;margin-bottom:1.8rem;}
+.hchips{display:flex;gap:8px;flex-wrap:wrap;}
+.hchip{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;}
+
+.sec{padding:3.5rem 0 1rem;}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:.4rem;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bd);}
+.sec-title{font-size:clamp(1.5rem,3.5vw,2rem);font-weight:700;margin-bottom:.4rem;}
+.sec-sub{color:#7a8aaa;font-size:14px;margin-bottom:2rem;}
+hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:640px){.two{grid-template-columns:1fr;}}
+
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:10px;
+  padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.7rem 0;user-select:text;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#454c6b;}.t{color:#89dceb;}.a{color:#a6e3a1;}.v{color:#fab387;}
+.hk{color:#34d399;} /* hook color */
+
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
+.ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+.ir2{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
+.io{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);color:#f0c8a0;}
+
+.badge-new{background:rgba(244,114,182,.1);color:var(--pk);border:1px solid rgba(244,114,182,.25);
+  padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
+.pc{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:1rem;margin-bottom:.7rem;}
+.pn{font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:5px;}
+.pd{font-size:13px;color:#8494b8;}
+
+/* ═══ USESTATE VISUALIZER ═══ */
+.state-vis{background:var(--surf);border:1px solid rgba(52,211,153,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.state-diagram{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:center;margin-bottom:1.2rem;}
+@media(max-width:580px){.state-diagram{grid-template-columns:1fr;gap:.5rem;}}
+.state-box{background:#060c20;border-radius:12px;padding:16px 20px;}
+.sb-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.sb-val{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;
+  color:var(--g);text-align:center;padding:14px;background:rgba(52,211,153,.07);
+  border-radius:8px;margin-bottom:8px;transition:all .3s;border:1px solid rgba(52,211,153,.2);}
+.sb-val.flash{background:rgba(52,211,153,.2);transform:scale(1.06);}
+.sb-label{font-size:12px;color:var(--mu);text-align:center;font-family:'JetBrains Mono',monospace;}
+
+.state-arrow{text-align:center;font-size:1.5rem;color:rgba(52,211,153,.5);}
+
+.state-controls-box{background:#060c20;border-radius:12px;padding:16px 20px;}
+.sc-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;}
+.sc-btns{display:flex;flex-direction:column;gap:8px;}
+.sc-btn{padding:9px 16px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;
+  transition:all .2s;text-align:left;}
+.sc-btn:hover{transform:translateX(3px);}
+
+.state-code-out{background:#060c20;border-radius:10px;padding:14px 18px;margin-top:1rem;}
+.sco-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.sco-line{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8494b8;margin-bottom:3px;}
+
+/* ═══ LIVE PLAYGROUND ═══ */
+.playground{background:var(--surf);border:1px solid rgba(251,191,36,.22);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.demo-card{background:#060c20;border-radius:12px;overflow:hidden;}
+.dc-head{padding:10px 14px;border-bottom:1px solid var(--bd);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);
+  letter-spacing:.08em;text-transform:uppercase;}
+.dc-body{padding:16px;}
+.dc-preview{background:white;border-radius:10px;padding:16px;margin-bottom:12px;min-height:90px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.dc-code{background:#030509;border-radius:8px;padding:10px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:#8494b8;line-height:1.8;}
+
+/* DEMO COMPONENTS */
+.demo-btn{padding:8px 20px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;transition:all .15s;}
+.demo-btn:hover{opacity:.85;transform:scale(.97);}
+.demo-btn:active{transform:scale(.93);}
+.counter-num{font-size:2rem;font-weight:700;color:#374151;}
+.counter-row{display:flex;align-items:center;gap:12px;}
+.like-btn{padding:8px 20px;border-radius:100px;border:2px solid #fca5a5;
+  background:white;cursor:pointer;font-size:14px;font-weight:600;
+  display:flex;align-items:center;gap:6px;font-family:'Mitr',sans-serif;
+  transition:all .2s;}
+.like-btn.liked{background:#ef4444;border-color:#ef4444;color:white;}
+.toggle-box{background:#f3f4f6;border-radius:10px;padding:12px;width:100%;text-align:center;
+  font-size:13px;color:#6b7280;transition:all .3s;}
+.toggle-box.show{background:#dbeafe;color:#1d4ed8;}
+.input-demo{width:100%;border:2px solid #e5e7eb;border-radius:8px;padding:8px 12px;
+  font-family:'Mitr',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.input-demo:focus{border-color:#6366f1;}
+.input-output{font-size:14px;color:#6b7280;margin-top:6px;}
+
+/* ═══ EVENT HANDLER PATTERNS ═══ */
+.event-table{width:100%;border-collapse:collapse;font-size:13px;}
+.event-table th{padding:9px 12px;text-align:left;font-size:11.5px;color:var(--mu);
+  font-weight:500;border-bottom:1px solid var(--bd);}
+.event-table td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.event-table tr:last-child td{border-bottom:none;}
+.event-table tr:hover td{background:rgba(255,255,255,.02);}
+.ev-pill{font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 8px;
+  border-radius:5px;background:rgba(251,191,36,.1);color:var(--y);}
+
+/* WORKSHOP */
+.ws{background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(97,218,251,.04));
+  border:1px solid rgba(52,211,153,.18);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.ws-icon{font-size:1.6rem;}
+.ws-title{font-size:1.1rem;font-weight:700;}
+.ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
+.ws-tasks{display:flex;flex-direction:column;gap:8px;}
+.wt{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;}
+.wlv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
+.lv3{background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.3);}
+.wt-text{font-size:13.5px;line-height:1.55;}
+.wt-text strong{color:var(--tx);}
+
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(52,211,153,.04));
+  border:1px solid rgba(244,114,182,.22);border-radius:16px;padding:2rem;margin:2rem 0;}
+
+/* MENU CARD FINAL */
+.mcard{background:white;border-radius:14px;overflow:hidden;width:160px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);position:relative;}
+.mc-badge-abs{position:absolute;top:8px;right:8px;
+  background:white;border:1px solid #86efac;color:#16a34a;
+  border-radius:100px;font-size:10px;padding:2px 8px;font-weight:600;}
+.mc-img2{height:80px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;}
+.mc-body2{padding:10px 12px;}
+.mc-name2{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;}
+.mc-price2{font-size:12px;color:#f97316;font-weight:600;margin-bottom:6px;}
+.mc-like-row{display:flex;align-items:center;gap:6px;}
+.mc-like-btn{padding:4px 12px;border-radius:100px;border:1.5px solid #fca5a5;
+  background:white;cursor:pointer;font-size:12px;
+  display:flex;align-items:center;gap:4px;font-family:'Mitr',sans-serif;
+  transition:all .2s;}
+.mc-like-btn.on{background:#ef4444;border-color:#ef4444;color:white;}
+.mc-likes{font-size:12px;color:#9ca3af;}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+
+<nav class="snav">
+  <a class="sni a1" href="#s1">🟢 useState</a>
+  <span class="nsep">›</span>
+  <a class="sni a2" href="#s2">🟡 Event Handler</a>
+  <span class="nsep">›</span>
+  <a class="sni a3" href="#s3">⚛️ Patterns</a>
+  <span class="nsep">›</span>
+  <a class="sni a4" href="#s4">🏁 Challenge</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wk-tag">⚛️ WEEK 10</div>
+  <h1>useState &<br><span>Event Handler</span></h1>
+  <p>ทำให้ Component "จำค่า" และ "ตอบสนอง" ต่อการกระทำของผู้ใช้ — กดปุ่ม พิมพ์ข้อความ อัปเดต UI ทันที</p>
+  <div class="hchips">
+    <span class="hchip" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.25)">🟢 useState Hook</span>
+    <span class="hchip" style="background:rgba(251,191,36,.1);color:var(--y);border:1px solid rgba(251,191,36,.25)">🟡 onClick / onChange</span>
+    <span class="hchip" style="background:rgba(97,218,251,.1);color:var(--re);border:1px solid rgba(97,218,251,.25)">⚛️ Counter / Toggle / Input</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: MenuCard + Like ❤️</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     S1: useState
+════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--g)">01</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--g)">useState Hook</h2>
+  <p class="sec-sub">ทำให้ Component "จำค่า" ได้ — เมื่อค่าเปลี่ยน UI อัปเดตอัตโนมัติ</p>
+
+  <!-- WHY STATE -->
+  <div class="card">
+    <div class="card-t"><span>🤔</span> ทำไมต้องมี State?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ ตัวแปรธรรมดา — UI ไม่อัปเดต</div>
+        <div class="cb">
+<span class="cm">// ❌ นี่ไม่ work</span>
+<span class="kw">const</span> <span class="fn">Counter</span> = () => {
+  <span class="kw">let</span> count = <span class="num">0</span>
+
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;{count}&lt;/p&gt;
+      &lt;button onClick={() => count++}&gt;
+        เพิ่ม
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+<span class="cm">// กดปุ่ม count เพิ่ม</span>
+<span class="cm">// แต่หน้าจอไม่เปลี่ยน! 😱</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--g);margin-bottom:6px;">✅ useState — UI อัปเดตอัตโนมัติ</div>
+        <div class="cb">
+<span class="cm">// ✅ ใช้ useState</span>
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="kw">const</span> <span class="fn">Counter</span> = () => {
+  <span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>)
+
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;{count}&lt;/p&gt;
+      &lt;button onClick={() => <span class="hk">setCount</span>(count + <span class="num">1</span>)}&gt;
+        เพิ่ม
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+<span class="cm">// กดปุ่ม → count เพิ่ม → UI อัปเดต ✓</span>
+        </div>
+      </div>
+    </div>
+    <div class="info ig">
+      <span class="ic">🔑</span>
+      <span>React รู้ว่าต้อง render ใหม่เมื่อไหร่ก็ต่อเมื่อเรียก <strong style="color:var(--g)">setter function</strong> (setCount) — ถ้าแก้ตัวแปรตรงๆ React ไม่รู้ ไม่ render ใหม่</span>
+    </div>
+  </div>
+
+  <!-- SYNTAX -->
+  <div class="card">
+    <div class="card-t"><span>📖</span> Syntax — อ่านและจำให้ขึ้นใจ</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="kw">const</span> [<span class="a">value</span>, <span class="hk">setValue</span>] = <span class="hk">useState</span>(<span class="num">initialValue</span>)
+
+<span class="cm">// ตัวอย่างจริง</span>
+<span class="kw">const</span> [<span class="a">count</span>,   <span class="hk">setCount</span>]   = <span class="hk">useState</span>(<span class="num">0</span>)
+<span class="kw">const</span> [<span class="a">name</span>,    <span class="hk">setName</span>]    = <span class="hk">useState</span>(<span class="str">""</span>)
+<span class="kw">const</span> [<span class="a">isOpen</span>,  <span class="hk">setIsOpen</span>]  = <span class="hk">useState</span>(<span class="kw">false</span>)
+<span class="kw">const</span> [<span class="a">liked</span>,   <span class="hk">setLiked</span>]   = <span class="hk">useState</span>(<span class="kw">false</span>)
+<span class="kw">const</span> [<span class="a">items</span>,   <span class="hk">setItems</span>]   = <span class="hk">useState</span>([])
+
+<span class="cm">// JS ที่ใช้: Array Destructuring</span>
+<span class="cm">// useState คืน array [ค่าปัจจุบัน, ฟังก์ชันอัปเดต]</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px;">แยกทีละส่วน:</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="pc">
+            <div class="pn" style="color:var(--g);">[ value ]</div>
+            <div class="pd">ค่าปัจจุบัน — ใช้ใน JSX เพื่อแสดงผล</div>
+          </div>
+          <div class="pc">
+            <div class="pn" style="color:var(--g);">[ setValue ]</div>
+            <div class="pd">ฟังก์ชันอัปเดต — เรียกเพื่อเปลี่ยนค่า React จะ render ใหม่อัตโนมัติ</div>
+          </div>
+          <div class="pc">
+            <div class="pn" style="color:var(--g);">useState(initial)</div>
+            <div class="pd">ค่าเริ่มต้น — number, string, boolean, array, object ได้ทั้งหมด</div>
+          </div>
+        </div>
+        <div class="info ig" style="margin-top:.7rem;">
+          <span class="ic">📝</span>
+          <span>ตั้งชื่อ: <code style="color:var(--g)">count + setCount</code>, <code style="color:var(--g)">name + setName</code> — ใช้ set นำหน้าเสมอ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USESTATE VISUALIZER -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> useState Visualizer — กดปุ่มดู State เปลี่ยน <span class="badge-new">Interactive</span></div>
+    <div class="info ig" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>กดปุ่มทางขวา แล้วดู state value เปลี่ยนและ code อัปเดตตาม</span>
+    </div>
+    <div class="state-vis">
+      <div class="state-diagram">
+        <div class="state-box">
+          <div class="sb-title">State ปัจจุบัน</div>
+          <div class="sb-val" id="vis-val">0</div>
+          <div class="sb-label" id="vis-label">count = 0</div>
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-controls-box">
+          <div class="sc-title">เรียก setter</div>
+          <div class="sc-btns">
+            <button class="sc-btn" onclick="visUpdate(1)"
+              style="background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);">
+              setCount(count + 1)
+            </button>
+            <button class="sc-btn" onclick="visUpdate(-1)"
+              style="background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25);">
+              setCount(count - 1)
+            </button>
+            <button class="sc-btn" onclick="visUpdate('reset')"
+              style="background:rgba(255,255,255,.05);color:var(--mu);border:1px solid var(--bd);">
+              setCount(0) — reset
+            </button>
+            <button class="sc-btn" onclick="visUpdate('double')"
+              style="background:rgba(167,139,250,.12);color:var(--pu);border:1px solid rgba(167,139,250,.25);">
+              setCount(count × 2)
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="state-code-out">
+        <div class="sco-title">โค้ดที่ run</div>
+        <div class="sco-line"><span style="color:#ff79c6;">const</span> [count, setCount] = <span style="color:var(--g);">useState</span>(<span style="color:#bd93f9;">0</span>)</div>
+        <div class="sco-line" id="vis-last-call" style="color:var(--g);">// กดปุ่มด้านบน</div>
+        <div class="sco-line">→ count = <span style="color:#bd93f9;" id="vis-result">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEVER MUTATE -->
+  <div class="card">
+    <div class="card-t"><span>⚠️</span> กฎเหล็ก — ห้ามแก้ State ตรงๆ</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:#f87171;margin-bottom:6px;">❌ ห้ามทำแบบนี้</div>
+        <div class="cb">
+<span class="kw">const</span> [count, setCount] = <span class="hk">useState</span>(<span class="num">0</span>)
+
+<span class="cm">// ❌ แก้ตรง — React ไม่รู้</span>
+count = count + <span class="num">1</span>
+count++
+
+<span class="cm">// ❌ สำหรับ array — ห้าม push</span>
+<span class="kw">const</span> [items, setItems] = <span class="hk">useState</span>([])
+items.push(<span class="str">"ใหม่"</span>)  <span class="cm">// ❌</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--g);margin-bottom:6px;">✅ ใช้ setter เสมอ</div>
+        <div class="cb">
+<span class="cm">// ✅ ผ่าน setter เสมอ</span>
+<span class="hk">setCount</span>(count + <span class="num">1</span>)
+<span class="hk">setCount</span>(prev => prev + <span class="num">1</span>)
+
+<span class="cm">// ✅ สำหรับ array — spread แล้วเพิ่ม</span>
+<span class="hk">setItems</span>([...items, <span class="str">"ใหม่"</span>])
+
+<span class="cm">// ✅ สำหรับ object</span>
+<span class="hk">setUser</span>({ ...user, name: <span class="str">"ใหม่"</span> })
+        </div>
+      </div>
+    </div>
+    <div class="info" style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);color:#fca5a5;">
+      <span class="ic">🚨</span>
+      <span><strong style="color:#f87171;">Immutability</strong> — React ต้องได้ "ค่าใหม่" ไม่ใช่แก้ค่าเดิม ถ้าแก้ตรงๆ React จะไม่ render ใหม่และ bug จะหายากมาก</span>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 1 -->
+  <div class="ws" id="ws1">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 1 — useState เบื้องต้น</div>
+        <span class="ws-badge" style="background:rgba(52,211,153,.12);color:var(--g);border:1px solid rgba(52,211,153,.3);">useState</span>
+      </div>
+    </div>
+    <p class="ws-desc">สร้าง Component ใหม่ <code style="color:var(--g)">src/components/Counter.jsx</code></p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง Counter แสดงตัวเลข + ปุ่ม "เพิ่ม" ใช้ <code style="color:var(--g)">const [count, setCount] = useState(0)</code> และ <code style="color:var(--g)">onClick={() => setCount(count + 1)}</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่มปุ่ม "ลด" <code style="color:var(--g)">setCount(count - 1)</code> และปุ่ม "รีเซ็ต" <code style="color:var(--g)">setCount(0)</code> — จัดปุ่มด้วย flex gap</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่มเงื่อนไข — ถ้า count {"<"} 0 ให้ตัวเลขเป็นสีแดง ถ้า count {">"} 10 เป็นสีเขียว ปกติเป็นสีดำ ด้วย conditional className</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S2: EVENT HANDLER
+════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--y)">02</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--y)">Event Handler</h2>
+  <p class="sec-sub">รับ input จากผู้ใช้ — กดปุ่ม พิมพ์ข้อความ เลื่อน mouse และอื่นๆ</p>
+
+  <!-- EVENT TYPES -->
+  <div class="card">
+    <div class="card-t"><span>📋</span> Events ที่ใช้บ่อย</div>
+    <table class="event-table">
+      <thead><tr><th>Event (JSX)</th><th>เมื่อไหร่</th><th>ใช้กับ</th><th>ตัวอย่าง</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="ev-pill">onClick</span></td>
+          <td style="font-size:13px;color:#8494b8;">คลิก element</td>
+          <td style="font-size:13px;color:#8494b8;">button, div, img</td>
+          <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#a6e3a1;">onClick={() => setCount(count+1)}</td>
+        </tr>
+        <tr>
+          <td><span class="ev-pill">onChange</span></td>
+          <td style="font-size:13px;color:#8494b8;">พิมพ์/เปลี่ยนค่า</td>
+          <td style="font-size:13px;color:#8494b8;">input, select, textarea</td>
+          <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#a6e3a1;">onChange={(e) => setText(e.target.value)}</td>
+        </tr>
+        <tr>
+          <td><span class="ev-pill">onSubmit</span></td>
+          <td style="font-size:13px;color:#8494b8;">กด Submit ใน form</td>
+          <td style="font-size:13px;color:#8494b8;">form</td>
+          <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#a6e3a1;">onSubmit={(e) => e.preventDefault()}</td>
+        </tr>
+        <tr>
+          <td><span class="ev-pill">onMouseEnter</span></td>
+          <td style="font-size:13px;color:#8494b8;">hover เข้า</td>
+          <td style="font-size:13px;color:#8494b8;">ทุก element</td>
+          <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#a6e3a1;">onMouseEnter={() => setHover(true)}</td>
+        </tr>
+        <tr>
+          <td><span class="ev-pill">onMouseLeave</span></td>
+          <td style="font-size:13px;color:#8494b8;">hover ออก</td>
+          <td style="font-size:13px;color:#8494b8;">ทุก element</td>
+          <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#a6e3a1;">onMouseLeave={() => setHover(false)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HOW TO WRITE -->
+  <div class="card">
+    <div class="card-t"><span>✍️</span> วิธีเขียน Event Handler</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="cm">// แบบที่ 1 — inline arrow function</span>
+<span class="cm">// เหมาะกับ logic สั้นๆ</span>
+&lt;button <span class="a">onClick</span>={() => <span class="hk">setCount</span>(count + <span class="num">1</span>)}&gt;
+  เพิ่ม
+&lt;/button&gt;
+
+<span class="cm">// แบบที่ 2 — แยก function</span>
+<span class="cm">// เหมาะกับ logic ยาว / ใช้หลายที่</span>
+<span class="kw">const</span> <span class="fn">handleClick</span> = () => {
+  <span class="hk">setCount</span>(count + <span class="num">1</span>)
+  console.log(<span class="str">'กดแล้ว!'</span>)
+}
+
+&lt;button <span class="a">onClick</span>={handleClick}&gt;เพิ่ม&lt;/button&gt;
+<span class="cm">// ⚠️ onClick={handleClick} ไม่ใส่ ()</span>
+        </div>
+      </div>
+      <div>
+        <div class="cb">
+<span class="cm">// onChange กับ input</span>
+<span class="kw">const</span> [text, <span class="hk">setText</span>] = <span class="hk">useState</span>(<span class="str">""</span>)
+
+&lt;input
+  <span class="a">value</span>={text}
+  <span class="a">onChange</span>={(e) => <span class="hk">setText</span>(e.target.value)}
+/&gt;
+
+<span class="cm">// e คือ Event Object</span>
+<span class="cm">// e.target คือ element</span>
+<span class="cm">// e.target.value คือค่าที่พิมพ์</span>
+
+&lt;p&gt;พิมพ์: {text}&lt;/p&gt;
+        </div>
+        <div class="info iy">
+          <span class="ic">⚠️</span>
+          <span><code style="color:var(--y)">onClick={"{"}handleClick{"}"}</code> ไม่มี <code>()</code> — ถ้าใส่ <code>handleClick()</code> จะเรียก function ทันทีตอน render ไม่ใช่ตอนกด</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S3: PATTERNS
+════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--re)">03</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--re)">Patterns ที่ใช้บ่อย</h2>
+  <p class="sec-sub">4 รูปแบบหลักที่เจอในงานจริงทุกวัน — ลองกดได้เลย</p>
+
+  <!-- LIVE PLAYGROUND -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> Live Playground — ลองกดเล่น <span class="badge-new">Interactive</span></div>
+    <div class="info ir" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>ทุก demo ด้านล่างทำงานจริง — กดและพิมพ์ได้เลย เปรียบเทียบกับ code ข้างล่างแต่ละอัน</span>
+    </div>
+    <div class="playground">
+      <div class="pg-grid">
+
+        <!-- COUNTER -->
+        <div class="demo-card">
+          <div class="dc-head">1. Counter</div>
+          <div class="dc-body">
+            <div class="dc-preview">
+              <div class="counter-row">
+                <button class="demo-btn" onclick="cDec()"
+                  style="background:#fee2e2;color:#ef4444;">−</button>
+                <span class="counter-num" id="c-num">0</span>
+                <button class="demo-btn" onclick="cInc()"
+                  style="background:#dcfce7;color:#16a34a;">+</button>
+              </div>
+              <button class="demo-btn" onclick="cReset()"
+                style="background:#f3f4f6;color:#6b7280;font-size:12px;padding:4px 12px;">reset</button>
+            </div>
+            <div class="dc-code">
+<span style="color:#ff79c6;">const</span> [count, setCount] = <span style="color:var(--g);">useState(0)</span>
+onClick={() => setCount(count <span style="color:#ff79c6;">+</span> 1)}
+onClick={() => setCount(count <span style="color:#ff79c6;">-</span> 1)}
+onClick={() => setCount(<span style="color:#bd93f9;">0</span>)}
+            </div>
+          </div>
+        </div>
+
+        <!-- LIKE BUTTON -->
+        <div class="demo-card">
+          <div class="dc-head">2. Like Button ❤️</div>
+          <div class="dc-body">
+            <div class="dc-preview">
+              <button class="like-btn" id="like-btn" onclick="toggleLike()">
+                <span id="like-icon">🤍</span>
+                <span id="like-text">Like</span>
+              </button>
+              <div style="font-size:12px;color:#9ca3af;" id="like-count-label">0 likes</div>
+            </div>
+            <div class="dc-code">
+<span style="color:#ff79c6;">const</span> [liked, setLiked] = <span style="color:var(--g);">useState(false)</span>
+<span style="color:#ff79c6;">const</span> [likes, setLikes] = <span style="color:var(--g);">useState(0)</span>
+onClick={() => {
+  setLiked(!liked)
+  setLikes(liked ? likes-1 : likes+1)
+}}
+            </div>
+          </div>
+        </div>
+
+        <!-- TOGGLE -->
+        <div class="demo-card">
+          <div class="dc-head">3. Toggle Show/Hide</div>
+          <div class="dc-body">
+            <div class="dc-preview">
+              <button class="demo-btn" onclick="toggleShow()"
+                id="toggle-btn" style="background:#dbeafe;color:#2563eb;">
+                ซ่อน/แสดง
+              </button>
+              <div class="toggle-box" id="toggle-box" style="display:none;">
+                📦 เนื้อหาที่ซ่อนอยู่!
+              </div>
+            </div>
+            <div class="dc-code">
+<span style="color:#ff79c6;">const</span> [isOpen, setIsOpen] = <span style="color:var(--g);">useState(false)</span>
+onClick={() => setIsOpen(!isOpen)}
+{isOpen && &lt;div&gt;เนื้อหา&lt;/div&gt;}
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTROLLED INPUT -->
+        <div class="demo-card">
+          <div class="dc-head">4. Controlled Input</div>
+          <div class="dc-body">
+            <div class="dc-preview" style="gap:6px;">
+              <input class="input-demo" id="ctrl-input"
+                placeholder="พิมพ์อะไรก็ได้..."
+                oninput="updateInput(this.value)">
+              <div class="input-output">พิมพ์: <strong id="input-val" style="color:#6366f1;">""</strong></div>
+              <div style="font-size:11px;color:#9ca3af;" id="input-len">0 ตัวอักษร</div>
+            </div>
+            <div class="dc-code">
+<span style="color:#ff79c6;">const</span> [text, setText] = <span style="color:var(--g);">useState("")</span>
+onChange={(e) => setText(e.target.value)}
+&lt;p&gt;พิมพ์: {text}&lt;/p&gt;
+&lt;p&gt;{text.length} ตัวอักษร&lt;/p&gt;
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTIPLE STATE -->
+  <div class="card">
+    <div class="card-t"><span>📦</span> ใช้ useState หลายตัวใน Component เดียว</div>
+    <div class="cb">
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="kw">const</span> <span class="fn">MenuCard</span> = ({ name, price, emoji, isBestseller = <span class="kw">false</span> }) => {
+
+  <span class="cm">// State หลายตัวได้เลย</span>
+  <span class="kw">const</span> [liked,    <span class="hk">setLiked</span>]    = <span class="hk">useState</span>(<span class="kw">false</span>)
+  <span class="kw">const</span> [likes,    <span class="hk">setLikes</span>]    = <span class="hk">useState</span>(<span class="num">0</span>)
+  <span class="kw">const</span> [showDesc, <span class="hk">setShowDesc</span>] = <span class="hk">useState</span>(<span class="kw">false</span>)
+
+  <span class="kw">const</span> <span class="fn">handleLike</span> = () => {
+    <span class="hk">setLiked</span>(!liked)
+    <span class="hk">setLikes</span>(liked ? likes - <span class="num">1</span> : likes + <span class="num">1</span>)
+  }
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"bg-white rounded-xl shadow-md p-4"</span>&gt;
+      &lt;span className=<span class="str">"text-4xl"</span>&gt;{emoji}&lt;/span&gt;
+      &lt;h3 className=<span class="str">"font-bold"</span>&gt;{name}&lt;/h3&gt;
+      &lt;p className=<span class="str">"text-orange-500"</span>&gt;฿{price}&lt;/p&gt;
+
+      <span class="cm">{/* Toggle description */}</span>
+      &lt;button onClick={() => <span class="hk">setShowDesc</span>(!showDesc)}&gt;
+        {showDesc ? <span class="str">"ซ่อน"</span> : <span class="str">"ดูรายละเอียด"</span>}
+      &lt;/button&gt;
+      {showDesc && &lt;p className=<span class="str">"text-sm text-gray-500"</span>&gt;รายละเอียด...&lt;/p&gt;}
+
+      <span class="cm">{/* Like button */}</span>
+      &lt;button onClick={handleLike}
+        className={liked ? <span class="str">"text-red-500"</span> : <span class="str">"text-gray-400"</span>}&gt;
+        {liked ? <span class="str">"❤️"</span> : <span class="str">"🤍"</span>} {likes}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+    </div>
+    <div class="info ir">
+      <span class="ic">💡</span>
+      <span>แต่ละ <code style="color:var(--re)">MenuCard</code> มี state ของตัวเอง — กด like ที่ card หนึ่ง ไม่กระทบ card อื่น</span>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 2 -->
+  <div class="ws">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 2 — Like & Toggle</div>
+        <span class="ws-badge" style="background:rgba(97,218,251,.12);color:var(--re);border:1px solid rgba(97,218,251,.3);">useState + Events</span>
+      </div>
+    </div>
+    <p class="ws-desc">เพิ่ม interaction เข้า <code style="color:var(--re)">MenuCard.jsx</code> จาก Week 9</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> เพิ่ม <code style="color:var(--re)">const [liked, setLiked] = useState(false)</code> แล้วสร้างปุ่ม Like ที่เปลี่ยน emoji 🤍/❤️ เมื่อกด <code style="color:var(--re)">onClick={() => setLiked(!liked)}</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่ม <code style="color:var(--re)">const [likes, setLikes] = useState(0)</code> ให้นับจำนวน like ถ้า liked อยู่แล้วกดอีกครั้งให้ unlike (ลด 1) ถ้ายังไม่ like กดแล้วเพิ่ม 1</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่มปุ่ม "ดูรายละเอียด" ที่ toggle <code style="color:var(--re)">showDesc</code> state — เมื่อ true แสดง div คำอธิบายเมนู เมื่อ false ซ่อน ด้วย <code style="color:var(--re)">{"{"}showDesc && &lt;p&gt;...&lt;/p&gt;{"}"}</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S4: CHALLENGE
+════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--pk)">04</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--pk)">🏁 ชิ้นงาน Week 10</h2>
+  <p class="sec-sub">MenuCard พร้อม Like ❤️ + Cart Counter — Interactive ครบ</p>
+
+  <div class="challenge">
+    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);
+      border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;
+      font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.8rem;">
+      MenuCard Interactive + Cart Counter
+    </div>
+
+    <!-- LIVE PREVIEW -->
+    <div style="background:#f8fafc;border-radius:14px;padding:1rem;margin-bottom:1.5rem;">
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:.8rem;font-family:'JetBrains Mono',monospace;">ตัวอย่างผลลัพธ์:</div>
+
+      <!-- CART BAR -->
+      <div style="background:white;border-radius:10px;padding:10px 14px;
+        display:flex;justify-content:space-between;align-items:center;
+        box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:10px;">
+        <div style="font-weight:600;color:#1a1a2e;font-size:14px;">🛒 ตะกร้า</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="background:#ef4444;color:white;border-radius:100px;
+            padding:2px 10px;font-size:13px;font-weight:700;" id="cart-count">0</span>
+          <span style="font-size:13px;color:#6b7280;">รายการ</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="mcard">
+          <div class="mc-badge-abs" id="badge1" style="display:none;">⭐ ขายดี</div>
+          <div class="mc-img2" style="background:#fef9c3;">☕</div>
+          <div class="mc-body2">
+            <div class="mc-name2">ลาเต้</div>
+            <div class="mc-price2">฿80</div>
+            <div class="mc-like-row">
+              <button class="mc-like-btn" id="lb1" onclick="toggleCardLike(1)">🤍 <span id="lc1">0</span></button>
+              <button onclick="addCart()" style="background:#6366f1;color:white;border:none;border-radius:8px;
+                padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Mitr',sans-serif;">+ ใส่ตะกร้า</button>
+            </div>
+          </div>
+        </div>
+        <div class="mcard">
+          <div class="mc-img2" style="background:#f0fdf4;">☕</div>
+          <div class="mc-body2">
+            <div class="mc-name2">อเมริกาโน่</div>
+            <div class="mc-price2">฿65</div>
+            <div class="mc-like-row">
+              <button class="mc-like-btn" id="lb2" onclick="toggleCardLike(2)">🤍 <span id="lc2">0</span></button>
+              <button onclick="addCart()" style="background:#6366f1;color:white;border:none;border-radius:8px;
+                padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Mitr',sans-serif;">+ ใส่ตะกร้า</button>
+            </div>
+          </div>
+        </div>
+        <div class="mcard">
+          <div class="mc-img2" style="background:#fdf2f8;">🍫</div>
+          <div class="mc-body2">
+            <div class="mc-name2">บราวนี่</div>
+            <div class="mc-price2">฿65</div>
+            <div class="mc-like-row">
+              <button class="mc-like-btn" id="lb3" onclick="toggleCardLike(3)">🤍 <span id="lc3">0</span></button>
+              <button onclick="addCart()" style="background:#6366f1;color:white;border:none;border-radius:8px;
+                padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Mitr',sans-serif;">+ ใส่ตะกร้า</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:.6rem;">✅ MenuCard State</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ liked state (boolean)</div>
+          <div>☐ likes state (number, เริ่มที่ 0)</div>
+          <div>☐ ปุ่ม Like toggle 🤍/❤️ + นับ</div>
+          <div>☐ ปุ่ม "ใส่ตะกร้า"</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.6rem;">✅ App.jsx State</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ cartCount state (number)</div>
+          <div>☐ แสดง cart count บน Navbar</div>
+          <div>☐ ส่ง onAddCart prop ลง MenuCard</div>
+          <div>☐ MenuCard เรียก onAddCart เมื่อกดปุ่ม</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">⭐ Bonus</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ ปุ่ม "ดูรายละเอียด" toggle description</div>
+          <div>☐ className เปลี่ยนเมื่อ liked</div>
+          <div>☐ Navbar badge แดงแสดง count</div>
+          <div>☐ ปุ่มลบออกจากตะกร้า</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:.5rem;">📤 ส่งงาน</div>
+      <div class="cb" style="margin:0;font-size:12px;">
+git add .
+git commit -m <span class="v">"Week 10 useState like button + cart counter"</span>
+git push
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
+  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 10</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
+    <div style="background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--g);font-weight:600;font-size:13px;margin-bottom:4px;">✓ useState</div>
+      <div style="font-size:12px;color:var(--mu);">const [val, setVal] = useState(init), immutability, re-render</div>
+    </div>
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--y);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Events</div>
+      <div style="font-size:12px;color:var(--mu);">onClick, onChange, e.target.value, handleFn vs inline</div>
+    </div>
+    <div style="background:rgba(97,218,251,.06);border:1px solid rgba(97,218,251,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--re);font-weight:600;font-size:13px;margin-bottom:4px;">✓ Patterns</div>
+      <div style="font-size:12px;color:var(--mu);">Counter, Like/Toggle, Controlled Input, หลาย state</div>
+    </div>
+    <div style="background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--pk);font-weight:600;font-size:13px;margin-bottom:4px;">✓ ชิ้นงาน</div>
+      <div style="font-size:12px;color:var(--mu);">MenuCard + Like ❤️ + Cart Counter → push GitHub</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
+    <strong style="color:var(--g)">Week 11 →</strong> .map() + List Rendering — render รายการจาก array อัตโนมัติ ไม่ต้อง copy-paste
+  </div>
+</div>
+
+</div>
+
+<script>
+// PROGRESS
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('rp').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+// NAV
+const obs=new IntersectionObserver(e=>{
+  e.forEach(en=>{
+    if(en.isIntersecting){
+      document.querySelectorAll('.sni').forEach(a=>a.classList.remove('on'));
+      const a=document.querySelector(`.sni[href="#${en.target.id}"]`);
+      if(a)a.classList.add('on');
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+
+// ═══ STATE VISUALIZER ═══
+let visCount=0;
+function visUpdate(op){
+  const prev=visCount;
+  if(op===1) visCount++;
+  else if(op===-1) visCount--;
+  else if(op==='reset') visCount=0;
+  else if(op==='double') visCount=visCount*2;
+  const el=document.getElementById('vis-val');
+  el.textContent=visCount;
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'),300);
+  document.getElementById('vis-label').textContent=`count = ${visCount}`;
+  document.getElementById('vis-result').textContent=visCount;
+  const calls={1:`setCount(${prev} + 1) → ${visCount}`,-1:`setCount(${prev} - 1) → ${visCount}`,'reset':`setCount(0) → ${visCount}`,'double':`setCount(${prev} × 2) → ${visCount}`};
+  document.getElementById('vis-last-call').textContent=calls[op]||'';
+}
+
+// ═══ COUNTER ═══
+let cCount=0;
+function cInc(){cCount++;document.getElementById('c-num').textContent=cCount;}
+function cDec(){cCount--;document.getElementById('c-num').textContent=cCount;}
+function cReset(){cCount=0;document.getElementById('c-num').textContent=0;}
+
+// ═══ LIKE ═══
+let liked=false, likes=0;
+function toggleLike(){
+  liked=!liked; likes+=liked?1:-1;
+  const btn=document.getElementById('like-btn');
+  document.getElementById('like-icon').textContent=liked?'❤️':'🤍';
+  document.getElementById('like-text').textContent=liked?'Liked':'Like';
+  btn.classList.toggle('liked',liked);
+  document.getElementById('like-count-label').textContent=`${likes} likes`;
+}
+
+// ═══ TOGGLE ═══
+let shown=false;
+function toggleShow(){
+  shown=!shown;
+  const box=document.getElementById('toggle-box');
+  box.style.display=shown?'block':'none';
+  box.classList.toggle('show',shown);
+}
+
+// ═══ INPUT ═══
+function updateInput(val){
+  document.getElementById('input-val').textContent=`"${val}"`;
+  document.getElementById('input-len').textContent=`${val.length} ตัวอักษร`;
+}
+
+// ═══ CARD LIKES ═══
+const cardLikes={1:{liked:false,count:0},2:{liked:false,count:0},3:{liked:false,count:0}};
+function toggleCardLike(id){
+  const s=cardLikes[id];
+  s.liked=!s.liked;
+  s.count+=s.liked?1:-1;
+  const btn=document.getElementById(`lb${id}`);
+  const cnt=document.getElementById(`lc${id}`);
+  btn.classList.toggle('on',s.liked);
+  btn.innerHTML=`${s.liked?'❤️':'🤍'} <span id="lc${id}">${s.count}</span>`;
+}
+
+let cartCount=0;
+function addCart(){
+  cartCount++;
+  document.getElementById('cart-count').textContent=cartCount;
+}
+</script>
+</body>
+</html>
