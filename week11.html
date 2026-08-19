@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Week 11 — .map() & List Rendering | 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,0.09);--bd2:rgba(130,150,255,0.2);
+  --y:#fbbf24;--y2:#f59e0b;       /* yellow — .map() */
+  --cy:#22d3ee;--cy2:#06b6d4;     /* cyan — .filter() */
+  --g:#34d399;--g2:#10b981;       /* green — List Render */
+  --pk:#f472b6;--pk2:#ec4899;     /* pink */
+  --re:#61dafb;--pu:#a78bfa;--or:#fb923c;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;font-weight:400;line-height:1.7;overflow-x:hidden;}
+
+#rp{position:fixed;top:0;left:0;height:3px;width:0;z-index:999;
+  background:linear-gradient(90deg,var(--y),var(--cy),var(--g),var(--pk));}
+
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  height:52px;display:flex;align-items:center;gap:6px;padding:0 1.5rem;overflow-x:auto;}
+.sni{white-space:nowrap;padding:5px 14px;border-radius:100px;font-size:13px;font-weight:500;
+  color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
+.sni:hover{color:var(--tx);border-color:var(--bd2);background:var(--card);}
+.sni.a1.on{color:var(--y);border-color:rgba(251,191,36,.35);}
+.sni.a2.on{color:var(--cy);border-color:rgba(34,211,238,.35);}
+.sni.a3.on{color:var(--g);border-color:rgba(52,211,153,.35);}
+.sni.a4.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
+.nsep{color:var(--bd2);font-size:11px;flex-shrink:0;}
+
+.page{max-width:880px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
+.wk-tag{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);
+  color:var(--y);padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.hero h1 span{background:linear-gradient(135deg,var(--y),var(--cy));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#94a3c8;font-size:15px;max-width:560px;margin-bottom:1.8rem;}
+.hchips{display:flex;gap:8px;flex-wrap:wrap;}
+.hchip{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;}
+
+.sec{padding:3.5rem 0 1rem;}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:.4rem;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bd);}
+.sec-title{font-size:clamp(1.5rem,3.5vw,2rem);font-weight:700;margin-bottom:.4rem;}
+.sec-sub{color:#7a8aaa;font-size:14px;margin-bottom:2rem;}
+hr.shr{border:none;border-top:1px solid var(--bd);margin:3rem 0 0;}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:640px){.two{grid-template-columns:1fr;}}
+
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:10px;
+  padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.7rem 0;user-select:text;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#454c6b;}.t{color:#89dceb;}.a{color:#a6e3a1;}.v{color:#fab387;}
+.hk{color:#34d399;}.mf{color:#fbbf24;}.fi{color:#22d3ee;}
+
+.info{border-radius:10px;padding:12px 16px;font-size:13.5px;margin:.7rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
+.ic{flex-shrink:0;font-size:1.1rem;margin-top:1px;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ic2{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.2);color:#9ee5f5;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+.ir2{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
+.io{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);color:#f0c8a0;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+
+.badge-new{background:rgba(244,114,182,.1);color:var(--pk);border:1px solid rgba(244,114,182,.25);
+  padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
+
+/* ═══ MAP VISUALIZER ═══ */
+.map-sim{background:var(--surf);border:1px solid rgba(251,191,36,.22);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.map-flow{display:grid;grid-template-columns:1fr 48px 1fr;gap:0;align-items:start;}
+@media(max-width:600px){.map-flow{grid-template-columns:1fr;}}
+.map-arrow{display:flex;align-items:center;justify-content:center;padding-top:40px;
+  font-size:1.6rem;color:rgba(251,191,36,.5);}
+.map-panel{background:#060c20;border-radius:12px;overflow:hidden;}
+.mp-head{padding:10px 14px;border-bottom:1px solid var(--bd);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--mu);
+  letter-spacing:.1em;text-transform:uppercase;}
+.mp-body{padding:12px 14px;display:flex;flex-direction:column;gap:6px;}
+.map-item{border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;
+  line-height:1.6;transition:all .3s;cursor:pointer;}
+.map-item.highlight{transform:scale(1.02);}
+.out-item{border-radius:8px;padding:10px 12px;font-size:12px;
+  line-height:1.5;transition:all .3s;}
+.out-item.highlight{transform:scale(1.02);}
+
+.map-fn-box{background:#060c20;border:1px dashed rgba(251,191,36,.3);border-radius:10px;
+  padding:14px 18px;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;}
+.map-fn-label{font-size:10px;color:var(--y);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+
+/* ═══ FILTER SIMULATOR ═══ */
+.filter-sim{background:var(--surf);border:1px solid rgba(34,211,238,.22);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.filter-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.2rem;}
+.fcat{padding:6px 16px;border-radius:100px;border:1px solid var(--bd);background:var(--card);
+  font-size:13px;cursor:pointer;color:var(--mu);transition:all .2s;}
+.fcat:hover{border-color:rgba(34,211,238,.4);color:var(--cy);}
+.fcat.on{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.45);color:var(--cy);}
+.filter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;
+  min-height:100px;margin-bottom:1rem;}
+.f-card{background:white;border-radius:10px;overflow:hidden;transition:all .3s;}
+.f-card.hidden-card{opacity:0;transform:scale(.9);pointer-events:none;}
+.f-card-img{height:60px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+.f-card-body{padding:8px 10px;}
+.f-card-name{font-size:12px;font-weight:700;color:#1a1a2e;}
+.f-card-cat{font-size:10px;color:#9ca3af;}
+.f-card-price{font-size:12px;color:#f97316;font-weight:600;}
+.filter-code{background:#060c20;border-radius:10px;padding:12px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;}
+.fc-count{font-size:13px;color:var(--cy);font-family:'JetBrains Mono',monospace;margin-bottom:.5rem;}
+
+/* SEARCH SIM */
+.search-sim{background:var(--surf);border:1px solid rgba(52,211,153,.22);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.search-input{width:100%;background:var(--card);border:1px solid rgba(52,211,153,.3);
+  border-radius:10px;padding:10px 16px;color:var(--tx);
+  font-family:'Mitr',sans-serif;font-size:15px;outline:none;transition:border-color .2s;
+  margin-bottom:1rem;}
+.search-input:focus{border-color:rgba(52,211,153,.6);}
+.search-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;min-height:80px;}
+.sr-card{background:white;border-radius:10px;padding:10px;text-align:center;transition:all .3s;}
+.sr-card .emoji{font-size:1.6rem;}
+.sr-card .name{font-size:12px;font-weight:700;color:#1a1a2e;margin-top:4px;}
+.sr-card .price{font-size:11px;color:#f97316;}
+.sr-empty{display:flex;align-items:center;justify-content:center;
+  color:var(--mu);font-size:14px;grid-column:1/-1;padding:1.5rem;}
+
+/* WORKSHOP */
+.ws{background:linear-gradient(135deg,rgba(251,191,36,.06),rgba(34,211,238,.04));
+  border:1px solid rgba(251,191,36,.18);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.ws-icon{font-size:1.6rem;}
+.ws-title{font-size:1.1rem;font-weight:700;}
+.ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
+.ws-tasks{display:flex;flex-direction:column;gap:8px;}
+.wt{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;}
+.wlv{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
+.lv3{background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.3);}
+.wt-text{font-size:13.5px;line-height:1.55;}
+.wt-text strong{color:var(--tx);}
+
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(251,191,36,.04));
+  border:1px solid rgba(244,114,182,.22);border-radius:16px;padding:2rem;margin:2rem 0;}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+
+<nav class="snav">
+  <a class="sni a1" href="#s1">🟡 .map()</a>
+  <span class="nsep">›</span>
+  <a class="sni a2" href="#s2">🔵 .filter()</a>
+  <span class="nsep">›</span>
+  <a class="sni a3" href="#s3">⚛️ List Rendering</a>
+  <span class="nsep">›</span>
+  <a class="sni a4" href="#s4">🏁 Challenge</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wk-tag">⚛️ WEEK 11</div>
+  <h1>.map() &<br><span>List Rendering</span></h1>
+  <p>แทนที่การ copy-paste Component ซ้ำๆ ด้วย .map() — render ทุก item ใน array อัตโนมัติเพียงบรรทัดเดียว</p>
+  <div class="hchips">
+    <span class="hchip" style="background:rgba(251,191,36,.1);color:var(--y);border:1px solid rgba(251,191,36,.25)">🟡 Array .map()</span>
+    <span class="hchip" style="background:rgba(34,211,238,.1);color:var(--cy);border:1px solid rgba(34,211,238,.25)">🔵 Array .filter()</span>
+    <span class="hchip" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.25)">⚛️ key prop + List</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🎯 ชิ้นงาน: Menu Filter + Search</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     S1: .map()
+════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--y)">01</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--y)">Array .map()</h2>
+  <p class="sec-sub">แปลงทุก item ใน array ให้เป็นอะไรก็ได้ — คืน array ใหม่ที่มีขนาดเท่ากัน</p>
+
+  <!-- WHAT IS MAP -->
+  <div class="card">
+    <div class="card-t"><span>🗺️</span> .map() คืออะไร?</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ แบบเดิม — วน loop ด้วย for</div>
+        <div class="cb">
+<span class="kw">const</span> nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+<span class="kw">const</span> doubled = []
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+  doubled.push(nums[i] * <span class="num">2</span>)
+}
+
+console.log(doubled) <span class="cm">// [2, 4, 6]</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--y);margin-bottom:6px;">✅ .map() — สั้นและชัดกว่ามาก</div>
+        <div class="cb">
+<span class="kw">const</span> nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+
+<span class="kw">const</span> doubled = nums.<span class="mf">map</span>((n) => n * <span class="num">2</span>)
+
+console.log(doubled) <span class="cm">// [2, 4, 6]</span>
+
+<span class="cm">// .map() ต้อง return ค่าเสมอ</span>
+<span class="cm">// คืน array ใหม่ — ไม่แก้ array เดิม</span>
+        </div>
+      </div>
+    </div>
+    <div class="info iy">
+      <span class="ic">💡</span>
+      <span><code style="color:var(--y)">.map()</code> วนทุก item แล้ว <strong style="color:var(--y)">return ค่าใหม่</strong> เสมอ — ต่างจาก <code>forEach</code> ที่ไม่ return อะไร</span>
+    </div>
+  </div>
+
+  <!-- MAP WITH OBJECTS -->
+  <div class="card">
+    <div class="card-t"><span>📦</span> .map() กับ Array of Objects</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="kw">const</span> menuData = [
+  { <span class="a">id</span>:<span class="num">1</span>, <span class="a">name</span>:<span class="str">"ลาเต้"</span>,      <span class="a">price</span>:<span class="num">80</span>  },
+  { <span class="a">id</span>:<span class="num">2</span>, <span class="a">name</span>:<span class="str">"อเมริกาโน่"</span>, <span class="a">price</span>:<span class="num">65</span>  },
+  { <span class="a">id</span>:<span class="num">3</span>, <span class="a">name</span>:<span class="str">"บราวนี่"</span>,    <span class="a">price</span>:<span class="num">65</span>  },
+]
+
+<span class="cm">// ดึงแค่ชื่อ</span>
+<span class="kw">const</span> names = menuData.<span class="mf">map</span>((item) => item.name)
+<span class="cm">// ["ลาเต้", "อเมริกาโน่", "บราวนี่"]</span>
+
+<span class="cm">// แปลงเป็น string แสดงราคา</span>
+<span class="kw">const</span> labels = menuData.<span class="mf">map</span>((item) =>
+  <span class="str">`${item.name} ฿${item.price}`</span>
+)
+<span class="cm">// ["ลาเต้ ฿80", "อเมริกาโน่ ฿65", ...]</span>
+        </div>
+      </div>
+      <div>
+        <div class="cb">
+<span class="cm">// .map() + destructuring</span>
+<span class="kw">const</span> names = menuData.<span class="mf">map</span>(
+  ({ name, price }) => <span class="str">`${name} ฿${price}`</span>
+)
+
+<span class="cm">// เพิ่มราคา 10 ทุกอัน</span>
+<span class="kw">const</span> newPrices = menuData.<span class="mf">map</span>((item) => ({
+  ...item,
+  price: item.price + <span class="num">10</span>
+}))
+<span class="cm">// [{id:1, name:"ลาเต้", price:90}, ...]</span>
+        </div>
+        <div class="info iy" style="margin-top:.7rem;">
+          <span class="ic">⚠️</span>
+          <span>return object ใน .map() ต้องครอบด้วย <code style="color:var(--y)">( )</code> — <code>.map((item) => ({'{'} ...item {'}'}))</code> ไม่งั้น JS คิดว่าเป็น function body</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP VISUALIZER -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> .map() Visualizer — คลิก Item ดู Transform <span class="badge-new">Interactive</span></div>
+    <div class="info iy" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>คลิก item ทางซ้ายเพื่อดูว่า .map() แปลงมันเป็นอะไรทางขวา</span>
+    </div>
+    <div class="map-sim">
+      <div class="map-fn-box">
+        <div class="map-fn-label">Function ที่ใช้ใน .map()</div>
+        <span style="color:#ff79c6;">const</span> cards = menuData.<span style="color:var(--y);">map</span>((item) =>
+        &lt;<span style="color:#89dceb;">MenuCard</span> <span style="color:#a6e3a1;">key</span>={item.id} {...item} /&gt;
+        )
+      </div>
+      <div class="map-flow">
+        <div class="map-panel">
+          <div class="mp-head">Input — menuData array</div>
+          <div class="mp-body" id="map-input">
+            <div class="map-item" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);color:var(--y);" onclick="mapHighlight(0)">
+              [0] id:1 · ☕ ลาเต้ · ฿80
+            </div>
+            <div class="map-item" style="background:rgba(97,218,251,.08);border:1px solid rgba(97,218,251,.2);color:var(--re);" onclick="mapHighlight(1)">
+              [1] id:2 · ☕ อเมริกาโน่ · ฿65
+            </div>
+            <div class="map-item" style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:var(--g);" onclick="mapHighlight(2)">
+              [2] id:3 · 🍫 บราวนี่ · ฿65
+            </div>
+            <div class="map-item" style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:var(--pu);" onclick="mapHighlight(3)">
+              [3] id:4 · 🧇 วาฟเฟิล · ฿75
+            </div>
+          </div>
+        </div>
+        <div class="map-arrow">→</div>
+        <div class="map-panel">
+          <div class="mp-head">Output — JSX Elements</div>
+          <div class="mp-body" id="map-output">
+            <div class="out-item" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);color:var(--y);" id="out0">
+              &lt;MenuCard key={1} emoji="☕" name="ลาเต้" price={80} /&gt;
+            </div>
+            <div class="out-item" style="background:rgba(97,218,251,.08);border:1px solid rgba(97,218,251,.2);color:var(--re);" id="out1">
+              &lt;MenuCard key={2} emoji="☕" name="อเมริกาโน่" price={65} /&gt;
+            </div>
+            <div class="out-item" style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:var(--g);" id="out2">
+              &lt;MenuCard key={3} emoji="🍫" name="บราวนี่" price={65} /&gt;
+            </div>
+            <div class="out-item" style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:var(--pu);" id="out3">
+              &lt;MenuCard key={4} emoji="🧇" name="วาฟเฟิล" price={75} /&gt;
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="map-detail" style="background:#060c20;border-radius:10px;padding:14px 18px;margin-top:1rem;display:none;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;">item ที่เลือก</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;" id="map-detail-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 1 -->
+  <div class="ws" id="ws1">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 1 — .map() ใน Console</div>
+        <span class="ws-badge" style="background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);">.map()</span>
+      </div>
+    </div>
+    <p class="ws-desc">เปิด Console (F12) แล้วทดลอง .map() กับข้อมูลก่อน</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง array <code style="color:var(--y)">const nums = [10, 20, 30, 40]</code> แล้วใช้ <code style="color:var(--y)">.map(n => n * 2)</code> แล้ว <code style="color:var(--y)">.map(n => n + "฿")</code> ดูผลแต่ละอัน</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> สร้าง <code style="color:var(--y)">menuData</code> array of objects 4 อัน แล้วใช้ .map() ดึงแค่ name ออกมาเป็น array ใหม่ จากนั้น .map() สร้าง template literal <code style="color:var(--y)">`${emoji} ${name} ฿${price}`</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> ใช้ .map() เพิ่ม property ใหม่เข้าทุก item ด้วย spread: <code style="color:var(--y)">.map(item => ({'{'} ...item, discountPrice: item.price * 0.9 {'}'}))</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S2: .filter()
+════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--cy)">02</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--cy)">Array .filter()</h2>
+  <p class="sec-sub">กรองเฉพาะ item ที่ตรงเงื่อนไข — คืน array ใหม่ที่สั้นลง</p>
+
+  <div class="card">
+    <div class="card-t"><span>🔍</span> .filter() คืออะไร?</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="kw">const</span> menuData = [
+  { <span class="a">name</span>:<span class="str">"ลาเต้"</span>,      <span class="a">price</span>:<span class="num">80</span>,  <span class="a">cat</span>:<span class="str">"เครื่องดื่ม"</span> },
+  { <span class="a">name</span>:<span class="str">"อเมริกาโน่"</span>, <span class="a">price</span>:<span class="num">65</span>,  <span class="a">cat</span>:<span class="str">"เครื่องดื่ม"</span> },
+  { <span class="a">name</span>:<span class="str">"บราวนี่"</span>,    <span class="a">price</span>:<span class="num">65</span>,  <span class="a">cat</span>:<span class="str">"ขนม"</span>       },
+  { <span class="a">name</span>:<span class="str">"วาฟเฟิล"</span>,    <span class="a">price</span>:<span class="num">75</span>,  <span class="a">cat</span>:<span class="str">"ขนม"</span>       },
+]
+
+<span class="cm">// เฉพาะเครื่องดื่ม</span>
+<span class="kw">const</span> drinks = menuData.<span class="fi">filter</span>(
+  (item) => item.cat === <span class="str">"เครื่องดื่ม"</span>
+)
+<span class="cm">// [{name:"ลาเต้",...}, {name:"อเมริกาโน่",...}]</span>
+
+<span class="cm">// เฉพาะราคาไม่เกิน 70</span>
+<span class="kw">const</span> cheap = menuData.<span class="fi">filter</span>(
+  (item) => item.price &lt;= <span class="num">70</span>
+)
+        </div>
+      </div>
+      <div>
+        <div class="cb">
+<span class="cm">// .filter() + .map() รวมกัน — ใช้บ่อยมาก</span>
+
+menuData
+  .<span class="fi">filter</span>((item) => item.cat === <span class="str">"ขนม"</span>)
+  .<span class="mf">map</span>((item) => (
+    &lt;<span class="fn">MenuCard</span> <span class="a">key</span>={item.id} {...item} /&gt;
+  ))
+
+<span class="cm">// 1. filter กรองเฉพาะขนม</span>
+<span class="cm">// 2. map แปลงแต่ละอันเป็น &lt;MenuCard /&gt;</span>
+        </div>
+        <div class="info ic2" style="margin-top:.7rem;">
+          <span class="ic">🔥</span>
+          <span><code style="color:var(--cy)">.filter().map()</code> คือ combo ที่ใช้บ่อยที่สุดใน React — filter หมวดหมู่ แล้ว map render</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER SIMULATOR -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> Filter Simulator — กดเลือกหมวดหมู่ <span class="badge-new">Interactive</span></div>
+    <div class="info ic2" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>กดปุ่มหมวดหมู่ แล้วดู card ที่ผ่าน .filter() เปลี่ยนอัตโนมัติ พร้อม code ที่ได้</span>
+    </div>
+    <div class="filter-sim">
+      <div class="filter-cats" id="filter-cats">
+        <button class="fcat on" onclick="setFilter('ทั้งหมด')">ทั้งหมด</button>
+        <button class="fcat" onclick="setFilter('เครื่องดื่ม')">☕ เครื่องดื่ม</button>
+        <button class="fcat" onclick="setFilter('ขนม')">🍰 ขนม</button>
+        <button class="fcat" onclick="setFilter('อาหาร')">🍳 อาหาร</button>
+      </div>
+      <div class="filter-grid" id="filter-grid">
+        <div class="f-card" data-cat="เครื่องดื่ม"><div class="f-card-img" style="background:#fef9c3;">☕</div><div class="f-card-body"><div class="f-card-name">ลาเต้</div><div class="f-card-cat">เครื่องดื่ม</div><div class="f-card-price">฿80</div></div></div>
+        <div class="f-card" data-cat="เครื่องดื่ม"><div class="f-card-img" style="background:#f0fdf4;">☕</div><div class="f-card-body"><div class="f-card-name">อเมริกาโน่</div><div class="f-card-cat">เครื่องดื่ม</div><div class="f-card-price">฿65</div></div></div>
+        <div class="f-card" data-cat="เครื่องดื่ม"><div class="f-card-img" style="background:#fdf4ff;">🧋</div><div class="f-card-body"><div class="f-card-name">ชาไทย</div><div class="f-card-cat">เครื่องดื่ม</div><div class="f-card-price">฿55</div></div></div>
+        <div class="f-card" data-cat="ขนม"><div class="f-card-img" style="background:#fdf2f8;">🍫</div><div class="f-card-body"><div class="f-card-name">บราวนี่</div><div class="f-card-cat">ขนม</div><div class="f-card-price">฿65</div></div></div>
+        <div class="f-card" data-cat="ขนม"><div class="f-card-img" style="background:#fefce8;">🧇</div><div class="f-card-body"><div class="f-card-name">วาฟเฟิล</div><div class="f-card-cat">ขนม</div><div class="f-card-price">฿75</div></div></div>
+        <div class="f-card" data-cat="อาหาร"><div class="f-card-img" style="background:#f0fdf4;">🍳</div><div class="f-card-body"><div class="f-card-name">ไข่เบเนดิกต์</div><div class="f-card-cat">อาหาร</div><div class="f-card-price">฿89</div></div></div>
+        <div class="f-card" data-cat="อาหาร"><div class="f-card-img" style="background:#fff7ed;">🥪</div><div class="f-card-body"><div class="f-card-name">แซนวิช</div><div class="f-card-cat">อาหาร</div><div class="f-card-price">฿75</div></div></div>
+      </div>
+      <div class="filter-code">
+        <div class="fc-count" id="fc-count">แสดง 7 รายการ จากทั้งหมด 7</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8494b8;line-height:1.9;" id="fc-code">
+          menuData<br>
+          &nbsp;&nbsp;<span style="color:var(--mu);">// ไม่ filter — แสดงทั้งหมด</span><br>
+          &nbsp;&nbsp;.<span style="color:var(--y);">map</span>((item) =&gt; &lt;MenuCard key={item.id} {...item} /&gt;)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S3: LIST RENDERING IN REACT
+════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--g)">03</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--g)">List Rendering ใน React</h2>
+  <p class="sec-sub">ใช้ .map() ใน JSX — render ทุก item อัตโนมัติ</p>
+
+  <!-- MAP IN JSX -->
+  <div class="card">
+    <div class="card-t"><span>⚛️</span> .map() ใน JSX — ก่อน vs หลัง</div>
+    <div class="two">
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">❌ แบบเดิม Week 9 — copy-paste</div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// App.jsx — ถ้ามี 10 เมนู = 10 บรรทัด</span>
+<span class="kw">return</span> (
+  &lt;div className=<span class="str">"grid grid-cols-3 gap-6"</span>&gt;
+    &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">0</span>]} /&gt;
+    &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">1</span>]} /&gt;
+    &lt;<span class="fn">MenuCard</span> {...menuData[<span class="num">2</span>]} /&gt;
+    <span class="cm">{/* เพิ่มเมนูต้องแก้ที่นี่ทุกครั้ง 😩 */}</span>
+  &lt;/div&gt;
+)
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--g);margin-bottom:6px;">✅ ใช้ .map() — ไม่ว่ากี่อันก็ทำได้</div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// App.jsx — เพิ่มข้อมูลใน array แค่นั้น</span>
+<span class="kw">return</span> (
+  &lt;div className=<span class="str">"grid grid-cols-3 gap-6"</span>&gt;
+    {menuData.<span class="mf">map</span>((item) => (
+      &lt;<span class="fn">MenuCard</span>
+        <span class="a">key</span>={item.id}
+        {...item}
+      /&gt;
+    ))}
+  &lt;/div&gt;
+)
+<span class="cm">// เพิ่มเมนูใน array → แสดงอัตโนมัติ ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY PROP -->
+  <div class="card">
+    <div class="card-t"><span>🔑</span> key prop — สำคัญมาก อย่าลืม!</div>
+    <div class="two">
+      <div>
+        <div class="cb">
+<span class="cm">// ❌ ไม่มี key — Warning ใน console</span>
+menuData.<span class="mf">map</span>((item) => (
+  &lt;<span class="fn">MenuCard</span> {...item} /&gt;
+))
+
+<span class="cm">// ✅ มี key — ถูกต้อง</span>
+menuData.<span class="mf">map</span>((item) => (
+  &lt;<span class="fn">MenuCard</span> <span class="a">key</span>={item.id} {...item} /&gt;
+))
+
+<span class="cm">// ถ้าไม่มี id ใช้ index ได้ (แต่ไม่แนะนำ)</span>
+menuData.<span class="mf">map</span>((item, <span class="a">index</span>) => (
+  &lt;<span class="fn">MenuCard</span> <span class="a">key</span>={index} {...item} /&gt;
+))
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:var(--card2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:600;font-size:13px;color:var(--g);margin-bottom:6px;">key คืออะไร?</div>
+            <div style="font-size:13px;color:#8494b8;line-height:1.7;">React ใช้ key ระบุว่า item ไหนคือตัวเดิม เมื่อ list เปลี่ยน React จะ update เฉพาะที่เปลี่ยนจริงๆ</div>
+          </div>
+          <div style="background:var(--card2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:600;font-size:13px;color:var(--y);margin-bottom:6px;">กฎของ key</div>
+            <div style="font-size:13px;color:#8494b8;line-height:1.7;">
+              ✓ ต้อง unique ในกลุ่มเดียวกัน<br>
+              ✓ ใช้ id จากข้อมูลจริง ดีที่สุด<br>
+              ✗ ห้ามใช้ random / Math.random()<br>
+              ✗ ไม่ต้อง pass เป็น prop ลง Component
+            </div>
+          </div>
+        </div>
+        <div class="info ir2" style="margin-top:.7rem;">
+          <span class="ic">🚨</span>
+          <span>ถ้าลืม key จะเห็น Warning สีเหลืองใน Console — ไม่ error แต่ทำให้ React ทำงานช้าและ bug ยาก</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL EXAMPLE -->
+  <div class="card">
+    <div class="card-t"><span>💻</span> ตัวอย่างสมบูรณ์ — MenuList Component</div>
+    <div class="cb">
+<span class="cm">// src/App.jsx</span>
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> MenuCard <span class="kw">from</span> <span class="str">'./components/MenuCard'</span>
+
+<span class="kw">const</span> menuData = [
+  { <span class="a">id</span>:<span class="num">1</span>, <span class="a">name</span>:<span class="str">"ลาเต้"</span>,      <span class="a">price</span>:<span class="num">80</span>,  <span class="a">emoji</span>:<span class="str">"☕"</span>, <span class="a">category</span>:<span class="str">"เครื่องดื่ม"</span>, <span class="a">isBestseller</span>:<span class="kw">true</span>  },
+  { <span class="a">id</span>:<span class="num">2</span>, <span class="a">name</span>:<span class="str">"อเมริกาโน่"</span>, <span class="a">price</span>:<span class="num">65</span>,  <span class="a">emoji</span>:<span class="str">"☕"</span>, <span class="a">category</span>:<span class="str">"เครื่องดื่ม"</span>, <span class="a">isBestseller</span>:<span class="kw">false</span> },
+  { <span class="a">id</span>:<span class="num">3</span>, <span class="a">name</span>:<span class="str">"บราวนี่"</span>,    <span class="a">price</span>:<span class="num">65</span>,  <span class="a">emoji</span>:<span class="str">"🍫"</span>, <span class="a">category</span>:<span class="str">"ขนม"</span>,        <span class="a">isBestseller</span>:<span class="kw">false</span> },
+  { <span class="a">id</span>:<span class="num">4</span>, <span class="a">name</span>:<span class="str">"วาฟเฟิล"</span>,    <span class="a">price</span>:<span class="num">75</span>,  <span class="a">emoji</span>:<span class="str">"🧇"</span>, <span class="a">category</span>:<span class="str">"ขนม"</span>,        <span class="a">isBestseller</span>:<span class="kw">false</span> },
+]
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="kw">const</span> [activeCategory, <span class="hk">setActiveCategory</span>] = <span class="hk">useState</span>(<span class="str">"ทั้งหมด"</span>)
+
+  <span class="cm">// filter ก่อน แล้วค่อย map</span>
+  <span class="kw">const</span> filtered = activeCategory === <span class="str">"ทั้งหมด"</span>
+    ? menuData
+    : menuData.<span class="fi">filter</span>((item) => item.category === activeCategory)
+
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      <span class="cm">{/* Category buttons */}</span>
+      &lt;div className=<span class="str">"flex gap-3 mb-6"</span>&gt;
+        {[<span class="str">"ทั้งหมด"</span>, <span class="str">"เครื่องดื่ม"</span>, <span class="str">"ขนม"</span>].<span class="mf">map</span>((cat) => (
+          &lt;button <span class="a">key</span>={cat}
+            onClick={() => <span class="hk">setActiveCategory</span>(cat)}
+            className={activeCategory === cat ? <span class="str">"bg-orange-500 text-white px-4 py-2 rounded-full"</span>
+                                               : <span class="str">"bg-gray-100 text-gray-600 px-4 py-2 rounded-full"</span>}&gt;
+            {cat}
+          &lt;/button&gt;
+        ))}
+      &lt;/div&gt;
+
+      <span class="cm">{/* Menu Grid */}</span>
+      &lt;div className=<span class="str">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"</span>&gt;
+        {filtered.<span class="mf">map</span>((item) => (
+          &lt;<span class="fn">MenuCard</span> <span class="a">key</span>={item.id} {...item} /&gt;
+        ))}
+      &lt;/div&gt;
+
+      <span class="cm">{/* Empty state */}</span>
+      {filtered.length === <span class="num">0</span> && (
+        &lt;p className=<span class="str">"text-center text-gray-400 py-10"</span>&gt;
+          ไม่มีเมนูในหมวดนี้
+        &lt;/p&gt;
+      )}
+    &lt;/div&gt;
+  )
+}
+    </div>
+  </div>
+
+  <!-- SEARCH WITH STATE -->
+  <div class="card">
+    <div class="card-t"><span>🔍</span> Search — กรองด้วย .includes() <span class="badge-new">Interactive</span></div>
+    <div class="info ig" style="margin-bottom:.8rem;">
+      <span class="ic">👆</span>
+      <span>พิมพ์ในช่องค้นหาด้านล่าง — ใช้ .filter() + .includes() กรองเมนูแบบ real-time</span>
+    </div>
+    <div class="search-sim">
+      <input class="search-input" id="search-input" placeholder="🔍 ค้นหาเมนู เช่น ลาเต้, บราวนี่..."
+        oninput="doSearch(this.value)">
+      <div class="search-results" id="search-results"></div>
+      <div style="margin-top:.8rem;background:#060c20;border-radius:8px;padding:10px 14px;
+        font-family:'JetBrains Mono',monospace;font-size:12px;color:#8494b8;line-height:1.8;">
+        <span style="color:#ff79c6;">const</span> [query, setQuery] = useState(<span style="color:#f1fa8c;">""</span>)<br>
+        <span style="color:#ff79c6;">const</span> results = menuData.<span style="color:var(--cy);">filter</span>((item) =&gt;<br>
+        &nbsp;&nbsp;item.name.<span style="color:var(--cy);">includes</span>(query)<br>
+        )
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 2 -->
+  <div class="ws">
+    <div class="ws-head">
+      <div class="ws-icon">🛠</div>
+      <div>
+        <div class="ws-title">Workshop 2 — .map() ใน React</div>
+        <span class="ws-badge" style="background:rgba(52,211,153,.12);color:var(--g);border:1px solid rgba(52,211,153,.3);">List Rendering</span>
+      </div>
+    </div>
+    <p class="ws-desc">อัปเกรด App.jsx จาก Week 10 — เปลี่ยนจาก hardcode เป็น .map()</p>
+    <div class="ws-tasks">
+      <div class="wt">
+        <div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง <code style="color:var(--g)">menuData</code> array ใน App.jsx มี 4+ items แล้วแทน <code style="color:var(--g)">{'<'}MenuCard {...menuData[0]} /{'>'}</code> ทั้งหมดด้วย <code style="color:var(--g)">{'{'} menuData.map(item =&gt; {'<'}MenuCard key={'{'}item.id{'}'} {...item} /{'>'}) {'}'}</code></div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่ม category ใน menuData แล้วสร้าง state <code style="color:var(--g)">activeCategory</code> และปุ่ม filter — ใช้ <code style="color:var(--g)">.filter().map()</code> แสดงเฉพาะหมวดที่เลือก</div>
+      </div>
+      <div class="wt">
+        <div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่ม search input และ state <code style="color:var(--g)">query</code> ใช้ <code style="color:var(--g)">.filter(item =&gt; item.name.includes(query))</code> แสดง empty state "ไม่พบเมนู" เมื่อผลลัพธ์ว่างด้วย <code style="color:var(--g)">{'{'} filtered.length === 0 && {'<'}p/{'>'} {'}'}</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════════════════════
+     S4: CHALLENGE
+════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head">
+    <span class="sec-num" style="color:var(--pk)">04</span>
+    <div class="sec-line"></div>
+  </div>
+  <h2 class="sec-title" style="color:var(--pk)">🏁 ชิ้นงาน Week 11</h2>
+  <p class="sec-sub">Menu App ครบ — Filter + Search + Like + Cart</p>
+
+  <div class="challenge">
+    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);
+      border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;
+      font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.5rem;">
+      Morning Glow Café — Menu App สมบูรณ์
+    </div>
+    <p style="font-size:14px;color:#c094b8;line-height:1.7;margin-bottom:1.5rem;">
+      รวมทุกอย่างตั้งแต่ Week 8–11 — Component, Props, State, Events, .map(), .filter()
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">✅ Data</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ menuData array ≥ 6 items</div>
+          <div>☐ มี id, name, price, emoji, category, isBestseller</div>
+          <div>☐ ย้ายไป <code style="color:var(--y);">src/data/menu.js</code></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--cy);margin-bottom:.6rem;">✅ Filter + Search</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ ปุ่ม category filter</div>
+          <div>☐ .filter() + .map()</div>
+          <div>☐ Search input + .includes()</div>
+          <div>☐ Empty state เมื่อไม่พบ</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:.6rem;">✅ Card State (Week 10)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ Like ❤️ toggle + นับ</div>
+          <div>☐ isBestseller badge</div>
+          <div>☐ Cart counter บน Navbar</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--pk);margin-bottom:.6rem;">⭐ Bonus</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#9aa3b8;">
+          <div>☐ Filter + Search ทำงานพร้อมกัน</div>
+          <div>☐ แสดงจำนวนผลลัพธ์ เช่น "4 รายการ"</div>
+          <div>☐ Sort ราคาต่ำ-สูง ด้วย .sort()</div>
+          <div>☐ Animate card ด้วย Tailwind transition</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:.5rem;">📤 ส่งงาน</div>
+      <div class="cb" style="margin:0;font-size:12px;">
+git add .
+git commit -m <span class="v">"Week 11 menu app with filter and search"</span>
+git push
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
+  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">สรุป Week 11</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
+    <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--y);font-weight:600;font-size:13px;margin-bottom:4px;">✓ .map()</div>
+      <div style="font-size:12px;color:var(--mu);">แปลงทุก item, return ใหม่, .map((item) => JSX)</div>
+    </div>
+    <div style="background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--cy);font-weight:600;font-size:13px;margin-bottom:4px;">✓ .filter()</div>
+      <div style="font-size:12px;color:var(--mu);">.filter().map() combo, .includes() สำหรับ search</div>
+    </div>
+    <div style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--g);font-weight:600;font-size:13px;margin-bottom:4px;">✓ key prop</div>
+      <div style="font-size:12px;color:var(--mu);">ต้องมีทุกครั้งที่ .map() ใน JSX, ใช้ id จากข้อมูล</div>
+    </div>
+    <div style="background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.15);border-radius:10px;padding:12px 14px;">
+      <div style="color:var(--pk);font-weight:600;font-size:13px;margin-bottom:4px;">✓ ชิ้นงาน</div>
+      <div style="font-size:12px;color:var(--mu);">Menu App ครบ — filter, search, like, cart → push GitHub</div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
+    <strong style="color:var(--g)">Week 12 →</strong> useEffect + Fetch API — ดึงข้อมูลจาก API จริง, loading state, error handling
+  </div>
+</div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('rp').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+const obs=new IntersectionObserver(e=>{
+  e.forEach(en=>{
+    if(en.isIntersecting){
+      document.querySelectorAll('.sni').forEach(a=>a.classList.remove('on'));
+      const a=document.querySelector(`.sni[href="#${en.target.id}"]`);
+      if(a)a.classList.add('on');
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+
+// ═══ MAP VISUALIZER ═══
+const mapItems=[
+  {id:1,emoji:'☕',name:'ลาเต้',price:80},
+  {id:2,emoji:'☕',name:'อเมริกาโน่',price:65},
+  {id:3,emoji:'🍫',name:'บราวนี่',price:65},
+  {id:4,emoji:'🧇',name:'วาฟเฟิล',price:75}
+];
+function mapHighlight(idx){
+  document.querySelectorAll('.map-item,.out-item').forEach(el=>{
+    el.style.opacity='.35';el.style.transform='';
+  });
+  const inp=document.querySelectorAll('.map-item')[idx];
+  const out=document.getElementById('out'+idx);
+  if(inp){inp.style.opacity='1';inp.classList.add('highlight');setTimeout(()=>inp.classList.remove('highlight'),300);}
+  if(out){out.style.opacity='1';out.classList.add('highlight');setTimeout(()=>out.classList.remove('highlight'),300);}
+  const item=mapItems[idx];
+  const detail=document.getElementById('map-detail');
+  detail.style.display='block';
+  document.getElementById('map-detail-content').innerHTML=
+    `<span style="color:#454c6b;">// item ที่ index ${idx}</span><br>`+
+    `{ <span style="color:#a6e3a1;">id</span>: <span style="color:#bd93f9;">${item.id}</span>, <span style="color:#a6e3a1;">emoji</span>: <span style="color:#f1fa8c;">"${item.emoji}"</span>, <span style="color:#a6e3a1;">name</span>: <span style="color:#f1fa8c;">"${item.name}"</span>, <span style="color:#a6e3a1;">price</span>: <span style="color:#bd93f9;">${item.price}</span> }<br>`+
+    `<span style="color:#454c6b;">→ return</span> &lt;<span style="color:#61dafb;">MenuCard</span> <span style="color:#a6e3a1;">key</span>={<span style="color:#bd93f9;">${item.id}</span>} emoji=<span style="color:#f1fa8c;">"${item.emoji}"</span> name=<span style="color:#f1fa8c;">"${item.name}"</span> price={<span style="color:#bd93f9;">${item.price}</span>} /&gt;`;
+  setTimeout(()=>{
+    document.querySelectorAll('.map-item,.out-item').forEach(el=>{el.style.opacity='1';});
+  },1500);
+}
+
+// ═══ FILTER SIMULATOR ═══
+let currentFilter='ทั้งหมด';
+function setFilter(cat){
+  currentFilter=cat;
+  document.querySelectorAll('.fcat').forEach(b=>{
+    b.classList.toggle('on',b.textContent.includes(cat)||b.textContent===cat);
+  });
+  const cards=document.querySelectorAll('.f-card');
+  let count=0;
+  cards.forEach(card=>{
+    const show=cat==='ทั้งหมด'||card.dataset.cat===cat;
+    card.classList.toggle('hidden-card',!show);
+    if(show) count++;
+  });
+  const total=cards.length;
+  document.getElementById('fc-count').textContent=`แสดง ${count} รายการ จากทั้งหมด ${total}`;
+  const codeEl=document.getElementById('fc-code');
+  if(cat==='ทั้งหมด'){
+    codeEl.innerHTML=`menuData<br>&nbsp;&nbsp;<span style="color:var(--mu);">// ไม่ filter — แสดงทั้งหมด</span><br>&nbsp;&nbsp;.<span style="color:var(--y);">map</span>((item) =&gt; &lt;MenuCard key={item.id} {...item} /&gt;)`;
+  } else {
+    codeEl.innerHTML=`menuData<br>&nbsp;&nbsp;.<span style="color:var(--cy);">filter</span>((item) =&gt; item.category === <span style="color:#f1fa8c;">"${cat}"</span>)<br>&nbsp;&nbsp;.<span style="color:var(--y);">map</span>((item) =&gt; &lt;MenuCard key={item.id} {...item} /&gt;)`;
+  }
+}
+
+// ═══ SEARCH ═══
+const searchData=[
+  {emoji:'☕',name:'ลาเต้',price:80},
+  {emoji:'☕',name:'อเมริกาโน่',price:65},
+  {emoji:'🧋',name:'ชาไทย',price:55},
+  {emoji:'🍫',name:'บราวนี่',price:65},
+  {emoji:'🧇',name:'วาฟเฟิล',price:75},
+  {emoji:'🍳',name:'ไข่เบเนดิกต์',price:89},
+  {emoji:'🥪',name:'แซนวิชไก่',price:75},
+  {emoji:'☕',name:'คาปูชิโน่',price:75}
+];
+function renderSearch(items){
+  const el=document.getElementById('search-results');
+  if(items.length===0){
+    el.innerHTML='<div class="sr-empty">😔 ไม่พบเมนูที่ค้นหา</div>';
+    return;
+  }
+  el.innerHTML=items.map(i=>`
+    <div class="sr-card">
+      <div class="emoji">${i.emoji}</div>
+      <div class="name">${i.name}</div>
+      <div class="price">฿${i.price}</div>
+    </div>`).join('');
+}
+function doSearch(q){
+  const results=q?searchData.filter(i=>i.name.includes(q)):searchData;
+  renderSearch(results);
+}
+renderSearch(searchData);
+</script>
+</body>
+</html>
