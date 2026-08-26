@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Week 12 — React + reqres.in | 31901-2004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,.09);--bd2:rgba(130,150,255,.2);
+  --in:#818cf8;--in2:#6366f1;    /* indigo — reqres */
+  --pu:#a78bfa;                  /* purple — useEffect */
+  --g:#34d399;--r:#f87171;       /* green/red */
+  --y:#fbbf24;--cy:#22d3ee;
+  --or:#fb923c;--pk:#f472b6;
+  --re:#61dafb;
+  --get:#34d399;--post:#22d3ee;--del:#f87171;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;line-height:1.7;overflow-x:hidden;}
+
+#rp{position:fixed;top:0;left:0;height:3px;width:0;z-index:999;
+  background:linear-gradient(90deg,var(--in),var(--pu),var(--g),var(--cy),var(--pk));}
+
+.snav{position:sticky;top:0;z-index:100;background:rgba(6,10,24,.9);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  height:52px;display:flex;align-items:center;gap:4px;padding:0 1.2rem;overflow-x:auto;}
+.sni{white-space:nowrap;padding:4px 12px;border-radius:100px;font-size:12.5px;font-weight:500;
+  color:var(--mu);cursor:pointer;border:1px solid transparent;transition:all .2s;text-decoration:none;}
+.sni:hover{color:var(--tx);border-color:var(--bd2);}
+.sni.a1.on{color:var(--in);border-color:rgba(129,140,248,.35);}
+.sni.a2.on{color:var(--g);border-color:rgba(52,211,153,.35);}
+.sni.a3.on{color:var(--re);border-color:rgba(97,218,251,.35);}
+.sni.a4.on{color:var(--cy);border-color:rgba(34,211,238,.35);}
+.sni.a5.on{color:var(--del);border-color:rgba(248,113,113,.35);}
+.sni.a6.on{color:var(--pk);border-color:rgba(244,114,182,.35);}
+.nsep{color:var(--bd2);font-size:10px;flex-shrink:0;}
+
+.page{max-width:920px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--bd);}
+.wk-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(129,140,248,.1);
+  border:1px solid rgba(129,140,248,.3);color:var(--in);
+  padding:5px 16px;border-radius:100px;font-size:13px;margin-bottom:1.2rem;}
+.hero h1{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:700;line-height:1.1;margin-bottom:.5rem;}
+.hero h1 span{background:linear-gradient(135deg,var(--in),var(--cy));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#94a3c8;font-size:15px;max-width:580px;margin-bottom:1.8rem;}
+.hchips{display:flex;gap:8px;flex-wrap:wrap;}
+.hchip{padding:5px 14px;border-radius:8px;font-size:13px;font-weight:500;}
+
+.sec{padding:3rem 0 .5rem;}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:.4rem;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bd);}
+.sec-title{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700;margin-bottom:.4rem;}
+.sec-sub{color:#7a8aaa;font-size:14px;margin-bottom:1.8rem;}
+hr.shr{border:none;border-top:1px solid var(--bd);margin:2.5rem 0 0;}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:.9rem;}
+.card-t{font-size:15px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+@media(max-width:640px){.two{grid-template-columns:1fr;}}
+
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:10px;
+  padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.6rem 0;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#454c6b;}.a{color:#a6e3a1;}.hk{color:#34d399;}.aw{color:#fbbf24;}
+.fe{color:#22d3ee;}.eff{color:#a78bfa;}.t{color:#89dceb;}
+
+.info{border-radius:10px;padding:11px 15px;font-size:13px;margin:.6rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:9px;}
+.ic{flex-shrink:0;margin-top:2px;}
+.ii{background:rgba(129,140,248,.07);border:1px solid rgba(129,140,248,.2);color:#c7d0fc;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.ir{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+.ir2{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
+
+.badge-new{background:rgba(244,114,182,.1);color:var(--pk);border:1px solid rgba(244,114,182,.25);
+  padding:2px 9px;border-radius:5px;font-size:11.5px;font-family:'JetBrains Mono',monospace;}
+
+/* METHOD */
+.m-get{background:rgba(52,211,153,.15);color:var(--get);border:1px solid rgba(52,211,153,.35);
+  padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;}
+.m-post{background:rgba(34,211,238,.12);color:var(--post);border:1px solid rgba(34,211,238,.35);
+  padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;}
+.m-put{background:rgba(251,146,60,.12);color:var(--or);border:1px solid rgba(251,146,60,.35);
+  padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;}
+.m-del{background:rgba(248,113,113,.12);color:var(--del);border:1px solid rgba(248,113,113,.35);
+  padding:2px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;}
+
+/* ═══ REQRES ENDPOINT LIST ═══ */
+.ep-list{display:flex;flex-direction:column;gap:6px;}
+.ep-row{display:flex;align-items:center;gap:10px;background:var(--card2);
+  border:1px solid var(--bd);border-radius:8px;padding:9px 12px;cursor:pointer;
+  transition:all .2s;}
+.ep-row:hover{border-color:var(--bd2);background:rgba(129,140,248,.06);}
+.ep-url{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c7d0fc;flex:1;}
+.ep-desc{font-size:12px;color:var(--mu);}
+
+/* ═══ API PLAYGROUND ═══ */
+.playground{background:var(--surf);border:1px solid rgba(129,140,248,.25);border-radius:16px;padding:1.5rem;margin:1rem 0;}
+.pg-url-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.pg-input{background:var(--card);border:1px solid rgba(129,140,248,.3);border-radius:8px;
+  padding:8px 12px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  outline:none;flex:1;min-width:200px;}
+.pg-input:focus{border-color:var(--in);}
+.pg-btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Mitr',sans-serif;font-size:13.5px;font-weight:600;transition:all .15s;flex-shrink:0;}
+.pg-btn:hover{opacity:.85;}
+.pg-result{background:#060c20;border-radius:10px;overflow:hidden;}
+.pr-head{padding:8px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);}
+.pr-body{padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:#8494b8;max-height:220px;overflow-y:auto;white-space:pre-wrap;line-height:1.7;}
+
+/* ═══ COMPONENT TREE ═══ */
+.comp-tree{background:#060c20;border-radius:12px;padding:1.2rem 1.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2.2;}
+.ct-app{color:var(--re);}
+.ct-comp{color:var(--in);}
+.ct-state{color:var(--g);font-size:11.5px;}
+.ct-prop{color:var(--y);font-size:11.5px;}
+.ct-hook{color:var(--pu);font-size:11.5px;}
+.ct-api{color:var(--cy);font-size:11.5px;}
+.ct-branch{color:var(--mu);}
+.i1{padding-left:18px;}
+.i2{padding-left:36px;}
+.i3{padding-left:54px;}
+
+/* ═══ LIVE DEMO ═══ */
+.live-demo{background:var(--surf);border:1px solid var(--bd2);border-radius:16px;overflow:hidden;margin:1rem 0;}
+.ld-header{background:rgba(129,140,248,.08);border-bottom:1px solid var(--bd);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.ld-title{font-size:13px;font-weight:600;color:var(--in);}
+.ld-status{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--mu);}
+.ld-body{padding:1.2rem;}
+
+/* USER CARDS (WHITE) */
+.user-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:1rem;}
+.user-card{background:white;border-radius:12px;overflow:hidden;position:relative;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);transition:transform .2s;}
+.user-card:hover{transform:translateY(-2px);}
+.uc-avatar{width:100%;height:80px;object-fit:cover;display:block;}
+.uc-avatar-placeholder{height:80px;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);}
+.uc-body{padding:10px 12px;}
+.uc-name{font-size:13px;font-weight:700;color:#1e293b;}
+.uc-email{font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.uc-del{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;
+  border:none;background:rgba(239,68,68,.9);color:white;font-size:11px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .15s;}
+.user-card:hover .uc-del{opacity:1;}
+
+/* ADD FORM */
+.add-form{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);
+  border-radius:12px;padding:1rem;}
+.af-title{font-size:13.5px;font-weight:600;color:var(--cy);margin-bottom:.7rem;}
+.af-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.7rem;}
+@media(max-width:500px){.af-inputs{grid-template-columns:1fr;}}
+.af-input{background:white;border:1px solid #e2e8f0;border-radius:7px;
+  padding:7px 11px;font-family:'Mitr',sans-serif;font-size:13px;color:#1e293b;outline:none;}
+.af-input:focus{border-color:var(--cy);}
+.af-btn{padding:7px 18px;border-radius:7px;border:none;cursor:pointer;
+  background:var(--cy);color:#0c1a2e;font-family:'Mitr',sans-serif;
+  font-size:13px;font-weight:600;transition:all .15s;}
+.af-btn:hover{opacity:.85;}
+.af-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.spinner{width:20px;height:20px;border:2px solid rgba(34,211,238,.2);
+  border-top-color:var(--cy);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:10px 18px;border-radius:10px;
+  font-size:14px;font-weight:500;z-index:999;transform:translateY(100px);
+  transition:transform .3s;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.toast.show{transform:translateY(0);}
+.toast-g{background:#064e3b;color:#6ee7b7;border:1px solid #065f46;}
+.toast-r{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b;}
+.toast-b{background:#1e1b4b;color:#a5b4fc;border:1px solid #312e81;}
+
+/* WORKSHOP */
+.ws{background:linear-gradient(135deg,rgba(129,140,248,.07),rgba(34,211,238,.04));
+  border:1px solid rgba(129,140,248,.2);border-radius:16px;padding:1.5rem;margin:2rem 0;}
+.ws-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.ws-icon{font-size:1.5rem;}
+.ws-title{font-size:1.05rem;font-weight:700;}
+.ws-badge{font-size:11px;padding:3px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;}
+.ws-desc{font-size:14px;color:#8494b8;margin-bottom:1rem;line-height:1.7;}
+.ws-tasks{display:flex;flex-direction:column;gap:8px;}
+.wt{background:rgba(0,0,0,.2);border-radius:9px;padding:11px 13px;display:flex;align-items:flex-start;gap:11px;}
+.wlv{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.lv1{background:rgba(52,211,153,.15);color:var(--g);border:1px solid rgba(52,211,153,.3);}
+.lv2{background:rgba(251,191,36,.12);color:var(--y);border:1px solid rgba(251,191,36,.3);}
+.lv3{background:rgba(244,114,182,.12);color:var(--pk);border:1px solid rgba(244,114,182,.3);}
+.wt-text{font-size:13px;line-height:1.55;}
+.wt-text strong{color:var(--tx);}
+
+.challenge{background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(129,140,248,.04));
+  border:1px solid rgba(244,114,182,.22);border-radius:16px;padding:2rem;margin:2rem 0;}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<div class="toast" id="toast"></div>
+
+<nav class="snav">
+  <a class="sni a1" href="#s1">🌐 reqres.in</a><span class="nsep">›</span>
+  <a class="sni a2" href="#s2">🧩 UserCard</a><span class="nsep">›</span>
+  <a class="sni a3" href="#s3">⚛️ UserList + GET</a><span class="nsep">›</span>
+  <a class="sni a4" href="#s4">📤 POST</a><span class="nsep">›</span>
+  <a class="sni a5" href="#s5">🗑 DELETE</a><span class="nsep">›</span>
+  <a class="sni a6" href="#s6">🏁 Full App</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wk-tag">⚛️ WEEK 12 — React ครบวงจร</div>
+  <h1>React +<br><span>reqres.in API</span></h1>
+  <p>นำทุกอย่างตั้งแต่ Week 8–12 มารวมกัน — Component, Props, useState, useEffect, .map(), fetch, CRUD สร้าง User Management App จริงๆ</p>
+  <div class="hchips">
+    <span class="hchip" style="background:rgba(129,140,248,.1);color:var(--in);border:1px solid rgba(129,140,248,.25)">🌐 reqres.in</span>
+    <span class="hchip" style="background:rgba(52,211,153,.1);color:var(--g);border:1px solid rgba(52,211,153,.25)">⚛️ Week 8 — Component</span>
+    <span class="hchip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🟡 Week 9 — Props</span>
+    <span class="hchip" style="background:rgba(97,218,251,.08);color:var(--re);border:1px solid rgba(97,218,251,.2)">🔵 Week 10 — useState</span>
+    <span class="hchip" style="background:rgba(34,211,238,.08);color:var(--cy);border:1px solid rgba(34,211,238,.2)">🗺 Week 11 — .map()</span>
+    <span class="hchip" style="background:rgba(167,139,250,.08);color:var(--pu);border:1px solid rgba(167,139,250,.2)">🔮 Week 12 — useEffect</span>
+  </div>
+</div>
+
+<!-- ═══════════ S1: REQRES.IN ═══════════ -->
+<div class="sec" id="s1">
+  <div class="sec-head"><span class="sec-num" style="color:var(--in)">01</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--in)">reqres.in — API สำหรับฝึก</h2>
+  <p class="sec-sub">Free API พร้อมข้อมูล User จริง — รองรับ GET, POST, PUT, DELETE ไม่ต้องสมัครสมาชิก</p>
+
+  <div class="card">
+    <div class="card-t"><span>🌐</span> Base URL + Endpoints ที่ใช้</div>
+    <div class="two">
+      <div>
+        <div style="background:#060c20;border-radius:10px;padding:12px 16px;margin-bottom:.7rem;font-family:'JetBrains Mono',monospace;font-size:13px;">
+          <div style="color:var(--mu);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Base URL</div>
+          <div style="color:var(--in);">https://reqres.in</div>
+        </div>
+        <div class="ep-list">
+          <div class="ep-row"><span class="m-get">GET</span><span class="ep-url">/api/users?page=1</span><span class="ep-desc">ดึง users ทั้งหมด</span></div>
+          <div class="ep-row"><span class="m-get">GET</span><span class="ep-url">/api/users/2</span><span class="ep-desc">ดึง user id=2</span></div>
+          <div class="ep-row"><span class="m-post">POST</span><span class="ep-url">/api/users</span><span class="ep-desc">สร้าง user ใหม่</span></div>
+          <div class="ep-row"><span class="m-put">PUT</span><span class="ep-url">/api/users/2</span><span class="ep-desc">แก้ไข user id=2</span></div>
+          <div class="ep-row"><span class="m-del">DELETE</span><span class="ep-url">/api/users/2</span><span class="ep-desc">ลบ user id=2</span></div>
+          <div class="ep-row"><span class="m-post">POST</span><span class="ep-url">/api/login</span><span class="ep-desc">login รับ token</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:7px;">ข้อมูล User ที่ได้จาก GET /api/users:</div>
+        <div class="cb" style="font-size:12px;">
+{
+  <span class="a">"page"</span>: <span class="num">1</span>,
+  <span class="a">"per_page"</span>: <span class="num">6</span>,
+  <span class="a">"total"</span>: <span class="num">12</span>,
+  <span class="a">"data"</span>: [
+    {
+      <span class="a">"id"</span>: <span class="num">1</span>,
+      <span class="a">"email"</span>: <span class="str">"george.bluth@reqres.in"</span>,
+      <span class="a">"first_name"</span>: <span class="str">"George"</span>,
+      <span class="a">"last_name"</span>: <span class="str">"Bluth"</span>,
+      <span class="a">"avatar"</span>: <span class="str">"https://reqres.in/img/faces/1-image.jpg"</span>
+    },
+    <span class="cm">// ... 5 คนอีก</span>
+  ]
+}
+        </div>
+        <div class="info ii">
+          <span class="ic">💡</span>
+          <span>ข้อมูล 5 field ที่สำคัญ: <strong style="color:var(--in)">id, first_name, last_name, email, avatar</strong> — ใช้เป็น props ของ UserCard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API PLAYGROUND -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> ลองเรียก reqres.in จริงๆ <span class="badge-new">Interactive</span></div>
+    <div class="info ii" style="margin-bottom:.8rem;">
+      <span class="ic">🌐</span>
+      <span>กดปุ่มเพื่อส่ง request จริงไปยัง reqres.in — ดูผลลัพธ์ JSON ที่ได้</span>
+    </div>
+    <div class="playground">
+      <div class="pg-url-row">
+        <span class="m-get">GET</span>
+        <input class="pg-input" id="pg-url" value="https://reqres.in/api/users?page=1">
+        <button class="pg-btn" onclick="pgFetch()" style="background:var(--in);color:white;">ส่ง Request</button>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.8rem;">
+        <button onclick="setUrl('https://reqres.in/api/users?page=1')" style="background:var(--card2);border:1px solid var(--bd);color:var(--mu);padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Mitr',sans-serif;">👥 users page 1</button>
+        <button onclick="setUrl('https://reqres.in/api/users?page=2')" style="background:var(--card2);border:1px solid var(--bd);color:var(--mu);padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Mitr',sans-serif;">👥 users page 2</button>
+        <button onclick="setUrl('https://reqres.in/api/users/2')" style="background:var(--card2);border:1px solid var(--bd);color:var(--mu);padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Mitr',sans-serif;">👤 user/2</button>
+        <button onclick="setUrl('https://reqres.in/api/users/23')" style="background:var(--card2);border:1px solid var(--bd);color:var(--mu);padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Mitr',sans-serif;">❌ user/23 (404)</button>
+      </div>
+      <div class="pg-result">
+        <div class="pr-head">
+          <span id="pg-status-dot" style="width:8px;height:8px;border-radius:50%;background:var(--mu);display:inline-block;"></span>
+          <span id="pg-status-text" style="font-size:12px;">รอส่ง request...</span>
+        </div>
+        <div class="pr-body" id="pg-body">// กด "ส่ง Request" เพื่อดูผลลัพธ์จริง</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════ S2: USERCARD ═══════════ -->
+<div class="sec" id="s2">
+  <div class="sec-head"><span class="sec-num" style="color:var(--re)">02</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--re)">UserCard Component — Week 8&9 ประยุกต์</h2>
+  <p class="sec-sub">สร้าง Component รับข้อมูล User เป็น Props และแสดงผล</p>
+
+  <div class="card">
+    <div class="card-t"><span>🧩</span> UserCard.jsx — รับ Props จาก reqres.in</div>
+    <div class="two">
+      <div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// src/components/UserCard.jsx</span>
+
+<span class="kw">const</span> <span class="fn">UserCard</span> = ({
+  first_name,
+  last_name,
+  email,
+  avatar,
+  onDelete,     <span class="cm">// ← callback จาก parent</span>
+  id
+}) => {
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"bg-white rounded-xl shadow-md
+      overflow-hidden relative group"</span>&gt;
+
+      <span class="cm">{/* Avatar */}</span>
+      &lt;img
+        src={avatar}
+        alt={<span class="str">`${first_name} ${last_name}`</span>}
+        className=<span class="str">"w-full h-24 object-cover"</span>
+      /&gt;
+
+      <span class="cm">{/* Info */}</span>
+      &lt;div className=<span class="str">"p-3"</span>&gt;
+        &lt;h3 className=<span class="str">"font-bold text-gray-800 text-sm"</span>&gt;
+          {first_name} {last_name}
+        &lt;/h3&gt;
+        &lt;p className=<span class="str">"text-gray-400 text-xs truncate"</span>&gt;
+          {email}
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      <span class="cm">{/* Delete button */}</span>
+      &lt;button
+        onClick={() => onDelete(id)}
+        className=<span class="str">"absolute top-2 right-2 w-6 h-6
+          bg-red-500 text-white rounded-full text-xs
+          hidden group-hover:flex items-center justify-center"</span>&gt;
+        ×
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+<span class="kw">export default</span> UserCard
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:8px;">ส่ง props จาก data ที่ fetch มา:</div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// วิธีส่ง props ครบด้วย spread</span>
+&lt;<span class="fn">UserCard</span>
+  key={user.id}
+  {...user}           <span class="cm">← spread ทุก field</span>
+  onDelete={handleDelete}
+/&gt;
+
+<span class="cm">// เหมือนกับเขียน:</span>
+&lt;<span class="fn">UserCard</span>
+  key={user.id}
+  id={user.id}
+  first_name={user.first_name}
+  last_name={user.last_name}
+  email={user.email}
+  avatar={user.avatar}
+  onDelete={handleDelete}
+/&gt;
+        </div>
+        <div class="info ig" style="margin-top:.7rem;">
+          <span class="ic">🔑</span>
+          <span>ชื่อ props <code style="color:var(--g)">first_name</code> ต้องตรงกับ key ใน JSON ของ reqres.in — destructure ออกมาตรงๆ ได้เลย</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════ S3: USERLIST + GET ═══════════ -->
+<div class="sec" id="s3">
+  <div class="sec-head"><span class="sec-num" style="color:var(--in)">03</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--in)">UserList + useEffect GET — Week 11&12 ประยุกต์</h2>
+  <p class="sec-sub">ดึง users จาก reqres.in แล้ว render ทุก card ด้วย .map()</p>
+
+  <div class="card">
+    <div class="card-t"><span>💻</span> App.jsx — useEffect + fetch + .map()</div>
+    <div class="cb">
+<span class="kw">import</span> { useState, <span class="eff">useEffect</span> } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> UserCard <span class="kw">from</span> <span class="str">'./components/UserCard'</span>
+
+<span class="kw">const</span> BASE = <span class="str">"https://reqres.in/api"</span>
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="cm">// ─── States ───</span>
+  <span class="kw">const</span> [users,   <span class="hk">setUsers</span>]   = <span class="hk">useState</span>([])     <span class="cm">// ← Week 10</span>
+  <span class="kw">const</span> [loading, <span class="hk">setLoading</span>] = <span class="hk">useState</span>(<span class="kw">true</span>)
+  <span class="kw">const</span> [error,   <span class="hk">setError</span>]   = <span class="hk">useState</span>(<span class="kw">null</span>)
+
+  <span class="cm">// ─── Fetch Users ───</span>
+  <span class="eff">useEffect</span>(() => {           <span class="cm">// ← Week 12</span>
+    <span class="kw">const</span> <span class="fn">fetchUsers</span> = <span class="aw">async</span> () => {
+      <span class="kw">try</span> {
+        <span class="hk">setLoading</span>(<span class="kw">true</span>)
+        <span class="kw">const</span> res  = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users?page=1`</span>)
+        <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">"โหลดไม่สำเร็จ"</span>)
+        <span class="kw">const</span> json = <span class="aw">await</span> res.json()
+        <span class="hk">setUsers</span>(json.data)         <span class="cm">// reqres ส่ง data ใน .data</span>
+      } <span class="kw">catch</span> (e) {
+        <span class="hk">setError</span>(e.message)
+      } <span class="kw">finally</span> {
+        <span class="hk">setLoading</span>(<span class="kw">false</span>)
+      }
+    }
+    fetchUsers()
+  }, [])
+
+  <span class="cm">// ─── Render ───</span>
+  <span class="kw">if</span> (loading) <span class="kw">return</span> &lt;div className=<span class="str">"flex justify-center py-20"</span>&gt;⏳ กำลังโหลด...&lt;/div&gt;
+  <span class="kw">if</span> (error)   <span class="kw">return</span> &lt;div className=<span class="str">"text-red-500 text-center py-20"</span>&gt;❌ {error}&lt;/div&gt;
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"p-6"</span>&gt;
+      &lt;h1 className=<span class="str">"text-2xl font-bold mb-6"</span>&gt;👥 User Management&lt;/h1&gt;
+
+      &lt;div className=<span class="str">"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"</span>&gt;
+        {users.<span class="hk">map</span>((user) => (    <span class="cm">// ← Week 11</span>
+          &lt;<span class="fn">UserCard</span>
+            key={user.id}          <span class="cm">// ← Week 11</span>
+            {...user}              <span class="cm">// ← Week 9</span>
+            onDelete={handleDelete}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+    </div>
+    <div class="info ii">
+      <span class="ic">🔑</span>
+      <span>reqres.in ส่งข้อมูลในรูป <code style="color:var(--in)">{'{'} "data": [...] {'}'}</code> — ดังนั้นต้องใช้ <code style="color:var(--in)">json.data</code> ไม่ใช่ <code>json</code> ตรงๆ</span>
+    </div>
+  </div>
+
+  <!-- LIVE DEMO GET -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> ดึง Users จาก reqres.in — Live Demo <span class="badge-new">Interactive</span></div>
+    <div class="live-demo">
+      <div class="ld-header">
+        <div class="ld-title">👥 User Management — React App Preview</div>
+        <div class="ld-status" id="demo-status">กดปุ่มเพื่อโหลด</div>
+      </div>
+      <div class="ld-body">
+        <div class="user-grid" id="user-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--mu);">
+            กด "โหลด Users" เพื่อดึงข้อมูลจาก reqres.in จริงๆ
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem;">
+          <button onclick="loadUsers(1)" class="pg-btn" style="background:var(--in);color:white;font-size:13px;">🔄 โหลด Page 1</button>
+          <button onclick="loadUsers(2)" class="pg-btn" style="background:rgba(129,140,248,.2);color:var(--in);border:1px solid rgba(129,140,248,.3);font-size:13px;">🔄 โหลด Page 2</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHOP 1 -->
+  <div class="ws">
+    <div class="ws-head"><div class="ws-icon">🛠</div>
+      <div><div class="ws-title">Workshop 1 — GET + UserCard</div>
+        <span class="ws-badge" style="background:rgba(52,211,153,.12);color:var(--g);border:1px solid rgba(52,211,153,.3);">Week 8-9-11-12</span>
+      </div>
+    </div>
+    <p class="ws-desc">สร้าง project ใหม่แล้วดึง users จาก reqres.in มาแสดงเป็น card grid</p>
+    <div class="ws-tasks">
+      <div class="wt"><div class="wlv lv1">1</div>
+        <div class="wt-text"><strong>พื้นฐาน:</strong> สร้าง <code style="color:var(--g)">UserCard.jsx</code> รับ props first_name, last_name, email, avatar แล้วแสดง — สร้าง App.jsx ดึง <code style="color:var(--g)">https://reqres.in/api/users?page=1</code> แล้ว <code style="color:var(--g)">setUsers(json.data)</code></div>
+      </div>
+      <div class="wt"><div class="wlv lv2">2</div>
+        <div class="wt-text"><strong>กลาง:</strong> เพิ่ม loading spinner และ error message ครบ — เพิ่มปุ่ม Page 1 / Page 2 ด้วย state <code style="color:var(--g)">const [page, setPage] = useState(1)</code> แล้วใส่ <code style="color:var(--g)">[page]</code> ใน dependency</div>
+      </div>
+      <div class="wt"><div class="wlv lv3">3</div>
+        <div class="wt-text"><strong>ท้าทาย:</strong> เพิ่ม Navbar แสดง "ทั้งหมด X คน" จาก <code style="color:var(--g)">json.total</code> และ search box filter ชื่อด้วย <code style="color:var(--g)">.filter(u => u.first_name.includes(query))</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════ S4: POST ═══════════ -->
+<div class="sec" id="s4">
+  <div class="sec-head"><span class="sec-num" style="color:var(--cy)">04</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--cy)">เพิ่ม User — POST Request</h2>
+  <p class="sec-sub">Form รับข้อมูล User ใหม่ + ส่ง POST ไปยัง reqres.in</p>
+
+  <div class="card">
+    <div class="card-t"><span>📤</span> AddUserForm + handleAdd function</div>
+    <div class="cb" style="font-size:12px;">
+<span class="cm">// เพิ่มใน App.jsx</span>
+
+<span class="cm">// State สำหรับ Form (Week 10)</span>
+<span class="kw">const</span> [form,     <span class="hk">setForm</span>]     = <span class="hk">useState</span>({ name: <span class="str">""</span>, job: <span class="str">""</span> })
+<span class="kw">const</span> [adding,   <span class="hk">setAdding</span>]   = <span class="hk">useState</span>(<span class="kw">false</span>)
+
+<span class="cm">// POST Function (Week 12)</span>
+<span class="kw">const</span> <span class="fn">handleAdd</span> = <span class="aw">async</span> () => {
+  <span class="kw">if</span> (!form.name || !form.job) <span class="kw">return</span>   <span class="cm">// validation</span>
+  <span class="kw">try</span> {
+    <span class="hk">setAdding</span>(<span class="kw">true</span>)
+    <span class="kw">const</span> res = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users`</span>, {
+      method:  <span class="str">"POST"</span>,
+      headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+      body:    JSON.stringify(form)
+    })
+    <span class="kw">const</span> created = <span class="aw">await</span> res.json()
+    <span class="cm">// reqres ตอบ: { id, name, job, createdAt }</span>
+
+    <span class="cm">// เพิ่มลง state (Week 10)</span>
+    <span class="hk">setUsers</span>(prev => [...prev, {
+      id: created.id,
+      first_name: form.name,
+      last_name: <span class="str">""</span>,
+      email: <span class="str">`${form.name.toLowerCase()}@reqres.in`</span>,
+      avatar: <span class="str">"https://reqres.in/img/faces/10-image.jpg"</span>
+    }])
+    <span class="hk">setForm</span>({ name: <span class="str">""</span>, job: <span class="str">""</span> })   <span class="cm">// reset form</span>
+  } <span class="kw">catch</span> (e) {
+    <span class="hk">setError</span>(e.message)
+  } <span class="kw">finally</span> {
+    <span class="hk">setAdding</span>(<span class="kw">false</span>)
+  }
+}
+
+<span class="cm">// JSX Form</span>
+&lt;div className=<span class="str">"bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6"</span>&gt;
+  &lt;h2 className=<span class="str">"text-blue-700 font-bold mb-3"</span>&gt;➕ เพิ่ม User ใหม่&lt;/h2&gt;
+  &lt;div className=<span class="str">"flex gap-3 flex-wrap"</span>&gt;
+    &lt;input
+      value={form.name}
+      onChange={e => <span class="hk">setForm</span>({...form, name: e.target.value})}
+      placeholder=<span class="str">"ชื่อ"</span>
+      className=<span class="str">"border rounded-lg px-3 py-2 flex-1"</span>
+    /&gt;
+    &lt;input
+      value={form.job}
+      onChange={e => <span class="hk">setForm</span>({...form, job: e.target.value})}
+      placeholder=<span class="str">"ตำแหน่ง"</span>
+      className=<span class="str">"border rounded-lg px-3 py-2 flex-1"</span>
+    /&gt;
+    &lt;button
+      onClick={handleAdd}
+      disabled={adding}
+      className=<span class="str">"bg-blue-600 text-white px-6 py-2 rounded-lg"</span>&gt;
+      {adding ? <span class="str">"กำลังเพิ่ม..."</span> : <span class="str">"เพิ่ม"</span>}
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+    </div>
+    <div class="info ir">
+      <span class="ic">💡</span>
+      <span>reqres.in ตอบ <code style="color:var(--cy)">{'{'} id, name, job, createdAt {'}'}</code> ไม่ใช่ user format เดิม — ต้อง <strong>map ข้อมูลใหม่</strong> ให้ตรงกับที่ UserCard รับก่อน setUsers</span>
+    </div>
+  </div>
+
+  <!-- LIVE ADD DEMO -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> ทดลอง POST User จริง <span class="badge-new">Interactive</span></div>
+    <div class="live-demo">
+      <div class="ld-header">
+        <div class="ld-title">➕ Add User Form</div>
+        <div class="ld-status" id="add-status">พร้อมใช้</div>
+      </div>
+      <div class="ld-body">
+        <div class="add-form">
+          <div class="af-title">เพิ่ม User ใหม่ → POST /api/users</div>
+          <div class="af-inputs">
+            <input class="af-input" id="add-name" placeholder="ชื่อ เช่น สมชาย">
+            <input class="af-input" id="add-job" placeholder="ตำแหน่ง เช่น Developer">
+          </div>
+          <button class="af-btn" id="add-btn" onclick="doAddUser()">➕ POST ไปยัง reqres.in</button>
+        </div>
+        <div id="add-result" style="margin-top:.8rem;display:none;background:#060c20;border-radius:8px;padding:12px 14px;
+          font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--g);line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════ S5: DELETE ═══════════ -->
+<div class="sec" id="s5">
+  <div class="sec-head"><span class="sec-num" style="color:var(--del)">05</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--del)">ลบ User — DELETE Request</h2>
+  <p class="sec-sub">ส่ง DELETE → filter ออกจาก state ทันที</p>
+
+  <div class="card">
+    <div class="card-t"><span>🗑</span> handleDelete function</div>
+    <div class="two">
+      <div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// เพิ่มใน App.jsx</span>
+<span class="kw">const</span> <span class="fn">handleDelete</span> = <span class="aw">async</span> (id) => {
+  <span class="kw">const</span> confirm = window.confirm(
+    <span class="str">`ลบ user id=${id} ใช่ไหม?`</span>
+  )
+  <span class="kw">if</span> (!confirm) <span class="kw">return</span>
+
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="aw">await</span> fetch(
+      <span class="str">`${BASE}/users/${id}`</span>,
+      { method: <span class="str">"DELETE"</span> }
+    )
+    <span class="cm">// reqres ตอบ 204 No Content</span>
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">"ลบไม่สำเร็จ"</span>)
+
+    <span class="cm">// filter ออกจาก state (Week 11)</span>
+    <span class="hk">setUsers</span>(prev =>
+      prev.filter(u => u.id !== id)
+    )
+  } <span class="kw">catch</span> (e) {
+    alert(e.message)
+  }
+}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;">ส่ง onDelete ลง UserCard:</div>
+        <div class="cb" style="font-size:12px;">
+<span class="cm">// ใน return JSX</span>
+{users.map((user) => (
+  &lt;<span class="fn">UserCard</span>
+    key={user.id}
+    {...user}
+    onDelete={handleDelete}  <span class="cm">← ส่ง fn ลงไป</span>
+  /&gt;
+))}
+
+<span class="cm">// ใน UserCard.jsx</span>
+<span class="kw">const</span> <span class="fn">UserCard</span> = ({
+  id, first_name, avatar,
+  onDelete  <span class="cm">← รับ fn มา</span>
+}) => (
+  &lt;button onClick={() => onDelete(id)}&gt;
+    ×
+  &lt;/button&gt;
+)
+        </div>
+        <div class="info ir2">
+          <span class="ic">💡</span>
+          <span>reqres.in ตอบ <strong style="color:var(--del)">204 No Content</strong> สำหรับ DELETE — ไม่มี body ตอบกลับ ดังนั้นอย่าพยายาม <code>.json()</code> หลัง DELETE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE DELETE DEMO -->
+  <div class="card">
+    <div class="card-t"><span>🎮</span> ทดลอง DELETE User — กด × บน Card <span class="badge-new">Interactive</span></div>
+    <div class="live-demo">
+      <div class="ld-header">
+        <div class="ld-title">🗑 Delete Demo</div>
+        <div class="ld-status" id="del-demo-status">โหลด users ก่อน</div>
+      </div>
+      <div class="ld-body">
+        <div class="user-grid" id="del-user-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--mu);">กด "โหลด" ก่อน</div>
+        </div>
+        <button onclick="loadDelUsers()" class="pg-btn" style="background:var(--del);color:white;margin-top:.7rem;font-size:13px;">🔄 โหลด Users</button>
+        <div style="font-size:12px;color:var(--mu);margin-top:.5rem;">Hover บน card แล้วกด × เพื่อ simulate DELETE</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="shr">
+
+<!-- ═══════════ S6: FULL APP ═══════════ -->
+<div class="sec" id="s6">
+  <div class="sec-head"><span class="sec-num" style="color:var(--pk)">06</span><div class="sec-line"></div></div>
+  <h2 class="sec-title" style="color:var(--pk)">🏁 Full App — ทุกอย่างรวมกัน</h2>
+  <p class="sec-sub">Component Tree + App.jsx สมบูรณ์ + Assignment</p>
+
+  <!-- COMPONENT TREE -->
+  <div class="card">
+    <div class="card-t"><span>🌳</span> Component Tree — ทุก Week รวมอยู่ที่นี่</div>
+    <div class="comp-tree">
+      <div><span class="ct-app">App.jsx</span></div>
+      <div class="i1"><span class="ct-branch">│</span></div>
+      <div class="i1"><span class="ct-branch">├─</span> <span class="ct-comp">&lt;Navbar /&gt;</span> <span class="ct-prop">props: total</span></div>
+      <div class="i1"><span class="ct-branch">│    &lt;/&gt;</span> <span style="color:#454c6b;font-size:11.5px;">แสดง "ทั้งหมด {total} คน"</span></div>
+      <div class="i1"><span class="ct-branch">│</span></div>
+      <div class="i1"><span class="ct-branch">├─</span> <span class="ct-comp">&lt;AddUserForm /&gt;</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-state">useState: form {'{'}name, job{'}'}</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-state">useState: adding</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-prop">props: onAdd(newUser)</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-api">POST /api/users</span></div>
+      <div class="i1"><span class="ct-branch">│</span></div>
+      <div class="i1"><span class="ct-branch">└─</span> <span class="ct-comp">&lt;UserList /&gt;</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-hook">useEffect: fetchUsers()</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-state">useState: users, loading, error</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-api">GET /api/users?page={'{'}page{'}'}</span></div>
+      <div class="i2"><span class="ct-branch">&lt;/&gt;</span> <span class="ct-api">DELETE /api/users/{'{'}id{'}'}</span></div>
+      <div class="i2"><span class="ct-branch">└─ users.map() →</span> <span class="ct-comp">&lt;UserCard /&gt;</span> <span class="ct-prop">props: id, first_name, last_name, email, avatar, onDelete</span></div>
+    </div>
+    <div class="info ii" style="margin-top:.8rem;">
+      <span class="ic">✨</span>
+      <span>แต่ละ Week ปรากฏในโค้ดจริง — <strong style="color:var(--in)">W8</strong> Component · <strong style="color:var(--y)">W9</strong> Props & Spread · <strong style="color:var(--re)">W10</strong> useState · <strong style="color:var(--cy)">W11</strong> .map() · <strong style="color:var(--pu)">W12</strong> useEffect + fetch</span>
+    </div>
+  </div>
+
+  <!-- FULL CODE -->
+  <div class="card">
+    <div class="card-t"><span>💻</span> App.jsx — ฉบับสมบูรณ์</div>
+    <div class="cb" style="font-size:11.5px;">
+<span class="kw">import</span> { useState, <span class="eff">useEffect</span> } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> UserCard <span class="kw">from</span> <span class="str">'./components/UserCard'</span>
+
+<span class="kw">const</span> BASE = <span class="str">"https://reqres.in/api"</span>
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="cm">// ─── States ───────────────────────────────────────────────</span>
+  <span class="kw">const</span> [users,   <span class="hk">setUsers</span>]   = <span class="hk">useState</span>([])
+  <span class="kw">const</span> [total,   <span class="hk">setTotal</span>]   = <span class="hk">useState</span>(<span class="num">0</span>)
+  <span class="kw">const</span> [loading, <span class="hk">setLoading</span>] = <span class="hk">useState</span>(<span class="kw">true</span>)
+  <span class="kw">const</span> [error,   <span class="hk">setError</span>]   = <span class="hk">useState</span>(<span class="kw">null</span>)
+  <span class="kw">const</span> [page,    <span class="hk">setPage</span>]    = <span class="hk">useState</span>(<span class="num">1</span>)
+  <span class="kw">const</span> [form,    <span class="hk">setForm</span>]    = <span class="hk">useState</span>({ name: <span class="str">""</span>, job: <span class="str">""</span> })
+  <span class="kw">const</span> [adding,  <span class="hk">setAdding</span>]  = <span class="hk">useState</span>(<span class="kw">false</span>)
+
+  <span class="cm">// ─── GET Users ────────────────────────────────────────────</span>
+  <span class="eff">useEffect</span>(() => {
+    <span class="kw">const</span> <span class="fn">fetch</span>Users = <span class="aw">async</span> () => {
+      <span class="kw">try</span> {
+        <span class="hk">setLoading</span>(<span class="kw">true</span>)
+        <span class="kw">const</span> res  = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users?page=${page}`</span>)
+        <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">"โหลด Users ไม่สำเร็จ"</span>)
+        <span class="kw">const</span> json = <span class="aw">await</span> res.json()
+        <span class="hk">setUsers</span>(json.data)
+        <span class="hk">setTotal</span>(json.total)
+      } <span class="kw">catch</span> (e) {
+        <span class="hk">setError</span>(e.message)
+      } <span class="kw">finally</span> {
+        <span class="hk">setLoading</span>(<span class="kw">false</span>)
+      }
+    }
+    fetchUsers()
+  }, [page])   <span class="cm">← fetch ใหม่ทุกครั้งที่ page เปลี่ยน</span>
+
+  <span class="cm">// ─── POST User ────────────────────────────────────────────</span>
+  <span class="kw">const</span> <span class="fn">handleAdd</span> = <span class="aw">async</span> () => {
+    <span class="kw">if</span> (!form.name || !form.job) <span class="kw">return</span>
+    <span class="kw">try</span> {
+      <span class="hk">setAdding</span>(<span class="kw">true</span>)
+      <span class="kw">const</span> res     = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users`</span>, {
+        method: <span class="str">"POST"</span>,
+        headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+        body: JSON.stringify(form)
+      })
+      <span class="kw">const</span> created = <span class="aw">await</span> res.json()
+      <span class="hk">setUsers</span>(prev => [...prev, {
+        id:         created.id,
+        first_name: form.name,
+        last_name:  <span class="str">""</span>,
+        email:      <span class="str">`${form.name.toLowerCase().replace(/ /g,<span class="str">"."</span>)}@reqres.in`</span>,
+        avatar:     <span class="str">"https://reqres.in/img/faces/10-image.jpg"</span>
+      }])
+      <span class="hk">setForm</span>({ name: <span class="str">""</span>, job: <span class="str">""</span> })
+    } <span class="kw">catch</span> (e) { <span class="hk">setError</span>(e.message) }
+    <span class="kw">finally</span>     { <span class="hk">setAdding</span>(<span class="kw">false</span>) }
+  }
+
+  <span class="cm">// ─── DELETE User ──────────────────────────────────────────</span>
+  <span class="kw">const</span> <span class="fn">handleDelete</span> = <span class="aw">async</span> (id) => {
+    <span class="kw">if</span> (!window.confirm(<span class="str">`ลบ user id=${id}?`</span>)) <span class="kw">return</span>
+    <span class="kw">const</span> res = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users/${id}`</span>, { method: <span class="str">"DELETE"</span> })
+    <span class="kw">if</span> (res.ok) <span class="hk">setUsers</span>(prev => prev.filter(u => u.id !== id))
+  }
+
+  <span class="cm">// ─── Render ───────────────────────────────────────────────</span>
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"min-h-screen bg-gray-50 p-6"</span>&gt;
+
+      <span class="cm">{/* Navbar */}</span>
+      &lt;div className=<span class="str">"flex justify-between items-center mb-6"</span>&gt;
+        &lt;h1 className=<span class="str">"text-2xl font-bold"</span>&gt;👥 User Management&lt;/h1&gt;
+        &lt;span className=<span class="str">"text-gray-500 text-sm"</span>&gt;ทั้งหมด {total} คน&lt;/span&gt;
+      &lt;/div&gt;
+
+      <span class="cm">{/* Add Form */}</span>
+      &lt;div className=<span class="str">"bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex gap-3"</span>&gt;
+        &lt;input value={form.name}
+          onChange={e => <span class="hk">setForm</span>({...form, name: e.target.value})}
+          placeholder=<span class="str">"ชื่อ"</span> className=<span class="str">"border rounded-lg px-3 py-2 flex-1"</span> /&gt;
+        &lt;input value={form.job}
+          onChange={e => <span class="hk">setForm</span>({...form, job: e.target.value})}
+          placeholder=<span class="str">"ตำแหน่ง"</span> className=<span class="str">"border rounded-lg px-3 py-2 flex-1"</span> /&gt;
+        &lt;button onClick={handleAdd} disabled={adding}
+          className=<span class="str">"bg-indigo-600 text-white px-6 rounded-lg"</span>&gt;
+          {adding ? <span class="str">"..."</span> : <span class="str">"เพิ่ม"</span>}
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      <span class="cm">{/* States */}</span>
+      {loading &amp;&amp; &lt;div className=<span class="str">"text-center py-10"</span>&gt;⏳ โหลด...&lt;/div&gt;}
+      {error   &amp;&amp; &lt;div className=<span class="str">"text-red-500 text-center py-10"</span>&gt;❌ {error}&lt;/div&gt;}
+
+      <span class="cm">{/* User Grid */}</span>
+      {!loading &amp;&amp; !error &amp;&amp; (
+        &lt;&gt;
+          &lt;div className=<span class="str">"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6"</span>&gt;
+            {users.map(user => (
+              &lt;<span class="fn">UserCard</span> key={user.id} {...user} onDelete={handleDelete} /&gt;
+            ))}
+          &lt;/div&gt;
+          &lt;div className=<span class="str">"flex gap-3"</span>&gt;
+            &lt;button onClick={() => <span class="hk">setPage</span>(<span class="num">1</span>)} className=<span class="str">"px-4 py-2 bg-indigo-600 text-white rounded-lg"</span>&gt;หน้า 1&lt;/button&gt;
+            &lt;button onClick={() => <span class="hk">setPage</span>(<span class="num">2</span>)} className=<span class="str">"px-4 py-2 bg-indigo-600 text-white rounded-lg"</span>&gt;หน้า 2&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/&gt;
+      )}
+    &lt;/div&gt;
+  )
+}
+
+<span class="kw">export default</span> App
+    </div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="challenge">
+    <div style="display:inline-block;background:rgba(244,114,182,.12);color:var(--pk);
+      border:1px solid rgba(244,114,182,.28);padding:3px 12px;border-radius:6px;
+      font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;">FINAL CHALLENGE</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--pk);margin-bottom:.5rem;">
+      User Management App — reqres.in
+    </div>
+    <p style="font-size:14px;color:#c094b8;line-height:1.7;margin-bottom:1.5rem;">
+      สร้าง App จัดการ User โดยใช้ reqres.in API ครบทุก concept Week 8–12
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.5rem;">✅ Week 8–9</div>
+        <div style="font-size:13px;color:#9aa3b8;display:flex;flex-direction:column;gap:5px;">
+          <div>☐ UserCard.jsx Component</div>
+          <div>☐ รับ props ด้วย destructuring</div>
+          <div>☐ ส่งด้วย spread {'{'}...user{'}'}</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.5rem;">✅ Week 10</div>
+        <div style="font-size:13px;color:#9aa3b8;display:flex;flex-direction:column;gap:5px;">
+          <div>☐ Form state {'{'}name, job{'}'}</div>
+          <div>☐ loading + adding states</div>
+          <div>☐ onChange controlled input</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.5rem;">✅ Week 11</div>
+        <div style="font-size:13px;color:#9aa3b8;display:flex;flex-direction:column;gap:5px;">
+          <div>☐ users.map() + key={'{'}user.id{'}'}</div>
+          <div>☐ filter ตอน DELETE</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--re);margin-bottom:.5rem;">✅ Week 12</div>
+        <div style="font-size:13px;color:#9aa3b8;display:flex;flex-direction:column;gap:5px;">
+          <div>☐ useEffect + [page]</div>
+          <div>☐ GET + POST + DELETE</div>
+          <div>☐ try/catch/finally</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.5rem;">⭐ Bonus</div>
+        <div style="font-size:13px;color:#9aa3b8;display:flex;flex-direction:column;gap:5px;">
+          <div>☐ Search filter .includes()</div>
+          <div>☐ PUT แก้ไข user ด้วย modal</div>
+          <div>☐ POST /api/login → แสดง token</div>
+        </div>
+      </div>
+    </div>
+    <div class="cb" style="font-size:12px;margin:0;">
+git add .
+git commit -m <span class="str">"Week 12 User Management App — reqres.in CRUD"</span>
+git push
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem;">
+  <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:1rem;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;">Week 8–12 ทุก Concept รวมอยู่ใน App นี้</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;">
+    <div style="background:rgba(97,218,251,.06);border:1px solid rgba(97,218,251,.15);border-radius:9px;padding:10px 12px;">
+      <div style="color:var(--re);font-weight:600;font-size:13px;">Week 8 ✓</div><div style="font-size:11.5px;color:var(--mu);">UserCard Component + JSX</div></div>
+    <div style="background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.12);border-radius:9px;padding:10px 12px;">
+      <div style="color:var(--y);font-weight:600;font-size:13px;">Week 9 ✓</div><div style="font-size:11.5px;color:var(--mu);">Props destructuring + Spread</div></div>
+    <div style="background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.12);border-radius:9px;padding:10px 12px;">
+      <div style="color:var(--g);font-weight:600;font-size:13px;">Week 10 ✓</div><div style="font-size:11.5px;color:var(--mu);">useState + onChange + onClick</div></div>
+    <div style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.12);border-radius:9px;padding:10px 12px;">
+      <div style="color:var(--cy);font-weight:600;font-size:13px;">Week 11 ✓</div><div style="font-size:11.5px;color:var(--mu);">.map() + key + .filter()</div></div>
+    <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:9px;padding:10px 12px;">
+      <div style="color:var(--pu);font-weight:600;font-size:13px;">Week 12 ✓</div><div style="font-size:11.5px;color:var(--mu);">useEffect + GET/POST/DELETE</div></div>
+  </div>
+  <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:13px;color:var(--mu);">
+    <strong style="color:var(--g)">Week 13–14 →</strong> Final Project — เลือก theme เอง + ใช้ concept ทั้งหมดนี้
+  </div>
+</div>
+
+</div><!-- page -->
+
+<script>
+// PROGRESS + NAV
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('rp').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+const obs=new IntersectionObserver(e=>{
+  e.forEach(en=>{
+    if(en.isIntersecting){
+      document.querySelectorAll('.sni').forEach(a=>a.classList.remove('on'));
+      const a=document.querySelector(`.sni[href="#${en.target.id}"]`);
+      if(a)a.classList.add('on');
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+
+// TOAST
+function toast(msg, type='b'){
+  const el=document.getElementById('toast');
+  el.className=`toast toast-${type} show`;
+  el.textContent=msg;
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// ═══ API PLAYGROUND ═══
+function setUrl(url){ document.getElementById('pg-url').value=url; }
+async function pgFetch(){
+  const url=document.getElementById('pg-url').value;
+  const dot=document.getElementById('pg-status-dot');
+  const txt=document.getElementById('pg-status-text');
+  const body=document.getElementById('pg-body');
+  dot.style.background='var(--y)'; txt.textContent='กำลังส่ง...'; body.textContent='// รอ response...';
+  try{
+    const res=await fetch(url);
+    const data=await res.json();
+    const ok=res.ok;
+    dot.style.background=ok?'var(--g)':'var(--r)';
+    txt.textContent=`${res.status} ${res.statusText}`;
+    body.textContent=JSON.stringify(data,null,2);
+  }catch(e){
+    dot.style.background='var(--r)'; txt.textContent='Error';
+    body.textContent='// '+e.message;
+  }
+}
+
+// ═══ LOAD USERS (GET DEMO) ═══
+let demoUsers=[];
+async function loadUsers(page=1){
+  const grid=document.getElementById('user-grid');
+  const status=document.getElementById('demo-status');
+  status.textContent='⏳ กำลังโหลด...';
+  grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1.5rem;"><div class="spinner"></div></div>';
+  try{
+    const res=await fetch(`https://reqres.in/api/users?page=${page}`);
+    const json=await res.json();
+    demoUsers=json.data;
+    status.textContent=`✅ ${json.total} users — แสดง page ${page}`;
+    renderDemoGrid();
+  }catch(e){
+    status.textContent='❌ '+e.message;
+    grid.innerHTML=`<div style="grid-column:1/-1;color:var(--r);text-align:center;padding:1.5rem;">${e.message}</div>`;
+  }
+}
+
+function renderDemoGrid(){
+  const grid=document.getElementById('user-grid');
+  if(!demoUsers.length){grid.innerHTML='<div style="grid-column:1/-1;color:var(--mu);text-align:center;padding:1.5rem;">ว่างเปล่า</div>';return;}
+  grid.innerHTML=demoUsers.map(u=>`
+    <div class="user-card">
+      <img class="uc-avatar" src="${u.avatar}" alt="${u.first_name}">
+      <div class="uc-body">
+        <div class="uc-name">${u.first_name} ${u.last_name}</div>
+        <div class="uc-email">${u.email}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══ POST USER ═══
+async function doAddUser(){
+  const name=document.getElementById('add-name').value.trim();
+  const job=document.getElementById('add-job').value.trim();
+  if(!name||!job){toast('กรุณากรอกชื่อและตำแหน่ง','r');return;}
+  const btn=document.getElementById('add-btn');
+  const status=document.getElementById('add-status');
+  const result=document.getElementById('add-result');
+  btn.disabled=true; btn.textContent='กำลังส่ง...'; status.textContent='⏳';
+  try{
+    const res=await fetch('https://reqres.in/api/users',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,job})
+    });
+    const data=await res.json();
+    status.textContent=`✅ ${res.status} Created`;
+    result.style.display='block';
+    result.innerHTML=`<div style="color:var(--g);margin-bottom:6px;">✅ Response ${res.status}:</div>${JSON.stringify(data,null,2)}`;
+    toast(`✅ สร้าง "${name}" สำเร็จ (id: ${data.id})`,'g');
+    document.getElementById('add-name').value='';
+    document.getElementById('add-job').value='';
+  }catch(e){
+    status.textContent='❌'; toast(e.message,'r');
+  }finally{btn.disabled=false; btn.textContent='➕ POST ไปยัง reqres.in';}
+}
+
+// ═══ DELETE DEMO ═══
+let delUsers=[];
+async function loadDelUsers(){
+  const grid=document.getElementById('del-user-grid');
+  const status=document.getElementById('del-demo-status');
+  status.textContent='⏳ โหลด...';
+  grid.innerHTML='<div class="spinner" style="margin:1rem auto;"></div>';
+  const res=await fetch('https://reqres.in/api/users?page=1');
+  const json=await res.json();
+  delUsers=[...json.data];
+  status.textContent=`✅ โหลดแล้ว — hover card แล้วกด × เพื่อลบ`;
+  renderDelGrid();
+}
+function renderDelGrid(){
+  const grid=document.getElementById('del-user-grid');
+  if(!delUsers.length){grid.innerHTML='<div style="grid-column:1/-1;color:var(--mu);text-align:center;padding:1.5rem;">🎉 ลบทั้งหมดแล้ว!</div>';return;}
+  grid.innerHTML=delUsers.map(u=>`
+    <div class="user-card" id="duc-${u.id}">
+      <img class="uc-avatar" src="${u.avatar}" alt="${u.first_name}">
+      <button class="uc-del" onclick="simDelete(${u.id})">×</button>
+      <div class="uc-body">
+        <div class="uc-name">${u.first_name}</div>
+        <div class="uc-email">${u.email}</div>
+      </div>
+    </div>`).join('');
+}
+async function simDelete(id){
+  const card=document.getElementById('duc-'+id);
+  if(card){card.style.opacity='.4';card.style.transform='scale(.9)';}
+  try{
+    await fetch(`https://reqres.in/api/users/${id}`,{method:'DELETE'});
+    delUsers=delUsers.filter(u=>u.id!==id);
+    setTimeout(()=>renderDelGrid(),400);
+    toast(`🗑 ลบ user id=${id} สำเร็จ (204)`,'g');
+  }catch(e){toast(e.message,'r');}
+}
+</script>
+</body>
+</html>
