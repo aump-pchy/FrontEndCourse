@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Teacher Handbook — Week 12 reqres.in | 31901-2004</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc;--card:white;--surf:#f1f5f9;--surf2:#e9eef5;
+  --bd:#e2e8f0;--bd2:#cbd5e1;
+  --pu:#7c3aed;--pu-l:#ede9fe;
+  --in:#4f46e5;--in-l:#e0e7ff;
+  --y:#d97706;--y-l:#fef3c7;
+  --cy:#0369a1;--cy-l:#e0f2fe;
+  --g:#059669;--g-l:#d1fae5;
+  --r:#dc2626;--r-l:#fee2e2;
+  --or:#c2410c;--or-l:#ffedd5;
+  --pk:#be185d;--pk-l:#fce7f3;
+  --tx:#1e293b;--mu:#64748b;--mu2:#94a3b8;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;line-height:1.7;font-size:14.5px;}
+
+@media print{
+  .no-print{display:none!important;}
+  body{font-size:11.5px;}
+  .page{padding:.8rem;}
+  .step-block{break-inside:avoid;}
+  .page-break{page-break-before:always;}
+}
+
+/* TOP BAR */
+.topbar{background:var(--in);color:white;padding:.5rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;font-size:13.5px;gap:.5rem;}
+.topbar-right{display:flex;gap:8px;}
+.tb-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;padding:4px 14px;border-radius:6px;cursor:pointer;font-family:'Mitr',sans-serif;font-size:13px;}
+.tb-btn:hover{background:rgba(255,255,255,.25);}
+
+.page{max-width:920px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+/* HEADER */
+.doc-header{background:linear-gradient(135deg,var(--in),var(--pu));color:white;border-radius:16px;padding:2rem 2.5rem;margin-bottom:2rem;position:relative;overflow:hidden;}
+.doc-header::after{content:'📋';position:absolute;right:2rem;top:1.5rem;font-size:5rem;opacity:.12;}
+.doc-tag{font-size:11.5px;opacity:.7;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+.doc-title{font-size:1.7rem;font-weight:700;margin-bottom:.3rem;}
+.doc-sub{font-size:14px;opacity:.8;margin-bottom:1.2rem;}
+.doc-meta{display:flex;gap:1.2rem;flex-wrap:wrap;font-size:12.5px;opacity:.9;}
+
+/* SEC */
+.sec{margin-bottom:2.5rem;}
+.sec-title{font-size:1.05rem;font-weight:700;color:var(--in);
+  border-left:4px solid var(--in);padding-left:12px;margin-bottom:1rem;padding-top:2px;}
+.sec-title.green{color:var(--g);border-color:var(--g);}
+.sec-title.orange{color:var(--or);border-color:var(--or);}
+.sec-title.red{color:var(--r);border-color:var(--r);}
+.sec-title.purple{color:var(--pu);border-color:var(--pu);}
+.sec-title.cyan{color:var(--cy);border-color:var(--cy);}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:.8rem;}
+.card-title{font-size:13.5px;font-weight:600;margin-bottom:.7rem;display:flex;align-items:center;gap:7px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:580px){.two{grid-template-columns:1fr;}}
+
+/* CODE */
+.cb{background:#1a1a2e;border-radius:8px;padding:13px 16px;font-family:'JetBrains Mono',monospace;
+  font-size:12.5px;color:#e2e8f0;line-height:1.8;overflow-x:auto;margin:.5rem 0;}
+.cb-title{font-size:10.5px;color:#6272a4;font-family:'JetBrains Mono',monospace;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#6272a4;}.a{color:#a6e3a1;}.hk{color:#50fa7b;}.aw{color:#ffb86c;}
+.fe{color:#8be9fd;}.eff{color:#bd93f9;}
+
+/* TIPS */
+.tip{border-radius:10px;padding:11px 15px;font-size:13px;margin:.6rem 0;
+  line-height:1.65;display:flex;align-items:flex-start;gap:9px;}
+.t-ic{flex-shrink:0;margin-top:2px;}
+.tip-v{background:var(--pu-l);border:1px solid #c4b5fd;color:var(--pu);}
+.tip-y{background:var(--y-l);border:1px solid #fcd34d;color:var(--y);}
+.tip-g{background:var(--g-l);border:1px solid #6ee7b7;color:var(--g);}
+.tip-r{background:var(--r-l);border:1px solid #fca5a5;color:var(--r);}
+.tip-c{background:var(--cy-l);border:1px solid #7dd3fc;color:var(--cy);}
+.tip-i{background:var(--in-l);border:1px solid #a5b4fc;color:var(--in);}
+
+/* ═══ STEP BLOCKS — หลักของ handbook นี้ ═══ */
+.steps-container{display:flex;flex-direction:column;gap:0;}
+.step-block{display:flex;gap:0;position:relative;}
+.step-block:not(:last-child) .step-line{background:var(--in);opacity:.2;}
+.step-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.step-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;border:2px solid;z-index:1;}
+.step-line{width:2px;flex:1;min-height:20px;margin:4px 0;}
+.step-content{flex:1;padding:0 0 1.5rem 1rem;}
+.step-title{font-weight:700;font-size:14.5px;margin-bottom:.5rem;display:flex;align-items:center;gap:8px;}
+.step-desc{font-size:13.5px;color:var(--mu);margin-bottom:.5rem;line-height:1.7;}
+.step-time{font-size:11.5px;font-family:'JetBrains Mono',monospace;
+  background:var(--surf);border:1px solid var(--bd2);
+  padding:2px 8px;border-radius:5px;color:var(--mu);}
+
+/* HOUR BLOCK */
+.hour-block{background:var(--card);border:1px solid var(--bd);border-radius:12px;
+  overflow:hidden;margin-bottom:1rem;}
+.hour-head{padding:12px 16px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.hour-num{font-weight:700;font-size:14.5px;}
+.hour-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mu);}
+.hour-body{padding:1rem 1.2rem;}
+
+/* SCRIPT */
+.script{background:#1e1e2e;border-radius:10px;padding:1rem 1.2rem;margin:.6rem 0;}
+.script-label{font-size:10.5px;color:#6272a4;font-family:'JetBrains Mono',monospace;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.script-say{color:#f8f8f2;font-size:13.5px;line-height:1.85;}
+.script-say em{color:#8be9fd;font-style:normal;}
+.script-do{color:#50fa7b;font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:.5rem;line-height:1.8;}
+
+/* INLINE CODE */
+code{background:#f1f5f9;border:1px solid var(--bd2);padding:1px 6px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--in);}
+
+/* CHECKLIST */
+.check-section{margin-bottom:1rem;}
+.check-title{font-weight:600;font-size:13.5px;margin-bottom:.5rem;color:var(--in);}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.check-item{display:flex;gap:9px;font-size:13px;padding:7px 12px;
+  background:var(--surf);border-radius:7px;align-items:flex-start;}
+.check-box{width:17px;height:17px;border:2px solid var(--bd2);border-radius:3px;flex-shrink:0;margin-top:1px;}
+
+/* ERR TABLE */
+.err-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.err-table th{padding:7px 12px;text-align:left;font-size:11.5px;background:var(--surf2);
+  border-bottom:2px solid var(--bd2);color:var(--mu);}
+.err-table td{padding:8px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.err-table tr:last-child td{border-bottom:none;}
+.err-table tr:hover td{background:#fafbff;}
+.err-code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--r-l);
+  color:var(--r);padding:2px 6px;border-radius:4px;display:inline-block;margin-top:2px;}
+.fix-code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--g-l);
+  color:var(--g);padding:2px 6px;border-radius:4px;display:inline-block;}
+
+/* FAQ */
+.faq-item{border:1px solid var(--bd);border-radius:10px;margin-bottom:.6rem;overflow:hidden;}
+.faq-q{padding:11px 14px;background:var(--surf);font-weight:600;font-size:13.5px;display:flex;gap:8px;}
+.faq-a{padding:11px 14px;font-size:13px;color:var(--mu);line-height:1.7;border-top:1px solid var(--bd);}
+
+/* SCORE TABLE */
+.score-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.score-table th{background:var(--in);color:white;padding:9px 13px;text-align:left;font-weight:600;}
+.score-table td{padding:9px 13px;border-bottom:1px solid var(--bd);}
+.score-table tr:last-child td{border-bottom:none;}
+.total-row td{background:var(--in-l);font-weight:700;}
+.score-num{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;}
+
+/* CONCEPTS TABLE */
+.concept-table{width:100%;border-collapse:collapse;font-size:13px;}
+.concept-table th{padding:8px 12px;text-align:left;font-size:11.5px;background:var(--surf2);
+  border-bottom:2px solid var(--bd2);color:var(--mu);}
+.concept-table td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.concept-table tr:last-child td{border-bottom:none;}
+.wk-badge{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<div class="topbar no-print">
+  <div>📋 Teacher Handbook — Week 12 reqres.in</div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="window.print()">🖨 พิมพ์</button>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-tag">Teacher Handbook · 31901-2004 · ฉบับ Step-by-Step</div>
+  <div class="doc-title">Week 12 — React + reqres.in</div>
+  <div class="doc-sub">คู่มือการสอนละเอียด ตั้งแต่สร้าง Project จนถึง CRUD ครบวงจร — สำหรับอาจารย์ที่ไม่ได้สอนมาสักพัก</div>
+  <div class="doc-meta">
+    <span>⏱ 5 ชั่วโมง</span>
+    <span>📚 ปวส.1</span>
+    <span>🌐 reqres.in API</span>
+    <span>⚛️ React + Vite + Tailwind v4</span>
+    <span>📦 รวม Week 8–12</span>
+  </div>
+</div>
+
+<!-- RECAP TABLE -->
+<div class="sec">
+  <div class="sec-title">📚 ทบทวนก่อน — นักเรียนเรียนอะไรมาแล้ว</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="concept-table">
+      <thead><tr><th>Week</th><th>เนื้อหา</th><th>ใช้ใน Week 12</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="wk-badge" style="background:#dbeafe;color:#1d4ed8;">W8</span></td>
+          <td>Function Component, JSX, export/import, className</td>
+          <td style="color:var(--g);">UserCard.jsx Component</td>
+        </tr>
+        <tr>
+          <td><span class="wk-badge" style="background:#fef3c7;color:#b45309;">W9</span></td>
+          <td>Object, Props, Destructuring, Spread {'{'}...obj{'}'}</td>
+          <td style="color:var(--g);">{'{'}...user{'}'} ส่ง props</td>
+        </tr>
+        <tr>
+          <td><span class="wk-badge" style="background:#dcfce7;color:#166534;">W10</span></td>
+          <td>useState, onClick, onChange, controlled input</td>
+          <td style="color:var(--g);">Form state, loading, adding</td>
+        </tr>
+        <tr>
+          <td><span class="wk-badge" style="background:#cffafe;color:#155e75;">W11</span></td>
+          <td>.map() + key prop, .filter()</td>
+          <td style="color:var(--g);">users.map() render grid</td>
+        </tr>
+        <tr>
+          <td><span class="wk-badge" style="background:var(--pu-l);color:var(--pu);">W12</span></td>
+          <td style="font-weight:600;">useEffect, fetch, async/await, try/catch, HTTP Methods</td>
+          <td style="color:var(--g);">GET/POST/DELETE reqres.in</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip tip-i">
+    <span class="t-ic">🎯</span>
+    <span><strong>Week 12 คือ synthesis week</strong> — ไม่ได้สอน concept ใหม่มาก แต่เอาทุก concept Week 8–11 มาใช้กับ API จริงๆ ครั้งแรก</span>
+  </div>
+</div>
+
+<!-- PRE-CLASS -->
+<div class="sec">
+  <div class="sec-title">🔧 เตรียมก่อนสอน (ทำวันก่อน 15 นาที)</div>
+  <div class="card">
+    <div class="steps-container">
+
+      <div class="step-block">
+        <div class="step-left">
+          <div class="step-num" style="background:var(--in-l);color:var(--in);border-color:#a5b4fc;">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">ทดสอบ reqres.in บนเน็ตโรงเรียน <span class="step-time">2 นาที</span></div>
+          <div class="step-desc">เปิด browser แล้วพิมพ์ URL นี้ใน address bar — ต้องได้ JSON กลับมา ถ้าไม่ได้แปลว่าเน็ตบล็อค</div>
+          <div class="cb">https://reqres.in/api/users?page=1</div>
+          <div class="tip tip-r" style="margin-top:.3rem;">
+            <span class="t-ic">🚨</span>
+            <span>ถ้าเน็ตบล็อค reqres.in — ให้นักเรียนสร้าง <code>public/users.json</code> แทน แล้ว fetch จาก local แทน</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-left">
+          <div class="step-num" style="background:var(--in-l);color:var(--in);border-color:#a5b4fc;">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">เช็ค Node.js ติดตั้งแล้วในเครื่อง <span class="step-time">1 นาที</span></div>
+          <div class="step-desc">เปิด Terminal แล้วพิมพ์ — ต้องได้เลข version ออกมา ถ้าไม่มีต้องติดตั้งก่อน</div>
+          <div class="cb">node -v
+npm -v</div>
+          <div class="tip tip-y">
+            <span class="t-ic">💡</span>
+            <span>ต้องการ Node 18+ ขึ้นไป — ถ้าได้ v16 หรือต่ำกว่าให้ update ก่อน</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-left">
+          <div class="step-num" style="background:var(--in-l);color:var(--in);border-color:#a5b4fc;">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">ลองสร้าง Project จริงๆ บนเครื่องอาจารย์ก่อน <span class="step-time">10 นาที</span></div>
+          <div class="step-desc">ทดสอบทุก command ให้แน่ใจว่าทำได้ก่อนสอนจริง — เพื่อรู้ว่าขั้นตอนไหนอาจมีปัญหา</div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-left">
+          <div class="step-num" style="background:var(--in-l);color:var(--in);border-color:#a5b4fc;">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">เปิดสื่อสอน Week 12 พร้อมบน projector</div>
+          <div class="step-desc">ไฟล์ <strong>week12-react-reqres.html</strong> — เปิดทิ้งไว้ section reqres.in ก่อน</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════
+     ชั่วโมง 1: สร้าง Project
+════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-title green">⏱ ชั่วโมงที่ 1 — สร้าง Project + reqres.in (50 นาที)</div>
+
+  <div class="hour-block">
+    <div class="hour-head">
+      <div class="hour-num">🎯 เป้าหมาย</div>
+      <div class="hour-time">50 นาที</div>
+    </div>
+    <div class="hour-body">
+      นักเรียนมี React project พร้อม Tailwind บนเครื่อง + เข้าใจว่า reqres.in คืออะไร + เห็น GET response จริง
+    </div>
+  </div>
+
+  <div class="steps-container">
+
+    <!-- STEP 1 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--g-l);color:var(--g);border-color:#6ee7b7;">1</div>
+        <div class="step-line" style="background:var(--g);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เปิด Terminal และสร้าง Project ด้วย Vite <span class="step-time">10 นาที</span></div>
+        <div class="step-desc">ให้นักเรียนทุกคนทำพร้อมกัน — อาจารย์ทำบน projector นักเรียนทำตามบนเครื่องตัวเอง</div>
+
+        <div class="cb-title">พิมพ์ทีละบรรทัด ไม่ต้องรีบ</div>
+        <div class="cb">
+<span class="cm"># 1. เปิด VSCode แล้ว Ctrl+` เพื่อเปิด Terminal</span>
+
+<span class="cm"># 2. ไปที่ folder ที่ต้องการสร้าง project</span>
+cd Desktop
+
+<span class="cm"># 3. สร้าง project ชื่อ user-management</span>
+npm create vite@latest user-management -- --template react
+
+<span class="cm"># 4. เข้า folder</span>
+cd user-management
+
+<span class="cm"># 5. ติดตั้ง packages</span>
+npm install
+
+<span class="cm"># 6. ติดตั้ง Tailwind v4</span>
+npm install tailwindcss @tailwindcss/vite
+
+<span class="cm"># 7. รัน dev server</span>
+npm run dev
+        </div>
+
+        <div class="tip tip-g">
+          <span class="t-ic">✅</span>
+          <span>เห็น <strong>"Local: http://localhost:5173"</strong> = สำเร็จ — เปิด browser ไปที่ URL นั้น</span>
+        </div>
+        <div class="tip tip-r">
+          <span class="t-ic">⚠️</span>
+          <span>ถ้า error ตอน <code>npm create vite</code> — ลอง <code>npm create vite@latest .</code> แทน หรือเปลี่ยนเป็น <code>npx create-vite@latest user-management --template react</code></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--g-l);color:var(--g);border-color:#6ee7b7;">2</div>
+        <div class="step-line" style="background:var(--g);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">ตั้งค่า Tailwind CSS v4 <span class="step-time">5 นาที</span></div>
+        <div class="step-desc">แก้ 2 ไฟล์ — ถ้าไม่แก้ Tailwind จะไม่ทำงาน</div>
+
+        <div class="two">
+          <div>
+            <div class="cb-title">📄 vite.config.js — แก้ให้เป็นแบบนี้</div>
+            <div class="cb">
+<span class="kw">import</span> { defineConfig } <span class="kw">from</span> <span class="str">'vite'</span>
+<span class="kw">import</span> react <span class="kw">from</span> <span class="str">'@vitejs/plugin-react'</span>
+<span class="kw">import</span> tailwindcss <span class="kw">from</span> <span class="str">'@tailwindcss/vite'</span>
+
+<span class="kw">export default</span> defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+})
+            </div>
+          </div>
+          <div>
+            <div class="cb-title">📄 src/index.css — ลบทุกอย่างออก ใส่แค่นี้</div>
+            <div class="cb">
+<span class="cm">/* ลบทุกบรรทัดเดิมออกก่อน */</span>
+<span class="kw">@import</span> <span class="str">"tailwindcss"</span>;
+            </div>
+            <div class="tip tip-r" style="margin-top:.5rem;">
+              <span class="t-ic">🚨</span>
+              <span><code>@import</code> ต้องอยู่บรรทัดแรกสุดเสมอ — ถ้ามีอะไรอยู่ก่อนจะ error</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip tip-g" style="margin-top:.5rem;">
+          <span class="t-ic">🧪</span>
+          <span>ทดสอบว่า Tailwind ทำงาน: เปิด <code>src/App.jsx</code> แก้ return เป็น <code>&lt;h1 className="text-3xl text-blue-500"&gt;สวัสดี&lt;/h1&gt;</code> — ถ้าเห็นสีน้ำเงินใหญ่ = ทำงาน</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--g-l);color:var(--g);border-color:#6ee7b7;">3</div>
+        <div class="step-line" style="background:var(--g);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">ทำความรู้จัก reqres.in <span class="step-time">10 นาที</span></div>
+        <div class="step-desc">เปิดสื่อสอน section 01 — ให้นักเรียนเปิด browser กด Try เองด้วย</div>
+
+        <div class="script">
+          <div class="script-label">อาจารย์พูด + Demo</div>
+          <div class="script-say">
+            "reqres.in คือ API สำเร็จรูปที่สร้างมาให้ฝึก — ไม่ต้องสมัคร ไม่ต้อง login ใช้ได้เลย<br><br>
+            มีข้อมูล User จริงๆ พร้อม avatar — เราจะดึงมาแสดงเป็น card ใน React ของเรา"
+          </div>
+          <div class="script-do">
+// [เปิด Chrome] พิมพ์ใน address bar
+https://reqres.in/api/users?page=1
+
+// [ให้นักเรียนดู JSON ที่ได้]
+// ชี้ให้เห็น: data คือ array, มี first_name, last_name, email, avatar
+          </div>
+        </div>
+
+        <div class="tip tip-i">
+          <span class="t-ic">👉</span>
+          <span>เปิด <strong>DevTools → Network tab</strong> ให้ดูด้วย — เห็น request/response จริงๆ บอก "นี่แหละคือสิ่งที่ React จะทำเมื่อ fetch"</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--g-l);color:var(--g);border-color:#6ee7b7;">4</div>
+        <div class="step-line" style="background:transparent;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">สร้างโครงสร้าง Folder <span class="step-time">5 นาที</span></div>
+        <div class="step-desc">ก่อน code ให้สร้าง folder ให้เรียบร้อยก่อน</div>
+        <div class="cb">
+<span class="cm"># ใน VSCode Explorer — สร้าง folder และไฟล์เหล่านี้</span>
+
+src/
+├── components/
+│   └── UserCard.jsx     ← สร้างใหม่
+└── App.jsx              ← แก้อันเดิม
+
+<span class="cm"># ใน App.jsx ลบทุกอย่างออก เริ่มใหม่หมด</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════
+     ชั่วโมง 2: UserCard + GET
+════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-title cyan">⏱ ชั่วโมงที่ 2 — UserCard + GET Users (50 นาที)</div>
+
+  <div class="hour-block">
+    <div class="hour-head">
+      <div class="hour-num">🎯 เป้าหมาย</div><div class="hour-time">50 นาที</div>
+    </div>
+    <div class="hour-body">เห็น User cards จาก reqres.in แสดงบนหน้าจอ — useEffect fetch + .map() render</div>
+  </div>
+
+  <div class="steps-container">
+
+    <!-- STEP 5 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--cy-l);color:var(--cy);border-color:#7dd3fc;">5</div>
+        <div class="step-line" style="background:var(--cy);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เขียน UserCard.jsx <span class="step-time">15 นาที</span></div>
+        <div class="script">
+          <div class="script-label">อาจารย์พูดก่อน</div>
+          <div class="script-say">"เริ่มจาก Component ก่อน — UserCard รับ props จาก data ของ reqres.in ชื่อ field ต้องตรงกับที่ API ส่งมา คือ first_name ไม่ใช่ firstName"</div>
+        </div>
+        <div class="cb-title">📄 src/components/UserCard.jsx — เขียนพร้อมกัน</div>
+        <div class="cb">
+<span class="kw">const</span> <span class="fn">UserCard</span> = ({ id, first_name, last_name, email, avatar, onDelete }) => {
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"bg-white rounded-xl shadow-md overflow-hidden relative group"</span>&gt;
+
+      &lt;img
+        src={avatar}
+        alt={<span class="str">`${first_name} ${last_name}`</span>}
+        className=<span class="str">"w-full h-24 object-cover"</span>
+      /&gt;
+
+      &lt;div className=<span class="str">"p-3"</span>&gt;
+        &lt;h3 className=<span class="str">"font-bold text-gray-800 text-sm"</span>&gt;
+          {first_name} {last_name}
+        &lt;/h3&gt;
+        &lt;p className=<span class="str">"text-gray-400 text-xs truncate"</span>&gt;
+          {email}
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;button
+        onClick={() => onDelete(id)}
+        className=<span class="str">"absolute top-2 right-2 w-6 h-6 bg-red-500 text-white
+          rounded-full text-xs hidden group-hover:flex items-center justify-center"</span>&gt;
+        ×
+      &lt;/button&gt;
+
+    &lt;/div&gt;
+  )
+}
+
+<span class="kw">export default</span> UserCard
+        </div>
+        <div class="tip tip-v">
+          <span class="t-ic">💡</span>
+          <span>ถาม: "group และ group-hover คืออะไร?" — ตอบ: เมื่อ hover ที่ parent (group) จะทำให้ button (group-hover:flex) แสดงขึ้นมา</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--cy-l);color:var(--cy);border-color:#7dd3fc;">6</div>
+        <div class="step-line" style="background:var(--cy);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เขียน App.jsx — GET + useEffect + .map() <span class="step-time">25 นาที</span></div>
+        <div class="script">
+          <div class="script-label">อาจารย์พูดก่อน</div>
+          <div class="script-say">"ตอนนี้เราจะเขียน App.jsx ทีละบล็อก — เริ่มจาก states ก่อน แล้วค่อย useEffect แล้วค่อย render<br>ทุกคนเขียนตามพร้อมกัน ไม่ต้อง copy ทั้งหมดพร้อมกัน"</div>
+        </div>
+        <div class="cb-title">📄 src/App.jsx — เขียนทีละส่วน</div>
+        <div class="cb">
+<span class="cm">// ส่วนที่ 1: import</span>
+<span class="kw">import</span> { useState, useEffect } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> UserCard <span class="kw">from</span> <span class="str">'./components/UserCard'</span>
+
+<span class="kw">const</span> BASE = <span class="str">"https://reqres.in/api"</span>
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+
+  <span class="cm">// ส่วนที่ 2: states (Week 10)</span>
+  <span class="kw">const</span> [users,   setUsers]   = useState([])
+  <span class="kw">const</span> [loading, setLoading] = useState(<span class="kw">true</span>)
+  <span class="kw">const</span> [error,   setError]   = useState(<span class="kw">null</span>)
+
+  <span class="cm">// ส่วนที่ 3: fetch ด้วย useEffect (Week 12)</span>
+  useEffect(() => {
+    <span class="kw">const</span> <span class="fn">fetchUsers</span> = <span class="aw">async</span> () => {
+      <span class="kw">try</span> {
+        setLoading(<span class="kw">true</span>)
+        <span class="kw">const</span> res  = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users?page=1`</span>)
+        <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">"โหลดไม่สำเร็จ"</span>)
+        <span class="kw">const</span> json = <span class="aw">await</span> res.json()
+        setUsers(json.data)       <span class="cm">// ← reqres ใส่ data ไว้ใน .data</span>
+      } <span class="kw">catch</span> (e) {
+        setError(e.message)
+      } <span class="kw">finally</span> {
+        setLoading(<span class="kw">false</span>)
+      }
+    }
+    fetchUsers()
+  }, [])               <span class="cm">// ← [] = รันครั้งเดียวตอน mount</span>
+
+  <span class="cm">// ส่วนที่ 4: handle delete (เดี๋ยวเพิ่ม)</span>
+  <span class="kw">const</span> <span class="fn">handleDelete</span> = (id) => {
+    setUsers(prev => prev.filter(u => u.id !== id))
+  }
+
+  <span class="cm">// ส่วนที่ 5: render</span>
+  <span class="kw">if</span> (loading) <span class="kw">return</span> &lt;p className=<span class="str">"text-center py-20 text-gray-500"</span>&gt;⏳ กำลังโหลด...&lt;/p&gt;
+  <span class="kw">if</span> (error)   <span class="kw">return</span> &lt;p className=<span class="str">"text-center py-20 text-red-500"</span>&gt;❌ {error}&lt;/p&gt;
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"min-h-screen bg-gray-50 p-8"</span>&gt;
+      &lt;h1 className=<span class="str">"text-3xl font-bold mb-8"</span>&gt;👥 Users&lt;/h1&gt;
+
+      &lt;div className=<span class="str">"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"</span>&gt;
+        {users.map(user => (           <span class="cm">// ← Week 11</span>
+          &lt;UserCard
+            key={user.id}              <span class="cm">// ← Week 11</span>
+            {...user}                  <span class="cm">// ← Week 9</span>
+            onDelete={handleDelete}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+<span class="kw">export default</span> App
+        </div>
+
+        <div class="tip tip-y">
+          <span class="t-ic">🔑</span>
+          <span><strong>จุดที่ต้องอธิบาย:</strong> <code>json.data</code> ไม่ใช่ <code>json</code> — reqres ส่งมาในรูป <code>{'{'}"data":[...]{"}"}</code> ต้องเข้าถึง .data</span>
+        </div>
+        <div class="tip tip-g">
+          <span class="t-ic">✅</span>
+          <span><strong>Save แล้วดู browser</strong> — ควรเห็น 6 user cards พร้อมรูป ถ้าเห็น = ทำสำเร็จ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--cy-l);color:var(--cy);border-color:#7dd3fc;">7</div>
+        <div class="step-line" style="background:transparent;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">ทดสอบ Loading และ Error State <span class="step-time">10 นาที</span></div>
+        <div class="script">
+          <div class="script-label">Demo ให้ดู</div>
+          <div class="script-do">
+// Test Loading: DevTools → Network → Slow 3G → refresh
+// ควรเห็น "⏳ กำลังโหลด..." ก่อน
+
+// Test Error: เปลี่ยน URL เป็นผิดๆ
+const res = await fetch(`${BASE}/wrong-endpoint`)
+// ควรเห็น "❌ โหลดไม่สำเร็จ"
+// แก้กลับหลังดูแล้ว
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════
+     ชั่วโมง 3: POST เพิ่ม User
+════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-title purple">⏱ ชั่วโมงที่ 3 — POST เพิ่ม User (50 นาที)</div>
+
+  <div class="hour-block">
+    <div class="hour-head"><div class="hour-num">🎯 เป้าหมาย</div><div class="hour-time">50 นาที</div></div>
+    <div class="hour-body">กรอก Form แล้วกด "เพิ่ม" → POST ไป reqres.in → User ใหม่ปรากฏใน grid</div>
+  </div>
+
+  <div class="steps-container">
+
+    <!-- STEP 8 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--pu-l);color:var(--pu);border-color:#c4b5fd;">8</div>
+        <div class="step-line" style="background:var(--pu);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">อธิบาย POST ต่าง GET ยังไง <span class="step-time">5 นาที</span></div>
+        <div class="script">
+          <div class="script-label">อาจารย์พูด</div>
+          <div class="script-say">
+            "GET เหมือนขอดูเมนู — แค่บอก URL ก็พอ<br>
+            POST เหมือนสั่งอาหาร — ต้องบอกว่าสั่งอะไร มีข้อมูลแนบมาด้วย<br><br>
+            ข้อมูลที่แนบมาเรียกว่า body — ต้องบอก server ด้วยว่าข้อมูลเป็น JSON ด้วย Content-Type"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 9 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--pu-l);color:var(--pu);border-color:#c4b5fd;">9</div>
+        <div class="step-line" style="background:var(--pu);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เพิ่ม Form state และ handleAdd ใน App.jsx <span class="step-time">20 นาที</span></div>
+        <div class="cb-title">เพิ่มในส่วน states (ต่อจากบรรทัด error state)</div>
+        <div class="cb">
+  <span class="cm">// เพิ่มต่อจาก states เดิม</span>
+  <span class="kw">const</span> [form,   setForm]   = useState({ name: <span class="str">""</span>, job: <span class="str">""</span> })
+  <span class="kw">const</span> [adding, setAdding] = useState(<span class="kw">false</span>)
+        </div>
+        <div class="cb-title" style="margin-top:.8rem;">เพิ่ม handleAdd function (ต่อจาก handleDelete)</div>
+        <div class="cb">
+  <span class="kw">const</span> <span class="fn">handleAdd</span> = <span class="aw">async</span> () => {
+    <span class="cm">// validation</span>
+    <span class="kw">if</span> (!form.name.trim() || !form.job.trim()) {
+      alert(<span class="str">"กรุณากรอกชื่อและตำแหน่ง"</span>)
+      <span class="kw">return</span>
+    }
+
+    <span class="kw">try</span> {
+      setAdding(<span class="kw">true</span>)
+
+      <span class="kw">const</span> res = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users`</span>, {
+        method:  <span class="str">"POST"</span>,
+        headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+        body:    JSON.stringify(form)
+      })
+      <span class="kw">const</span> created = <span class="aw">await</span> res.json()
+
+      <span class="cm">// reqres ตอบ: { id, name, job, createdAt }</span>
+      <span class="cm">// ต้องแปลงให้ตรงกับ UserCard props</span>
+      <span class="kw">const</span> newUser = {
+        id:         created.id,
+        first_name: form.name,
+        last_name:  <span class="str">""</span>,
+        email:      <span class="str">`${form.name.toLowerCase()}@reqres.in`</span>,
+        avatar:     <span class="str">"https://reqres.in/img/faces/10-image.jpg"</span>
+      }
+
+      setUsers(prev => [...prev, newUser])  <span class="cm">// เพิ่มลง state</span>
+      setForm({ name: <span class="str">""</span>, job: <span class="str">""</span> })           <span class="cm">// reset form</span>
+
+    } <span class="kw">catch</span> (e) {
+      alert(<span class="str">"เพิ่มไม่สำเร็จ: "</span> + e.message)
+    } <span class="kw">finally</span> {
+      setAdding(<span class="kw">false</span>)
+    }
+  }
+        </div>
+        <div class="tip tip-y">
+          <span class="t-ic">⚠️</span>
+          <span><strong>อธิบาย newUser object:</strong> reqres ตอบกลับมาในรูปแบบต่างกับที่ UserCard ต้องการ จึงต้องแปลง (map) ให้ตรงก่อน setUsers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 10 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--pu-l);color:var(--pu);border-color:#c4b5fd;">10</div>
+        <div class="step-line" style="background:transparent;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เพิ่ม Form JSX ใน return <span class="step-time">25 นาที</span></div>
+        <div class="cb-title">เพิ่มก่อน &lt;div className="grid..."&gt;</div>
+        <div class="cb">
+      &lt;div className=<span class="str">"bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-6"</span>&gt;
+        &lt;h2 className=<span class="str">"text-indigo-700 font-bold mb-3"</span>&gt;➕ เพิ่ม User ใหม่&lt;/h2&gt;
+        &lt;div className=<span class="str">"flex gap-3 flex-wrap"</span>&gt;
+
+          &lt;input
+            value={form.name}
+            onChange={e => setForm({...form, name: e.target.value})}
+            placeholder=<span class="str">"ชื่อ"</span>
+            className=<span class="str">"border border-gray-300 rounded-lg px-3 py-2 flex-1 min-w-40"</span>
+          /&gt;
+
+          &lt;input
+            value={form.job}
+            onChange={e => setForm({...form, job: e.target.value})}
+            placeholder=<span class="str">"ตำแหน่ง"</span>
+            className=<span class="str">"border border-gray-300 rounded-lg px-3 py-2 flex-1 min-w-40"</span>
+          /&gt;
+
+          &lt;button
+            onClick={handleAdd}
+            disabled={adding}
+            className=<span class="str">"bg-indigo-600 text-white px-6 py-2 rounded-lg
+              hover:bg-indigo-700 disabled:opacity-50"</span>
+          &gt;
+            {adding ? <span class="str">"กำลังเพิ่ม..."</span> : <span class="str">"เพิ่ม"</span>}
+          &lt;/button&gt;
+
+        &lt;/div&gt;
+      &lt;/div&gt;
+        </div>
+        <div class="tip tip-g">
+          <span class="t-ic">🧪</span>
+          <span>กรอก Form แล้วกดเพิ่ม — เปิด DevTools Network เห็น POST request — card ใหม่ต้องปรากฏใน grid</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════
+     ชั่วโมง 4: DELETE
+════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-title red">⏱ ชั่วโมงที่ 4 — DELETE ลบ User (50 นาที)</div>
+
+  <div class="hour-block">
+    <div class="hour-head"><div class="hour-num">🎯 เป้าหมาย</div><div class="hour-time">50 นาที</div></div>
+    <div class="hour-body">กด × บน Card → DELETE ไป reqres.in → Card หายออกจาก grid</div>
+  </div>
+
+  <div class="steps-container">
+
+    <!-- STEP 11 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--r-l);color:var(--r);border-color:#fca5a5;">11</div>
+        <div class="step-line" style="background:var(--r);opacity:.2;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">อัปเกรด handleDelete ให้เรียก API จริง <span class="step-time">15 นาที</span></div>
+        <div class="step-desc">ตอนนี้ handleDelete แค่ filter state — อัปเกรดให้ DELETE จริงก่อน</div>
+        <div class="cb-title">แก้ handleDelete เดิม</div>
+        <div class="cb">
+  <span class="kw">const</span> <span class="fn">handleDelete</span> = <span class="aw">async</span> (id) => {
+    <span class="kw">const</span> ok = window.confirm(<span class="str">`ลบ user id=${id} ใช่ไหม?`</span>)
+    <span class="kw">if</span> (!ok) <span class="kw">return</span>
+
+    <span class="kw">try</span> {
+      <span class="kw">const</span> res = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users/${id}`</span>, {
+        method: <span class="str">"DELETE"</span>
+        <span class="cm">// ไม่มี body, ไม่ต้อง Content-Type</span>
+      })
+      <span class="cm">// reqres ตอบ 204 No Content — ไม่มี body</span>
+      <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">"ลบไม่สำเร็จ"</span>)
+
+      <span class="cm">// filter ออกจาก state (Week 11)</span>
+      setUsers(prev => prev.filter(u => u.id !== id))
+
+    } <span class="kw">catch</span> (e) {
+      alert(e.message)
+    }
+  }
+        </div>
+        <div class="tip tip-r">
+          <span class="t-ic">⚠️</span>
+          <span>reqres.in ตอบ <strong>204 No Content</strong> สำหรับ DELETE — ห้าม <code>await res.json()</code> หลัง DELETE เพราะไม่มี body จะ error</span>
+        </div>
+        <div class="tip tip-g">
+          <span class="t-ic">🧪</span>
+          <span>ลอง hover card แล้วกด × — ควรมี confirm popup แล้ว card หาย — เปิด Network เห็น DELETE request</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 12 -->
+    <div class="step-block">
+      <div class="step-left">
+        <div class="step-num" style="background:var(--r-l);color:var(--r);border-color:#fca5a5;">12</div>
+        <div class="step-line" style="background:transparent;"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">เพิ่ม Pagination — Page 1 / Page 2 <span class="step-time">35 นาที</span></div>
+        <div class="step-desc">reqres.in มี 12 users แบ่ง 2 หน้า — สอน dependency array ด้วย [page]</div>
+        <div class="cb-title">เพิ่ม state page และแก้ useEffect</div>
+        <div class="cb">
+  <span class="cm">// เพิ่ม state</span>
+  <span class="kw">const</span> [page, setPage] = useState(<span class="num">1</span>)
+
+  <span class="cm">// แก้ useEffect — เปลี่ยน page=1 เป็น page</span>
+  useEffect(() => {
+    <span class="kw">const</span> fetchUsers = <span class="aw">async</span> () => {
+      <span class="kw">try</span> {
+        setLoading(<span class="kw">true</span>)
+        <span class="kw">const</span> res  = <span class="aw">await</span> fetch(<span class="str">`${BASE}/users?page=${page}`</span>)  <span class="cm">← เปลี่ยน</span>
+        <span class="kw">const</span> json = <span class="aw">await</span> res.json()
+        setUsers(json.data)
+      } <span class="kw">catch</span> (e) { setError(e.message) }
+      <span class="kw">finally</span>     { setLoading(<span class="kw">false</span>) }
+    }
+    fetchUsers()
+  }, [page])   <span class="cm">← เปลี่ยนจาก [] เป็น [page]</span>
+
+  <span class="cm">// เพิ่ม pagination buttons ใน JSX (ใต้ grid)</span>
+  &lt;div className=<span class="str">"flex gap-3 mt-6"</span>&gt;
+    &lt;button
+      onClick={() => setPage(<span class="num">1</span>)}
+      className={<span class="str">`px-4 py-2 rounded-lg ${page === 1
+        ? <span class="str">"bg-indigo-600 text-white"</span>
+        : <span class="str">"bg-white border border-gray-300"</span>
+      }`</span>}&gt;
+      หน้า 1
+    &lt;/button&gt;
+    &lt;button
+      onClick={() => setPage(<span class="num">2</span>)}
+      className={<span class="str">`px-4 py-2 rounded-lg ${page === 2
+        ? <span class="str">"bg-indigo-600 text-white"</span>
+        : <span class="str">"bg-white border border-gray-300"</span>
+      }`</span>}&gt;
+      หน้า 2
+    &lt;/button&gt;
+  &lt;/div&gt;
+        </div>
+        <div class="tip tip-v">
+          <span class="t-ic">🎯</span>
+          <span>นี่คือตัวอย่าง dependency array [page] ที่ดีที่สุด — กด "หน้า 2" จะ fetch ใหม่อัตโนมัติ</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════
+     ชั่วโมง 5: LAB
+════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-title orange">⏱ ชั่วโมงที่ 5 — Lab + Push GitHub (50 นาที)</div>
+
+  <div class="hour-block">
+    <div class="hour-head"><div class="hour-num">🎯 เป้าหมาย</div><div class="hour-time">50 นาที</div></div>
+    <div class="hour-body">นักเรียนทำ App ให้สมบูรณ์ด้วยตัวเอง + push GitHub</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 นักเรียนทำเองในชั่วโมงนี้</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;">
+      <div style="padding:10px 14px;background:var(--surf);border-radius:8px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;">🟢</span>
+        <div><strong>ระดับ 1:</strong> ทำ GET + POST + DELETE ให้ครบ + ตกแต่งด้วย Tailwind</div>
+      </div>
+      <div style="padding:10px 14px;background:var(--surf);border-radius:8px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;">🟡</span>
+        <div><strong>ระดับ 2:</strong> เพิ่ม Search — <code>const filtered = users.filter(u => u.first_name.includes(query))</code></div>
+      </div>
+      <div style="padding:10px 14px;background:var(--surf);border-radius:8px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;">🔴</span>
+        <div><strong>ระดับ 3:</strong> เพิ่ม Login — POST /api/login ด้วย email/password → แสดง token ที่ได้</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📤 Push GitHub</div>
+    <div class="cb">
+<span class="cm"># ใน Terminal ของ project</span>
+git init
+git add .
+git commit -m "Week 12 User Management App — reqres.in CRUD"
+git remote add origin [URL ของ repository]
+git push -u origin main
+    </div>
+    <div class="tip tip-i">
+      <span class="t-ic">💡</span>
+      <span>ถ้านักเรียนมี repo จาก Week ก่อนแล้ว ให้ใช้ repo ใหม่สำหรับ Week 12 โดยเฉพาะ</span>
+    </div>
+  </div>
+</div>
+
+<!-- COMMON MISTAKES -->
+<div class="sec">
+  <div class="sec-title red">🐛 ข้อผิดพลาดที่เจอบ่อย + วิธีแก้ทันที</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="err-table">
+      <thead><tr><th style="width:30%;">อาการ</th><th>สาเหตุ</th><th>แก้ยังไง</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div style="font-weight:600;">หน้า refresh ไม่หยุด</div><div class="err-code">infinite loop</div></td>
+          <td style="font-size:12.5px;">setUsers อยู่ใน useEffect โดยไม่มี [] หรือมี dependency ผิด</td>
+          <td><span class="fix-code">เพิ่ม [] ใน useEffect</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">users ไม่แสดง เห็นว่าง</div><div class="err-code">users = []</div></td>
+          <td style="font-size:12.5px;">setUsers(json) แทนที่จะเป็น setUsers(json.data)</td>
+          <td><span class="fix-code">setUsers(json.data)</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">รูปภาพไม่โหลด</div></td>
+          <td style="font-size:12.5px;">ปกติ — reqres.in อาจช้า refresh ใหม่</td>
+          <td><span class="fix-code">รอสักครู่หรือ refresh</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">POST ส่งแล้วไม่มี Card ใหม่</div></td>
+          <td style="font-size:12.5px;">ลืม setUsers(prev => [...prev, newUser])</td>
+          <td><span class="fix-code">เพิ่ม setUsers ใน try block</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">Tailwind class ไม่ทำงาน</div></td>
+          <td style="font-size:12.5px;">ลืมแก้ vite.config.js หรือ index.css</td>
+          <td><span class="fix-code">ตรวจ 2 ไฟล์นั้น + restart npm run dev</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">@import error ใน CSS</div><div class="err-code">must precede all other statements</div></td>
+          <td style="font-size:12.5px;">มีอะไรอยู่ก่อน @import ใน index.css</td>
+          <td><span class="fix-code">@import ต้องอยู่บรรทัดแรกสุด</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">Cannot read properties of undefined</div></td>
+          <td style="font-size:12.5px;">users ยัง [] อยู่ แต่พยายาม .map() ก่อน fetch เสร็จ</td>
+          <td><span class="fix-code">เช็ค if (loading) return ก่อน .map()</span></td>
+        </tr>
+        <tr>
+          <td><div style="font-weight:600;">UserCard ไม่รับ props</div><div class="err-code">first_name is undefined</div></td>
+          <td style="font-size:12.5px;">ชื่อ props ผิด หรือไม่ส่ง {...user}</td>
+          <td><span class="fix-code">console.log(user) ดู structure ก่อน</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="sec">
+  <div class="sec-title">❓ คำถามที่นักเรียนมักถาม</div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ ทำไม json.data ไม่ใช่ json ตรงๆ?</div>
+    <div class="faq-a">reqres.in ออกแบบ response ให้มีข้อมูลเพิ่มเติมด้วย เช่น page, total, per_page จึงห่อ users array ไว้ใน key ชื่อ "data" — เปิด DevTools Network ดู response structure จะเห็นชัด</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ ทำไมต้อง [...prev, newUser] ไม่ใช้ setUsers([...users, newUser])?</div>
+    <div class="faq-a">ทั้งสองแบบทำงานได้ในกรณีส่วนใหญ่ แต่ prev => แบบ callback มั่นใจได้ว่าได้ state ล่าสุดเสมอ ในกรณีที่มีการ update หลาย state พร้อมกัน prev => จะปลอดภัยกว่า</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ reqres.in DELETE แล้ว user กลับมาเมื่อ refresh ไหม?</div>
+    <div class="faq-a">ใช่ — reqres.in ไม่บันทึกข้อมูลจริงๆ แค่ simulate response ดังนั้น refresh ใหม่ user กลับมา นั่นเป็นเหตุผลที่เราต้อง filter state ใน React เพื่อให้ UI ดูถูกต้องในระหว่างใช้งาน</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ ทำไม DELETE ถึงไม่มี body?</div>
+    <div class="faq-a">HTTP spec กำหนดว่า DELETE ระบุ resource ที่จะลบผ่าน URL แล้ว (เช่น /api/users/2) ไม่ต้องส่งข้อมูลเพิ่มเติม — เหมือนบอกว่า "ลบอันนี้" ชี้นิ้วไปที่ URL เลย</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ [page] ใน dependency array หมายความว่าอะไร?</div>
+    <div class="faq-a">บอก React ว่า "รัน useEffect ใหม่ทุกครั้งที่ page เปลี่ยน" — เมื่อกด "หน้า 2" state page เปลี่ยนเป็น 2 → React เห็นว่า page เปลี่ยน → รัน useEffect อีกครั้ง → fetch /api/users?page=2 ใหม่</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ ถ้าต้องการ PUT แก้ไข User ต้องทำยังไง?</div>
+    <div class="faq-a">สร้าง state editUser เก็บ user ที่เลือก → เปิด modal/form → กรอกข้อมูล → PUT ไปที่ /api/users/{'{'}id{'}'} พร้อม body → อัปเดต state ด้วย setUsers(prev => prev.map(u => u.id === id ? updated : u)) — เป็น Bonus ของชิ้นงาน</div>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="sec">
+  <div class="sec-title">📊 เกณฑ์ประเมิน</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="score-table">
+      <thead><tr><th>หัวข้อ</th><th>เกณฑ์</th><th style="text-align:right;width:90px;">คะแนน</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;">GET + useEffect</td>
+          <td style="font-size:12.5px;color:var(--mu);">ดึง users จาก reqres.in ได้ + loading + error state ครบ + .map() render cards</td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--in);">30</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">POST Form</td>
+          <td style="font-size:12.5px;color:var(--mu);">Form 2 input + POST ไปยัง API + card ใหม่ปรากฏใน grid + form reset</td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--in);">30</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">DELETE</td>
+          <td style="font-size:12.5px;color:var(--mu);">กด × แล้ว DELETE + card หายจาก grid + มี confirm ก่อนลบ</td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--in);">20</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Code + GitHub</td>
+          <td style="font-size:12.5px;color:var(--mu);">Tailwind styling, export/import ถูกต้อง, push GitHub</td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--in);">20</span></td>
+        </tr>
+        <tr class="total-row"><td colspan="2" style="font-size:14px;font-weight:700;">รวม</td><td style="text-align:right;"><span class="score-num" style="color:var(--in);font-size:1.4rem;">100</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="two" style="margin-top:.7rem;">
+    <div class="tip tip-g"><span class="t-ic">⭐</span><span><strong>Bonus +10:</strong> Search filter หรือ Pagination page 1/2 หรือ POST /api/login แสดง token</span></div>
+    <div class="tip tip-r"><span class="t-ic">❌</span><span><strong>หักคะแนน:</strong> ไม่มี try/catch (-10) | ไม่มี loading state (-10) | ไม่ push GitHub (-10)</span></div>
+  </div>
+</div>
+
+<!-- FINAL CHECKLIST -->
+<div class="sec">
+  <div class="sec-title">✅ Checklist ก่อนปล่อยนักเรียนกลับ</div>
+  <div class="card">
+    <div class="check-section">
+      <div class="check-title">ทุกคนต้องผ่าน:</div>
+      <ul class="check-list">
+        <li class="check-item"><div class="check-box"></div>เปิด localhost:5173 แล้วเห็น User cards จาก reqres.in จริงๆ</li>
+        <li class="check-item"><div class="check-box"></div>กรอก Form แล้วกดเพิ่ม → เห็น card ใหม่ใน grid</li>
+        <li class="check-item"><div class="check-box"></div>hover card กด × → card หาย</li>
+        <li class="check-item"><div class="check-box"></div>push GitHub เรียบร้อย — ส่ง URL repo ให้อาจารย์</li>
+      </ul>
+    </div>
+    <div class="check-section">
+      <div class="check-title">ทดสอบด้วย DevTools:</div>
+      <ul class="check-list">
+        <li class="check-item"><div class="check-box"></div>Network tab เห็น GET request ไปยัง reqres.in ตอน mount</li>
+        <li class="check-item"><div class="check-box"></div>Network → Slow 3G → เห็น loading state ก่อน cards โหลด</li>
+        <li class="check-item"><div class="check-box"></div>Network tab เห็น POST request ตอนกดเพิ่ม</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip tip-i">
+    <span class="t-ic">🚀</span>
+    <span><strong>บอกนักเรียนก่อนกลับ:</strong> Week 13–14 คือ Final Project — เลือก theme เอง ใช้ความรู้ทั้งหมดนี้ คิดไอเดียไว้เลย เช่น ร้านอาหาร, to-do list, weather app, movie list</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--bd);
+  display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu2);flex-wrap:wrap;gap:.5rem;">
+  <div>31901-2004 · วิทยาลัยเทคนิคเลย · Teacher Handbook Week 12</div>
+  <div>React + reqres.in · Step-by-Step Edition</div>
+</div>
+
+</div><!-- page -->
+</body>
+</html>
