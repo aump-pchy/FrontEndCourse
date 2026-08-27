@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Final Project — 31901-2004</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a18;--surf:#0c1028;--card:#111830;--card2:#161c38;
+  --bd:rgba(130,150,255,.09);--bd2:rgba(130,150,255,.2);
+  --pk:#f472b6;--re:#61dafb;--g:#34d399;--y:#fbbf24;
+  --or:#fb923c;--pu:#a78bfa;--cy:#22d3ee;--r:#f87171;
+  --tx:#e2e8f0;--mu:#546280;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'Mitr',sans-serif;line-height:1.7;}
+@media print{body{background:white;color:#1e293b;}.card{background:white;border:1px solid #e2e8f0;}.no-print{display:none;}}
+
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,rgba(244,114,182,.1),rgba(97,218,251,.06));
+  border:1px solid rgba(244,114,182,.25);border-radius:18px;padding:2rem 2.5rem;margin-bottom:2rem;}
+.course-tag{font-size:12px;color:var(--pk);font-family:'JetBrains Mono',monospace;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.title{font-size:2rem;font-weight:700;margin-bottom:.3rem;}
+.title span{background:linear-gradient(135deg,var(--pk),var(--re));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{color:#94a3c8;font-size:14.5px;margin-bottom:1.2rem;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{padding:5px 14px;border-radius:8px;font-size:13px;font-weight:500;}
+
+/* SECTION */
+.section{margin-bottom:2rem;}
+.sec-title{font-size:1rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--mu);margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:.8rem;}
+.card-title{font-size:14.5px;font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.two{grid-template-columns:1fr;}}
+
+.cb{background:#070c1e;border:1px solid rgba(255,255,255,.06);border-radius:9px;
+  padding:13px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  line-height:1.8;overflow-x:auto;margin:.5rem 0;}
+.kw{color:#ff79c6;}.fn{color:#61dafb;}.str{color:#f1fa8c;}.num{color:#bd93f9;}
+.cm{color:#454c6b;}.a{color:#a6e3a1;}.hk{color:#34d399;}
+
+.info{border-radius:9px;padding:11px 14px;font-size:13px;margin:.5rem 0;
+  line-height:1.6;display:flex;align-items:flex-start;gap:8px;}
+.ic{flex-shrink:0;margin-top:2px;}
+.ig{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:#8ed9b8;}
+.ip{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:#c4b5fc;}
+.iy{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);color:#e5ca80;}
+.ir{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.2);color:#fca5a5;}
+.ir2{background:rgba(97,218,251,.07);border:1px solid rgba(97,218,251,.2);color:#9ee5f5;}
+
+/* THEME CARDS */
+.theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.8rem;}
+.theme-card{background:var(--card2);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.2rem;}
+.theme-emoji{font-size:1.8rem;margin-bottom:.4rem;}
+.theme-name{font-size:14px;font-weight:700;margin-bottom:.2rem;}
+.theme-desc{font-size:12.5px;color:var(--mu);line-height:1.6;}
+.theme-data{font-size:11.5px;color:var(--g);margin-top:.4rem;font-family:'JetBrains Mono',monospace;}
+
+/* MUST-HAVE LIST */
+.must-list{display:flex;flex-direction:column;gap:7px;}
+.must-item{display:flex;align-items:flex-start;gap:10px;background:var(--card2);
+  border-radius:9px;padding:10px 13px;font-size:13.5px;}
+.must-badge{flex-shrink:0;font-size:11px;font-family:'JetBrains Mono',monospace;
+  padding:2px 8px;border-radius:5px;font-weight:700;white-space:nowrap;margin-top:1px;}
+
+/* SCORE TABLE */
+.score-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.score-table th{padding:10px 14px;text-align:left;color:var(--mu);font-size:12px;
+  font-weight:500;border-bottom:1px solid var(--bd);}
+.score-table td{padding:10px 14px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.score-table tr:last-child td{border-bottom:none;}
+.score-table tr:hover td{background:rgba(255,255,255,.02);}
+.score-num{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;}
+.total-row td{background:rgba(244,114,182,.07);}
+.score-sub{font-size:12px;color:var(--mu);margin-top:3px;line-height:1.5;}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;padding-bottom:1.2rem;position:relative;}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:18px;top:38px;
+  bottom:0;width:1px;background:var(--bd);}
+.tl-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:1px solid;}
+.tl-body{flex:1;padding-top:6px;}
+.tl-day{font-weight:600;font-size:14px;margin-bottom:3px;}
+.tl-task{font-size:13px;color:#8494b8;line-height:1.6;}
+
+/* BONUS */
+.bonus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem;}
+.bonus-item{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);
+  border-radius:10px;padding:10px 14px;}
+.bonus-pts{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--y);font-weight:700;}
+.bonus-text{font-size:13px;color:#e5ca80;margin-top:2px;}
+
+/* SUBMIT */
+.submit-card{background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(97,218,251,.04));
+  border:1px solid rgba(52,211,153,.2);border-radius:14px;padding:1.5rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="course-tag">31901-2004 · Final Project · Week 13–14</div>
+  <h1 class="title">🏁 <span>Final Project</span></h1>
+  <p class="sub">สร้าง React App ด้วยตัวเอง — ใช้ทุกอย่างที่เรียนมา Week 8–11</p>
+  <div class="chips">
+    <span class="chip" style="background:rgba(97,218,251,.1);color:var(--re);border:1px solid rgba(97,218,251,.25)">⚛️ Week 8 — Component</span>
+    <span class="chip" style="background:rgba(251,191,36,.08);color:var(--y);border:1px solid rgba(251,191,36,.2)">🟡 Week 9 — Props</span>
+    <span class="chip" style="background:rgba(52,211,153,.08);color:var(--g);border:1px solid rgba(52,211,153,.2)">🟢 Week 10 — useState</span>
+    <span class="chip" style="background:rgba(34,211,238,.08);color:var(--cy);border:1px solid rgba(34,211,238,.2)">🗺 Week 11 — .map()/.filter()</span>
+    <span class="chip" style="background:rgba(251,146,60,.08);color:var(--or);border:1px solid rgba(251,146,60,.2)">⏱ 1 สัปดาห์</span>
+  </div>
+</div>
+
+<!-- THEME -->
+<div class="section">
+  <div class="sec-title">🎨 เลือก Theme โปรเจก</div>
+  <div class="info iy" style="margin-bottom:.8rem;">
+    <span class="ic">💡</span>
+    <span>เลือกอะไรก็ได้ที่ตัวเองสนใจ — ข้อมูลต้องเป็น <strong style="color:var(--y)">array of objects อย่างน้อย 6 items</strong> ที่มีความหมาย ไม่ใช่ข้อมูลสุ่ม</span>
+  </div>
+  <div class="theme-grid">
+    <div class="theme-card">
+      <div class="theme-emoji">☕</div>
+      <div class="theme-name">เมนูร้านกาแฟ/ร้านอาหาร</div>
+      <div class="theme-desc">แสดงเมนู filter ตามหมวด Like ปุ่มเพิ่มตะกร้า</div>
+      <div class="theme-data">items: name, price, category, emoji</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-emoji">🗺️</div>
+      <div class="theme-name">สถานที่ท่องเที่ยวจังหวัดเลย</div>
+      <div class="theme-desc">รวมสถานที่ filter ตามประเภท แผนที่ อธิบาย</div>
+      <div class="theme-data">items: name, type, district, desc</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-emoji">🎬</div>
+      <div class="theme-name">รายการหนัง/ซีรีส์/เกม</div>
+      <div class="theme-desc">คอลเลกชันที่ชอบ search ชื่อ filter genre rating</div>
+      <div class="theme-data">items: title, genre, rating, year</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-emoji">🛒</div>
+      <div class="theme-name">ร้านค้าออนไลน์ (Mock)</div>
+      <div class="theme-desc">สินค้า filter หมวดหมู่ เพิ่มตะกร้า นับจำนวน</div>
+      <div class="theme-data">items: name, price, category, img</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-emoji">📚</div>
+      <div class="theme-name">หนังสือ/คอร์สที่แนะนำ</div>
+      <div class="theme-desc">รายการหนังสือ filter ประเภท search bookmark</div>
+      <div class="theme-data">items: title, author, genre, level</div>
+    </div>
+    <div class="theme-card" style="border-color:rgba(167,139,250,.25);">
+      <div class="theme-emoji">✨</div>
+      <div class="theme-name">เลือกเองได้เลย</div>
+      <div class="theme-desc">ขอแค่มี array of objects ≥ 6 items และมีความหมาย</div>
+      <div class="theme-data" style="color:var(--pu);">ปรึกษาอาจารย์ก่อน</div>
+    </div>
+  </div>
+</div>
+
+<!-- REQUIREMENTS -->
+<div class="section">
+  <div class="sec-title">✅ สิ่งที่ต้องมีในโปรเจก (บังคับ)</div>
+  <div class="must-list">
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(97,218,251,.15);color:var(--re);">W8</span>
+      <div>
+        <strong>อย่างน้อย 2 Component</strong> — แบ่ง component ให้สมเหตุสมผล
+        เช่น <code style="font-size:12px;">App.jsx + ItemCard.jsx</code> หรือ <code style="font-size:12px;">App.jsx + Card.jsx + Navbar.jsx</code>
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(251,191,36,.12);color:var(--y);">W9</span>
+      <div>
+        <strong>ส่ง Props ด้วย Destructuring</strong> — รับ props เป็น <code style="font-size:12px;">{'{'} name, price, emoji {'}'}</code>
+        และส่งด้วย Spread <code style="font-size:12px;">{'<'}Card {...item} /{'>'}</code>
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(52,211,153,.12);color:var(--g);">W9</span>
+      <div>
+        <strong>Array of Objects ≥ 6 items</strong> — ข้อมูลเป็น array ใน App.jsx
+        แต่ละ item มีอย่างน้อย 4 keys และมีความหมาย
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(52,211,153,.12);color:var(--g);">W10</span>
+      <div>
+        <strong>useState อย่างน้อย 2 ตัว</strong> — เช่น search query + liked items
+        หรือ activeCategory + cartCount หรือ showAll + selectedItem
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(34,211,238,.1);color:var(--cy);">W11</span>
+      <div>
+        <strong>.map() render items</strong> — ห้าม copy-paste component ซ้ำ
+        ต้องใช้ <code style="font-size:12px;">items.map(item => {'<'}Card key={'{'}item.id{'}'} {...item} /{'>'})  </code>
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(34,211,238,.1);color:var(--cy);">W11</span>
+      <div>
+        <strong>.filter() หรือ search</strong> — กรองข้อมูลตามหมวดหมู่หรือค้นหาด้วย input
+        เช่น category filter หรือ <code style="font-size:12px;">.filter(i => i.name.includes(query))</code>
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(251,146,60,.1);color:var(--or);">W4</span>
+      <div>
+        <strong>Responsive Grid ด้วย Tailwind</strong> —
+        <code style="font-size:12px;">grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code>
+        หน้าจอเล็กต้อง stack เป็น 1 column
+      </div>
+    </div>
+    <div class="must-item">
+      <span class="must-badge" style="background:rgba(244,114,182,.1);color:var(--pk);">ส่งงาน</span>
+      <div>
+        <strong>Push GitHub</strong> — commit message สื่อความหมาย
+        ส่ง URL ของ repo ผ่าน LMS ภายในกำหนด
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRUCTURE EXAMPLE -->
+<div class="section">
+  <div class="sec-title">🌳 ตัวอย่าง Structure ที่ถูกต้อง</div>
+  <div class="card">
+    <div class="card-title"><span>💻</span> App.jsx — โครงสร้างขั้นต่ำ</div>
+    <div class="cb">
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>
+<span class="kw">import</span> ItemCard <span class="kw">from</span> <span class="str">'./components/ItemCard'</span>
+
+<span class="cm">// ← W9: array of objects</span>
+<span class="kw">const</span> data = [
+  { id: <span class="num">1</span>, name: <span class="str">"..."</span>, category: <span class="str">"..."</span>, emoji: <span class="str">"..."</span>, price: <span class="num">0</span> },
+  <span class="cm">// ... ≥ 6 items</span>
+]
+
+<span class="kw">const</span> <span class="fn">App</span> = () => {
+  <span class="kw">const</span> [query,    setQuery]    = useState(<span class="str">""</span>)     <span class="cm">// ← W10</span>
+  <span class="kw">const</span> [category, setCategory] = useState(<span class="str">"ทั้งหมด"</span>) <span class="cm">// ← W10</span>
+
+  <span class="cm">// ← W11: filter + search</span>
+  <span class="kw">const</span> filtered = data
+    .filter(i => category === <span class="str">"ทั้งหมด"</span> || i.category === category)
+    .filter(i => i.name.includes(query))
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"p-6"</span>&gt;
+      <span class="cm">{/* ← W10: controlled input */}</span>
+      &lt;input value={query} onChange={e => setQuery(e.target.value)} /&gt;
+
+      <span class="cm">{/* ← W11: .map() */}</span>
+      &lt;div className=<span class="str">"grid grid-cols-1 md:grid-cols-3 gap-4"</span>&gt;
+        {filtered.map(item => (
+          &lt;<span class="fn">ItemCard</span> key={item.id} {...item} /&gt;  <span class="cm">// ← W8, W9</span>
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+    </div>
+  </div>
+</div>
+
+<!-- SCORING -->
+<div class="section">
+  <div class="sec-title">📊 เกณฑ์การให้คะแนน</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="score-table">
+      <thead><tr><th>หัวข้อ</th><th>รายละเอียด</th><th style="text-align:right;width:80px;">คะแนน</th></tr></thead>
+      <tbody>
+        <!-- W8 -->
+        <tr>
+          <td colspan="3" style="background:rgba(97,218,251,.04);padding:7px 14px;
+            font-size:11.5px;color:var(--re);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;">
+            ⚛️ Week 8–9 — Component & Props (25 คะแนน)
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Component แยกไฟล์</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">มี ≥ 2 Component แยก .jsx ถูกต้อง export/import ทำงานได้</div>
+            <div class="score-sub">✅ เต็ม: แยก ≥ 2 ไฟล์ ⚠️ ครึ่ง: ทุกอย่างอยู่ใน App.jsx ❌ ศูนย์: ไม่เป็น Component</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--re);">15</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Props & Spread</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">รับ props ด้วย destructuring + ส่งด้วย {'{'} ...item {'}'}</div>
+            <div class="score-sub">✅ เต็ม: ทั้งสองอย่าง ⚠️ ครึ่ง: ใช้ props. หรือส่งทีละ field ❌ ศูนย์: hardcode ทั้งหมด</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--re);">10</span></td>
+        </tr>
+
+        <!-- W10 -->
+        <tr>
+          <td colspan="3" style="background:rgba(52,211,153,.04);padding:7px 14px;
+            font-size:11.5px;color:var(--g);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;">
+            🟢 Week 10 — useState & Events (25 คะแนน)
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">useState ≥ 2 ตัว</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">ใช้ useState อย่างน้อย 2 ตัว มีความหมาย ไม่ใช่แค่ประกาศทิ้งไว้</div>
+            <div class="score-sub">✅ เต็ม: ≥ 2 ตัว ทำงานจริง ⚠️ ครึ่ง: 1 ตัว ❌ ศูนย์: ไม่มีเลย</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--g);">15</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Event Handler</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">มี onClick หรือ onChange ที่ทำงานได้จริง เช่น Like, Filter, Search</div>
+            <div class="score-sub">✅ เต็ม: ทำงานได้ UI เปลี่ยนตาม state ❌ ศูนย์: ไม่มี interaction</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--g);">10</span></td>
+        </tr>
+
+        <!-- W11 -->
+        <tr>
+          <td colspan="3" style="background:rgba(34,211,238,.04);padding:7px 14px;
+            font-size:11.5px;color:var(--cy);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;">
+            🗺 Week 11 — .map() & .filter() (25 คะแนน)
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">.map() + key prop</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">ใช้ .map() render items ทั้งหมด มี key={'{'}item.id{'}'} ไม่มีการ copy-paste component</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--cy);">15</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">.filter() หรือ Search</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">filter ตามหมวดหมู่ หรือ search ด้วย .includes() ทำงานได้จริง</div>
+            <div class="score-sub">✅ เต็ม: filter ทำงาน ⚠️ ครึ่ง: มีปุ่มแต่ไม่ทำงาน</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--cy);">10</span></td>
+        </tr>
+
+        <!-- TAILWIND -->
+        <tr>
+          <td colspan="3" style="background:rgba(251,146,60,.04);padding:7px 14px;
+            font-size:11.5px;color:var(--or);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;">
+            🎨 Tailwind + Responsive (15 คะแนน)
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Responsive Grid</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">ใช้ grid-cols-1 md:grid-cols-2 lg:grid-cols-3 หน้าเล็กไม่แตก</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--or);">10</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Design & UI</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">สีสัน spacing ดูแล้วใช้งานได้ ไม่ต้องสวยมาก แต่ไม่ cluttered</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--or);">5</span></td>
+        </tr>
+
+        <!-- CODE -->
+        <tr>
+          <td colspan="3" style="background:rgba(167,139,250,.04);padding:7px 14px;
+            font-size:11.5px;color:var(--pu);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;">
+            📝 Code Quality + GitHub (10 คะแนน)
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Code สะอาด</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">ชื่อ function/variable สื่อความหมาย ไม่มี console.log ค้าง ไม่มี code ซ้ำซ้อน</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--pu);">5</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">GitHub</td>
+          <td>
+            <div style="font-size:13px;color:#8494b8;">push ขึ้น GitHub repo commit message สื่อความหมาย มีอย่างน้อย 3 commits</div>
+          </td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--pu);">5</span></td>
+        </tr>
+
+        <!-- TOTAL -->
+        <tr class="total-row">
+          <td colspan="2" style="font-size:15px;font-weight:700;color:var(--pk);">รวม</td>
+          <td style="text-align:right;"><span class="score-num" style="color:var(--pk);font-size:1.8rem;">100</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BONUS -->
+  <div style="margin-top:.8rem;">
+    <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:.6rem;">⭐ Bonus (เพิ่มจาก 100)</div>
+    <div class="bonus-grid">
+      <div class="bonus-item">
+        <div class="bonus-pts">+5 คะแนน</div>
+        <div class="bonus-text">มี ≥ 3 Components แยกไฟล์ทั้งหมด</div>
+      </div>
+      <div class="bonus-item">
+        <div class="bonus-pts">+5 คะแนน</div>
+        <div class="bonus-text">Conditional rendering ด้วย && หรือ ternary ที่ทำงานได้</div>
+      </div>
+      <div class="bonus-item">
+        <div class="bonus-pts">+5 คะแนน</div>
+        <div class="bonus-text">Empty state — แสดงข้อความเมื่อ filter แล้วไม่พบ item</div>
+      </div>
+      <div class="bonus-item">
+        <div class="bonus-pts">+10 คะแนน</div>
+        <div class="bonus-text">Deploy ขึ้น GitHub Pages / Vercel จริงๆ — ส่ง URL</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ห้ามทำ -->
+  <div class="info ir" style="margin-top:.8rem;">
+    <span class="ic">🚫</span>
+    <span><strong style="color:var(--r)">ห้าม:</strong> ข้อมูล hardcode ใน JSX (ต้อง array of objects) | copy-paste component ซ้ำๆ แทน .map() | ไม่มี interaction เลย | ส่งงานเกินกำหนด</span>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section">
+  <div class="sec-title">📅 แผนสัปดาห์ (แนะนำ)</div>
+  <div class="card">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:rgba(97,218,251,.15);color:var(--re);border-color:rgba(97,218,251,.3);">1</div>
+        <div class="tl-body">
+          <div class="tl-day">วันจันทร์–อังคาร — วางแผน + Setup</div>
+          <div class="tl-task">เลือก theme · วาด wireframe คร่าวๆ · สร้าง Vite project · ติดตั้ง Tailwind · เตรียม array of objects ≥ 6 items · push ครั้งแรก</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:rgba(251,191,36,.12);color:var(--y);border-color:rgba(251,191,36,.3);">2</div>
+        <div class="tl-body">
+          <div class="tl-day">วันพุธ–พฤหัส — สร้าง Components</div>
+          <div class="tl-task">เขียน Card component รับ props · App.jsx ใช้ .map() render · เพิ่ม filter/search ด้วย .filter() · ตกแต่ง Tailwind</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:rgba(52,211,153,.12);color:var(--g);border-color:rgba(52,211,153,.3);">3</div>
+        <div class="tl-body">
+          <div class="tl-day">วันศุกร์–เสาร์ — ขัด + ส่งงาน</div>
+          <div class="tl-task">ตรวจ responsive · เพิ่ม bonus ถ้าทำทัน · push GitHub · ส่ง repo URL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-card">
+  <div style="font-size:14px;font-weight:700;color:var(--g);margin-bottom:.8rem;">📤 การส่งงาน</div>
+  <div class="two">
+    <div>
+      <div class="cb" style="font-size:12px;">
+git add .
+git commit -m <span class="str">"final project week 13-14"</span>
+git push
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13.5px;color:#8494b8;line-height:1.8;">
+        ส่ง URL ของ GitHub Repository ผ่าน LMS<br>
+        ตัวอย่าง: <span style="color:var(--g);font-family:'JetBrains Mono',monospace;font-size:12px;">github.com/username/project-name</span>
+      </div>
+      <div class="info ig" style="margin-top:.5rem;">
+        <span class="ic">⚠️</span>
+        <span>Repo ต้องเป็น <strong style="color:var(--g)">Public</strong> ไม่งั้นอาจารย์เข้าไม่ได้</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- wrap -->
+</body>
+</html>
